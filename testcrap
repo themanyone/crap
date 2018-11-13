@@ -1,0 +1,21 @@
+//bin/crap "$0" |tcc -run - "$@";exit 0;
+#define FOO  x         \
+if  x                  \
+    printf  "%s\n", x  \
+    puts  x
+int plus  int x, int y
+    // do simple addition
+    return x+y
+
+/* test comment */
+int y
+/* this is a test
+
+
+    test
+    * oink  55  */
+
+main
+    repeat  5
+        puts  "eek"
+    printf  "1+1=%i\n", plus(1,1)

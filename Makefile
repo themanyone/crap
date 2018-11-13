@@ -1,0 +1,68 @@
+NAME=crap
+DOCDIR=/usr/share/$(NAME)
+PREFIX=/usr/local
+INSTALLDIR=$(PREFIX)/bin
+LIBDIR=$(PREFIX)/lib64
+BUILD_TARGETS=$(NAME).o
+BUILD_LIBS=reg.o
+INCLUDES=-I.
+LDFLAGS=-L.
+CFLAGS=-g -Wall -pipe -O2 -std=c99
+MING=/usr/bin/i686-pc-mingw32-gcc
+CC=gcc
+
+%.c : %.crap
+	crap "$<" > "$@"
+%.o : %.c %.h
+	$(CC) $(CFLAGS) -c "$<" -o "$@" $(INCLUDES)
+% : %.o $(BUILD_LIBS)
+	$(CC) "$<" $(BUILD_LIBS) -o "$@$(EXT)" $(LDFLAGS)
+#~ "make foo.so" shared library
+%.so : CFLAGS+=-fPIC
+%.so : LDFLAGS=-shared
+%.so : %.o
+	$(CC) $(LDFLAGS) $< -Wl,-soname,"lib$@.1" -o "libs/lib$@.1.0.1"
+	ln -sf "lib$@.1.0.1" "libs/lib$@.1"
+	ln -sf "lib$@.1.0.1" "libs/lib$@"
+
+#~ defauilt rule builds target[s] [libs]
+all: $(BUILD_TARGETS:.o=) $(BUILD_TARGETS) $(BUILD_LIBS)
+
+shared: $(BUILD_LIBS:.o=.so) $(BUILD_TARGETS)
+	$(CC) $(BUILD_TARGETS) -o "$(NAME)$(EXT)" -Llibs -lreg
+
+#~ do not delete .c files after build
+.PRECIOUS: %.c
+
+#~ other targets
+win: CC=$(MINGW)
+win: EXT=.exe
+win: all
+
+debug: CFLAGS+=-g -pedantic -O0
+debug: all
+
+%.asm : %.o
+	objdump -Sx $< > $@
+
+s:
+	SciTE Makefile *.h *.anch&
+
+clean:
+	rm -f $(BUILD_TARGETS) $(BUILD_TARGETS:.o=) $(BUILD_TARGETS:.o=.exe) $(BUILD_LIBS) *.asm libs/*
+
+pub:
+	-strip $(BUILD_TARGETS:.o=)
+	-i686-pc-mingw32-strip $(BUILD_TARGETS:.o=.exe)
+	$(RM) -f $(BUILD_TARGETS) $(BUILD_LIBS)
+
+install:
+	install -D README.md "$(DOCDIR)/README.md"
+	install -D COPYING   "$(DOCDIR)/COPYING"
+	install -D "$(NAME)" "$(INSTALLDIR)/$(NAME)"
+	install -D libs/*    "$(LIBDIR)/"
+
+uninstall:
+	$(RM) "$(DOCDIR)/README.md"
+	$(RM) "$(DOCDIR)/COPYING"
+	$(RM) "$(INSTALLDIR)/$(NAME)"
