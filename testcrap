@@ -1,4 +1,5 @@
 //bin/crap "$0" |tcc -run - "$@";exit 0;
+#include <stdio.h>
 #define FOO  x         \
 if  x                  \
     printf  "%s\n", x  \

@@ -1,8 +1,9 @@
 NAME=crap
-DOCDIR=/usr/share/$(NAME)
 PREFIX=/usr/local
+INCLUDEDIR=$(PREFIX)/include
 INSTALLDIR=$(PREFIX)/bin
-LIBDIR=$(PREFIX)/lib64
+DOCDIR=    $(PREFIX)/share/$(NAME)
+LIBDIR=    $(PREFIX)/lib64
 BUILD_TARGETS=$(NAME).o
 BUILD_LIBS=reg.o
 INCLUDES=-I.
@@ -58,11 +59,12 @@ pub:
 
 install:
 	install -D README.md "$(DOCDIR)/README.md"
-	install -D COPYING   "$(DOCDIR)/COPYING"
+	install -D LICENSE   "$(DOCDIR)/LICENSE"
 	install -D "$(NAME)" "$(INSTALLDIR)/$(NAME)"
-	install -D libs/*    "$(LIBDIR)/"
+	install -D libs/*    "$(LIBDIR)"
+	install -D "asprintf.h" "$(INCLUDEDIR)"
 
 uninstall:
 	$(RM) "$(DOCDIR)/README.md"
-	$(RM) "$(DOCDIR)/COPYING"
+	$(RM) "$(DOCDIR)/LICENSE"
 	$(RM) "$(INSTALLDIR)/$(NAME)"

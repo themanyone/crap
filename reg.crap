@@ -1,4 +1,18 @@
 //usr/local/bin/anch -keep -run "$0" "$@"; exit 0;
+/** resub
+ * a terse regex library for code decorating
+ */
+/* Copyright (C) 2018-2019 Henry Kroll III, https://thenerdshow.com
+
+Permission to use, copy, modify, distribute, and sell this software and 
+its documentation for any purpose is hereby granted without fee, 
+provided that the above copyright notice appears in all copies and that 
+both that copyright notice and this permission notice appear in 
+supporting documentation, including About boxes in derived user 
+interfaces or web front-ends. No representations are made about the 
+suitability of this software for any purpose. It is provided "as is" 
+without express or implied warranty.
+*/
 #include "reg.h"
 char *resub  const char *text, const char *pattern, const char *replacement
     // text replacement with up to \7 octal backref substitutions

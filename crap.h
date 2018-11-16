@@ -6,13 +6,9 @@
 #include <string.h>
 #include "reg.h"
 
-#ifdef _WIN32
-#include <io.h>
-#else
-#include <unistd.h>
-#endif
-
 #define TAB 4 //count tab as 4 spaces
+#define MAX_LINE_LEN 8000   // truncate lines longer than this
+#define BACK_BUFFER_LEN 100 // length of back buffer, for indents
 
 static void cut_eol(char**, char**);
 static char *prepend(char*, char*);
