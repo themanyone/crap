@@ -55,7 +55,6 @@ clean:
 pub:
 	-strip $(BUILD_TARGETS:.o=)
 	-i686-pc-mingw32-strip $(BUILD_TARGETS:.o=.exe)
-	$(RM) -f $(BUILD_TARGETS) $(BUILD_LIBS)
 
 install:
 	install -D README.md "$(DOCDIR)/README.md"
@@ -68,3 +67,4 @@ uninstall:
 	$(RM) "$(DOCDIR)/README.md"
 	$(RM) "$(DOCDIR)/LICENSE"
 	$(RM) "$(INSTALLDIR)/$(NAME)"
+	$(RM) "$(INCLUDEDIR)/asprintf.h"

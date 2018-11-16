@@ -20,4 +20,4 @@ main
 	// Macros permit declaring pointer at time of use.
 	// This follows the design pattern of least duplication.
 	char * asprintf  blah, "The array has %i elements. \n", len(words)
-	puts  blah // a newly-declared pointer
+	puts  blah // the newly-declared pointer

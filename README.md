@@ -130,6 +130,11 @@ GNU `make` to turn `.crap` files into `.c` files as needed.
 
 ## Installing crap.
 
+There is no ./configure file. Edit the Makefile to change paths 
+relevant to your system before running `make`. If the build complains 
+about a missing library or header file, use the system package manager 
+to find it or search the web.
+
 ```
 make
 sudo make install

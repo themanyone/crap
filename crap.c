@@ -29,25 +29,25 @@ static void macros(char **s){
         // main becomes int main()
         if(!has_main && !strcmp(*s, "main")){
             has_main = strcpy(*s, "int main(int argc, char **argv)");}
-        #define RESUB(match, rep)      \
+        #define SUB(match, rep)      \
         while((tmp=resub(*s, match, rep))){ \
             strcpy(*s, tmp) ;free(tmp);}    \
         // for..x..in..y
-        RESUB("for\\s*(\\w+)\\s+in\\s+(\\w+)", 
+        SUB("for\\s*(\\w+)\\s+in\\s+(\\w+)", 
           "for(size_t \1_index=0,\1_len=len(\2);" 
           "\1_index<\1_len&&(\1=\2[\1_index]);" 
           "\1_index++)");
         // double-space = parenthesis
-        RESUB("(\\w)  (( ?[^ \"]+| ?\".*\")*) ?( |$)", "\1(\2)\4");
+        SUB("(\\w)  (( ?[^ \"]+| ?\".*\")*) ?( |$)", "\1(\2)\4");
 
         // Put function-like macros here
         // repeat
-        RESUB("repeat\\s*\\(([^)]+)\\)", "for(size_t _=\1;_--;)");
+        SUB("repeat\\s*\\(([^)]+)\\)", "for(size_t _=\1;_--;)");
         // until
-        RESUB("until\\s*\\(([^)]+)\\)", "while(!\1)");
+        SUB("until\\s*\\(([^)]+)\\)", "while(!\1)");
         // unless
-        RESUB("unless\\s*\\(([^)]+)\\)", "if(!\1)");
-        #undef RESUB
+        SUB("unless\\s*\\(([^)]+)\\)", "if(!\1)");
+        #undef SUB
         // skip over multi-line comments
         if((tmp = resub(*s,"(/\\*)(.*[^/]$)", "\1\2"))){
             free(tmp);
@@ -103,11 +103,11 @@ static void decorate(char **s){
         *s = prepend(*s, "{");
         prev_indent += TAB;}}
 static int crap(char *name){
-    char buf[1100], *b;
+    char buf[MAX_LINE_LEN + BACK_BUFFER_LEN], *b;
     FILE *f = fopen(name, "r");
     while(f && !feof(f) && !ferror(f)){
-        b = buf + 100;
-        if(fgets(b, 1000, f)){
+        b = buf + BACK_BUFFER_LEN;
+        if(fgets(b, MAX_LINE_LEN, f)){
             decorate(&b);
             printf("%s", b);}}
     fclose(f);
