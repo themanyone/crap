@@ -80,10 +80,10 @@ things manually, as with logical operators and "truth y" value assignments. Thos
 who dislike the feature do not have to use it, but it persists for the author's 
 convenience.
 
-**Semicolons.** Added to every line, except the line above an indented block (like 
-if, for or while), and lines that end with any of the characters 
-"<>;,.=*/&|^!". Ending a line with one of those characters or a space permits 
-long statements to be broken up across multiple lines.
+**Semicolons.** Added to every line, except the line above an indented 
+block (like if, for or while), and lines that end with any of the 
+characters "<>;,.\"=*/&|^!". Ending a line with one of those characters or 
+a space permits long statements to be broken up across multiple lines.
 
 **Return.** Again, crap adds a final "return 0" only when "main" is used.
 

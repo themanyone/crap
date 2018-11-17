@@ -14,11 +14,11 @@ suitability of this software for any purpose. It is provided "as is"
 without express or implied warranty.
 */
 #include "crap.h"
-static struct
+struct
     char to[255], end[255]
-skip = {{'\0'}, {'\1'}}
-static char *has_main=NULL, eol[255]={'\0'}
-static void macros  char **s
+skip = {{'\0'}, {'\2'}}
+char *has_main=NULL, eol[255]={'\0'}
+void macros  char **s
     char *tmp = NULL
     // check if we are done skipping over a multiline comment
     if  skip.to[0] && (tmp = resub(*s, skip.to, skip.end))
@@ -33,13 +33,13 @@ static void macros  char **s
         while  (tmp=resub(*s, match, rep)) 	\
         	strcpy  *s, tmp  ;free  tmp
         // for..x..in..y
-        SUB("for\\s*(\\w+)\\s+in\\s+(\\w+)", 
-          "for(size_t \1_index=0,\1_len=len(\2);" 
-          "\1_index<\1_len&&(\1=\2[\1_index]);" 
+        SUB("for\\s*(\\w+)\\s+in\\s+(\\w+)",
+          "for(size_t \1_index=0,\1_len=len(\2);"
+          "\1_index<\1_len&&(\1=\2[\1_index]);"
           "\1_index++)")
         // read embedded macros
         // TODO: apply them
-        SUB("#replace\\s+\"(.*)\"\\s+with\\s+\"(.*)\"", 
+        SUB("#replace\\s+\"(.*)\"\\s+with\\s+\"(.*)\"",
         "// \"\1\" becomes \"\2\"")
         // double-space = parenthesis
         SUB("(\\w)  (( ?[^ \"]+| ?\".*\")*) ?([ ;]|$)", "\1(\2)\4")
@@ -57,13 +57,13 @@ static void macros  char **s
             free  tmp
             strcpy  skip.to, "(\\*/)"
             strcpy  skip.end, "\1"
-static void cut_eol  char **fc, char **lc
+void cut_eol  char **fc, char **lc
     // slice off end of line comments, store in $eol
 	// needed to insert semicolon before comments
     char *broil = resub(*fc,"([ \t]*/\\*[^/]*\\*/)?[\\ \n\t]*$|[/]{2}.*$", "")
     *lc = *fc + strlen  broil  ;free  broil
     strcpy  eol, *lc  ;**lc = '\0'; (*lc)--
-static char *prepend  char *dest, char *src
+char *prepend  char *dest, char *src
     // Requires writable memory *before* dest.
     // Returns pointer to *new* beginning.
     // Caller may choose to keep original pointer or
@@ -72,32 +72,27 @@ static char *prepend  char *dest, char *src
     dest -= srclen
     memcpy  dest, src, srclen
     return dest
-static void decorate  char **s
+void decorate  char **s
     static int prev_indent = 0, indent = 0
-    // convert tabs to spaces
     char *t
+    // convert tabs to spaces
     while  (t = resub(*s, "\t", "    "))
-        strcpy  *s, t  ;free  t
+    	strcpy  *s, t  ;free  t
     // locate first non-whitespace char
     int spaces = strspn(*s, " ")
     char *fc = *s + spaces, *lc = strrchr(*s, '\n')
     if  !(*skip.to) && fc < lc  indent = ((fc - *s) | 0x03) ^ 0x03
-    if  indent < prev_indent
-        *s = prepend  *s, eol
-        while  indent < prev_indent
-            *s = prepend  *s, "}"
-            prev_indent -= TAB
-    else *s = prepend  *s, eol
-    char *ll = eol + strlen(eol) - 2
-    if  *ll == ' '  *(skip.end) = 1
-    if  !*(skip.end) && indent == prev_indent
-        *s = prepend  *s, ";"
+    *s = prepend  *s, eol
+    while  indent < prev_indent
+        *s = prepend  *s, "}"
+        prev_indent -= TAB
     cut_eol  &fc, &lc
+    if  !*(skip.end)  *s = prepend  *s, ";"
     macros  &fc
     if  *(skip.to) || (*(skip.end) && --(*(skip.end)))  return
     lc = *s + strlen(*s) - 1; if  lc < *s  return
     // skip semicolon on lines ending with punc.
-    if  strchr("<>;,.=*/&|^!", *lc)  *(skip.end) = 1
+    if  strchr("<>;,\".=*/&|^!", *lc)  *(skip.end) = 1
     // skip semicolon on blank lines
     if  strlen(fc) < 3  *(skip.end) = 1
     // skip semicolon on defines
@@ -106,7 +101,7 @@ static void decorate  char **s
     while  indent > prev_indent
         *s = prepend  *s, "{"
         prev_indent += TAB
-static int crap  char *name
+int crap  char *name
     char buf[MAX_LINE_LEN + BACK_BUFFER_LEN], *b
     FILE *f = fopen  name, "r"
     if  !f
@@ -115,13 +110,11 @@ static int crap  char *name
     while  !feof(f) && !ferror(f)
         b = buf + BACK_BUFFER_LEN
         if  fgets(b, MAX_LINE_LEN, f)
-            decorate  &b
-            printf  "%s", b
+            decorate  &b  ;printf  "%s", b
     fclose  f
     if  has_main  strcpy  b, "    return 0;\n}\n"
     else strcpy  b, "    \n}\n"
-    decorate  &b
-    puts  b
+    decorate  &b  ;puts  b
     return 0
 int main  int argc, char **argv
     if  argc < 2  puts  "usage: crap infile [> outfile]"
