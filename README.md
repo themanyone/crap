@@ -1,11 +1,12 @@
 # Concise, Regex-Aware Preprocessor (CRAP)
-Yet another C (computer language) code decorator and language maker.
+Yet another C (computer language) code decorator and language builder.
 
-<img style="float:right" src="https://eyeopeners.design/emoticons/faces/emoticon_pile-of-poop.png">Brought to you by [TheNerdShow.com](http://thenerdshow.com).
+<img style="float:right"
+src="https://proxy.duckduckgo.com/iu/?u=http%3A%2F%2Ficons.iconarchive.com%2Ficons%2Fgoogle%2Fnoto-emoji-smileys%2F128%2F10104-pile-of-poo-icon.png&f=1">
 
 ## Let's give everyone crap for writing crappy code.
 
-* **Terse**. Under 150 lines of pure, unadulterated crap.
+* **Terse**. Under 200 lines of pure, unadulterated crap.
 * **Simple**. Write programs with a simplified syntax.
 * **Compatible**. Won't break existing code unless it looks like crap.*
 * **Extendable**. Drop in complex macros that would confuse any compiler.
@@ -16,7 +17,7 @@ Yet another C (computer language) code decorator and language maker.
 Crap includes powerful macrotives to make coding sessions flow more smoothly. 
 The easiest way to explain it is to show some examples.
 
-The following crap-worthy example prints "hello world" five times.
+The following crapworthy example prints "hello world" five times.
 
 ```
 #include <stdio.h>
@@ -57,33 +58,34 @@ those indented blocks into separate functions.
 
 Here are some flexible rules for turning crap into compatible C code.
 
-*Includes.* As with C, programs should "#include <stdio.h>" if they want to 
+**Includes.** As with C, programs should "#include <stdio.h>" if they want 
+to 
 print to, or read from, consoles or files in a standard way.
 
-*Expand "main" and return*. The optional "main" macro, when it occurs all by 
+**Expand "main" and return**. The optional "main" macro, when it occurs all by 
 itself, expands to "int main(int argc, char **argv)". Using "main" causes 
 "return 0" to be appended, so make sure "main" is the last function in the file.
 
-*Curly brackets (braces).* Braces magically appear around code blocks when they 
+**Curly brackets (braces).** Braces magically appear around code blocks when they 
 are indented by tabs or four spaces (the default, as defined in "crap.h"). 
 Comments must be indented to the same level as code. To avoid automatic 
 bracketing for style reasons, do not indent the full four spaces; indent two or 
 three spaces instead. If, for some reason, a semicolon must appear after the 
 automatic closing brace, then start the next line with one.
 
-*Parenthesis.* Crap puts parenthesis around arguments in a linear fashion, if 
+**Parenthesis.** Crap puts parenthesis around arguments in a linear fashion, if 
 they are set off by two spaces. "while _ _ a == b _ _ puts _ _ c" is shorthand 
 for "while(a == b) puts(c)". It is often preferable to put parenthesis around 
 things manually, as with logical operators and "truth y" value assignments. Those 
 who dislike the feature do not have to use it, but it persists for the author's 
 convenience.
 
-*Semicolons.* Added to every line, except the line above an indented block (like 
+**Semicolons.** Added to every line, except the line above an indented block (like 
 if, for or while), and lines that end with any of the characters 
 "<>;,.=*/&|^!". Ending a line with one of those characters or a space permits 
 long statements to be broken up across multiple lines.
 
-*Return.* Again, crap adds a final "return 0" only when "main" is used.
+**Return.** Again, crap adds a final "return 0" only when "main" is used.
 
 ## Spreading crap around.
 
@@ -97,10 +99,11 @@ crap holy.crap > holy.c
 
 ## A legacy of crap.
 
-Crap's predecessor, Anchor, is still remarkably stable. But don't look at the 
-code! It abuses `flex` in horrible ways and is otherwise unmaintainable. To make 
-matters worse, `flex` grinds through confusing modes of operation during 
-parsing, tripping flags, and interpreting things differently as it goes.
+Crap's predecessor, [Anchor](http://anch.org/anchor.html), is still 
+remarkably stable. But don't look at the code! It abuses `flex` in horrible 
+ways and is otherwise unmaintainable. To make matters worse, `flex` grinds 
+through confusing modes of operation during parsing, tripping flags, and 
+interpreting things differently as it goes.
 
 Crap drops the `flex` dependency and implements its own simplified regex calls.
 
@@ -149,16 +152,18 @@ make clean
 
 ## Using crap for "boot tracking."
 
-Our privacy policy for crap strictly forbids tracking. Please scrub off and leave boots outside.
+Our privacy policy for crap strictly forbids tracking. Please scrub off 
+and leave boots outside.
 
 ## Picking up fresh crap.
 
-Didn't Mom warn you about playing with dirty old crap? Don't take crap from just 
-anyone. Get a fresh pile from [https://github.com/themanyone/crap].
+Didn't Mom warn you about playing with dirty old crap? Don't take crap 
+from just anyone. Get a fresh pile from 
+[GitHub](https://github.com/themanyone/crap).
 
 `git clone https://github.com/themanyone/crap.git`
 
-Copyright (C) 2018-2019 Henry Kroll III, [https://thenerdshow.com]
+Copyright (C) 2018-2019 Henry Kroll III, https://thenerdshow.com
 
 Permission to use, copy, modify, distribute, and sell this software and its 
 documentation for any purpose is hereby granted without fee, provided that the 

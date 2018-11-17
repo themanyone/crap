@@ -29,16 +29,20 @@ static void macros  char **s
         // main becomes int main()
         if  !has_main && !strcmp(*s, "main")
             has_main = strcpy(*s, "int main(int argc, char **argv)")
-        #define SUB  match, rep      \
-        while  (tmp=resub(*s, match, rep)) \
-        	strcpy  *s, tmp  ;free  tmp    \
+        #define SUB  match, rep      		\
+        while  (tmp=resub(*s, match, rep)) 	\
+        	strcpy  *s, tmp  ;free  tmp
         // for..x..in..y
         SUB("for\\s*(\\w+)\\s+in\\s+(\\w+)", 
           "for(size_t \1_index=0,\1_len=len(\2);" 
           "\1_index<\1_len&&(\1=\2[\1_index]);" 
           "\1_index++)")
+        // read embedded macros
+        // TODO: apply them
+        SUB("#replace\\s+\"(.*)\"\\s+with\\s+\"(.*)\"", 
+        "// \"\1\" becomes \"\2\"")
         // double-space = parenthesis
-        SUB("(\\w)  (( ?[^ \"]+| ?\".*\")*) ?( |$)", "\1(\2)\4")
+        SUB("(\\w)  (( ?[^ \"]+| ?\".*\")*) ?([ ;]|$)", "\1(\2)\4")
 
         // Put function-like macros here
         // repeat
@@ -105,7 +109,10 @@ static void decorate  char **s
 static int crap  char *name
     char buf[MAX_LINE_LEN + BACK_BUFFER_LEN], *b
     FILE *f = fopen  name, "r"
-    while  f && !feof(f) && !ferror(f)
+    if  !f
+        fprintf  stderr, "crap: Unable to open \"%s\" for reading.\n", name
+    	return 1
+    while  !feof(f) && !ferror(f)
         b = buf + BACK_BUFFER_LEN
         if  fgets(b, MAX_LINE_LEN, f)
             decorate  &b
