@@ -87,12 +87,13 @@ void decorate  char **s
         *s = prepend  *s, "}"
         prev_indent -= TAB
     cut_eol  &fc, &lc
-    if  !*(skip.end)  *s = prepend  *s, ";"
+    if  !*(skip.end) && indent == prev_indent
+        *s = prepend  *s, ";"
     macros  &fc
     if  *(skip.to) || (*(skip.end) && --(*(skip.end)))  return
     lc = *s + strlen(*s) - 1; if  lc < *s  return
     // skip semicolon on lines ending with punc.
-    if  strchr("<>;,\".=*/&|^!", *lc)  *(skip.end) = 1
+    if  strchr("<>;,.\"=*/&|^!", *lc)  *(skip.end) = 1
     // skip semicolon on blank lines
     if  strlen(fc) < 3  *(skip.end) = 1
     // skip semicolon on defines
