@@ -1,5 +1,6 @@
 //bin/crap "$0" | tcc -run - "$@"; exit 0
 #include "asprintf.h"
+#replace /print\((.*)\) /puts(\1)/
 main
 	// declare pointers and arrays just like C
 	char *word, words[][10] = { "zero", "one", "two", "three" }
@@ -9,15 +10,15 @@ main
 	for word in words
 		// _index and _len are local loop variables.
 		// They do not exist outside the loop.
-		printf  "  %i of %i %s\n", word_index, word_len, word
+		printf  "  %i of %i %s\n", word_index, words_len, word
 
 	// The asprintf() macro is alloca() + sprintf().
 	// Do not attempt to free or return the resulting pointer.
 	// Use msprintf() for that.
 	asprintf  word, "Array indexes start at [%s].\n", words[0]
-	puts  word // temporary local stack space.
+	print  word // temporary local stack space.
 
 	// Macros permit declaring pointer at time of use.
 	// This follows the design pattern of least duplication.
 	char * asprintf  blah, "The array has %i elements. \n", len(words)
-	puts  blah // the newly-declared pointer
+	print  blah // the newly-declared pointer

@@ -10,10 +10,11 @@
 #define MAX_LINE_LEN 8000   // truncate lines longer than this
 #define BACK_BUFFER_LEN 100 // length of back buffer, for indents
 
-static void cut_eol(char**, char**);
-static char *prepend(char*, char*);
-static void macros(char **);
-static void decorate(char **);
-static int crap(char*);
+char *unescape_ocatal(char *);
+void cut_eol(char**, char**);
+char *prepend(char*, char*);
+void macros(char **);
+void decorate(char **);
+int crap(char*);
 
 #endif //__CRAP_H__

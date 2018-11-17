@@ -1,4 +1,4 @@
-;//usr/local/bin/anch -keep -run "$0" "$@"; exit 0;
+//usr/local/bin/anch -keep -run "$0" "$@"; exit 0;
 /** resub
  * a terse regex library for code decorating
  */
@@ -20,8 +20,8 @@ char *resub(const char *text, const char *pattern, const char *replacement){
     char *output = calloc(100,1);
     regmatch_t pm[8];
     regex_t re;
-    if (!(status = regcomp(&re, pattern, REG_EXTENDED)) 
-    && !(status = regexec(&re, text, 8, pm, 0))){
+    if (!(status = regcomp(&re, pattern, REG_EXTENDED)) &&
+      !(status = regexec(&re, text, 8, pm, 0))){
         int i, len;
         CAT(output, text, pm[0].rm_so);
         while(1){

@@ -22,6 +22,11 @@ struct macro{
     char *match, *replace;
     struct macro *next;}
 *maclist = NULL;
+char *unescape_octal(char *replace){
+    char pat[3]="\\8"; while(--pat[1] > '0'){
+        char *j; while((j = strstr(replace, pat))){
+            *j++ = pat[1]-'0'; while((*j++ = *j));}}
+    return replace;}
 void macros(char **s){
     char *tmp, *match, *replace;
     // check if we are done skipping over a multiline comment
@@ -55,18 +60,20 @@ void macros(char **s){
         // apply embedded macros
         for(struct macro *m = maclist;m ;m = m->next){
             SUB(m->match, m->replace);}
-        #undef SUB
         // read embedded macros
-        match = resub(*s, "#replace\\s+\"(.*)\"\\s+with\\s+\"(.*)\"", "\1");
-        replace= resub(*s, "#replace\\s+\"(.*)\"\\s+with\\s+\"(.*)\"","\2");
+        match = resub(*s, "#replace\\s+/(.*)/(.*)/", "\1");
+        replace= resub(*s, "#replace\\s+/(.*)/(.*)/","\2");
         if(match && replace){
             struct macro *next = maclist;
             if((maclist = malloc(sizeof (struct macro)))){
-                maclist->match = match, maclist->replace = replace,
+                maclist->match = match;
+                maclist->replace = unescape_octal(replace);
                 maclist->next = next;}
             else fprintf(stderr, "Out of memory.");}
         else{
             free(match) ;free(replace);}
+        SUB("#replace\\s+/(.*)/(.*)/", "\x2f/ crap: replacing \1 with \2");
+        #undef SUB
         // skip over multi-line comments
         if((tmp = resub(*s,"(/\\*)(.*[^/]$)", "\1\2"))){
             free(tmp);
@@ -102,7 +109,7 @@ void decorate(char **s){
         *s = prepend(*s, "}");
         prev_indent -= TAB;}
     cut_eol(&fc, &lc);
-    if(!*(skip.end) || indent != prev_indent){
+    if(!(*(skip.end) || indent != prev_indent)){
         *s = prepend(*s, ";");}
     macros(&fc);
     if(*(skip.to) || (*(skip.end) && --(*(skip.end)))) return;
@@ -121,10 +128,10 @@ int crap(char *name){
     char buf[MAX_LINE_LEN + BACK_BUFFER_LEN], *b;
     FILE *f = stdin;
     if (strcmp(name, "-")) f = fopen(name, "r");
-    if(!f){
+    if(!(f)){
         fprintf(stderr, "crap: Unable to open \"%s\" for reading.\n", name);
         return 1;}
-    while(!feof(f) || ferror(f)){
+    while(!(feof(f) || ferror(f))){
         b = buf + BACK_BUFFER_LEN;
         if(fgets(b, MAX_LINE_LEN, f)){
             decorate(&b) ;printf("%s", b);}}
