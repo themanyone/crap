@@ -50,7 +50,7 @@ s:
 	SciTE Makefile *.h *.anch&
 
 clean:
-	rm -f $(BUILD_TARGETS) $(BUILD_TARGETS:.o=) $(BUILD_TARGETS:.o=.exe) $(BUILD_LIBS) *.asm libs/*
+	rm -f $(BUILD_TARGETS) $(BUILD_TARGETS:.o=) $(BUILD_TARGETS:.o=.exe) $(BUILD_LIBS) *.asm
 
 pub:
 	-strip $(BUILD_TARGETS:.o=)

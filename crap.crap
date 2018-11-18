@@ -15,18 +15,10 @@ without express or implied warranty.
 */
 #include "crap.h"
 struct
-    char to[255], end[255]
+    char to[7], end[2]
 skip = {{'\0'}, {'\2'}}
 char *has_main=NULL, eol[255]={'\0'}
-struct macro
-    char *match, *replace
-    struct macro *next
-*maclist = NULL
-char *unescape_octal  char *replace
-    char pat[3]="\\8"; while  --pat[1] > '0'
-        char *j; while  (j = strstr(replace, pat))
-            *j++ = pat[1]-'0'; while  (*j++ = *j)
-    return replace
+struct macro *maclist = NULL
 void macros  char **s
     char *tmp, *match, *replace
     // check if we are done skipping over a multiline comment
@@ -38,9 +30,11 @@ void macros  char **s
         // main becomes int main()
         if  !has_main && !strcmp(*s, "main")
             has_main = strcpy(*s, "int main(int argc, char **argv)")
-        #define SUB  match, rep      		\
-        while  (tmp=resub(*s, match, rep)) 	\
-        	strcpy  *s, tmp  ;free  tmp
+        int max
+        #define SUB  match, rep                     \
+        max = MAX_REPLACE                           \
+        while  max-- && (tmp=resub(*s, match, rep)) \
+            strcpy  *s, tmp  ;free  tmp
         // for..x..in..y
         SUB("for\\s*(\\w+)\\s+in\\s+(\\w+)",
           "for(size_t \1_index=0,\2_len=len(\2);"
@@ -54,9 +48,14 @@ void macros  char **s
         SUB("repeat\\s*\\(([^, ]+)[, ]*([^)]+)?\\)",
          "for(size_t \2_index=\1;\2_index--;)")
         // until
-        SUB("until\\s*\\(([^;]+)\\)", "while(!(\1))")
+        SUB("until\\s*\\(([^);]+)\\)", "while(!(\1))")
         // unless
-        SUB("unless\\s*\\(([^;]+)\\)", "if(!(\1))")
+        SUB("unless\\s*\\(([^);]+)\\)", "if(!(\1))")
+        // skip over multi-line comments
+        if  (tmp = resub(*s,"(/\\*)(.*[^/]$)", "\1\2"))
+            strcpy  skip.to, "(\\*/)"
+            strcpy  skip.end, "\1"
+            free  tmp  ;return
         // apply embedded macros
         for  struct macro *m = maclist;m ;m = m->next
             SUB  m->match, m->replace
@@ -64,21 +63,12 @@ void macros  char **s
         match = resub(*s, "#replace\\s+/(.*)/(.*)/", "\1")
         replace= resub(*s, "#replace\\s+/(.*)/(.*)/","\2")
         if  match && replace
-            struct macro *next = maclist
-            if  (maclist = malloc(sizeof (struct macro)))
-                maclist->match = match
-                maclist->replace = unescape_octal  replace
-                maclist->next = next
-            else fprintf  stderr, "Out of memory."
+            macro_append  &maclist, match, replace
         else
             free  match  ;free  replace
-        SUB("#replace\\s+/(.*)/(.*)/", "\x2f/ crap: replacing \1 with \2")
-        #undef SUB
-        // skip over multi-line comments
-        if  (tmp = resub(*s,"(/\\*)(.*[^/]$)", "\1\2"))
-            free  tmp
-            strcpy  skip.to, "(\\*/)"
-            strcpy  skip.end, "\1"
+        SUB("#replace\\s+/(.*)/(.*)/", "\x2f/ crap: replaced \1 with \2")
+    return
+#undef SUB
 void cut_eol  char **fc, char **lc
     // slice off end of line comments, store in $eol
     // needed to insert semicolon before comments
@@ -87,13 +77,10 @@ void cut_eol  char **fc, char **lc
     strcpy  eol, *lc  ;**lc = '\0'; (*lc)--
 char *prepend  char *dest, char *src
     // Requires writable memory *before* dest.
-    // Returns pointer to *new* beginning.
     // Caller may choose to keep original pointer or
     // reassign it with s = prepend(s, "some text")
-    size_t srclen = strlen(src)
-    dest -= srclen
-    memcpy  dest, src, srclen
-    return dest
+    size_t srclen = strlen(src); dest -= srclen
+    memcpy  dest, src, srclen  ; return dest
 void decorate  char **s
     static int prev_indent = 0, indent = 0
     char *t
@@ -122,8 +109,7 @@ void decorate  char **s
     if  *fc=='#'  *(skip.end) = 1
     // add braces
     while  indent > prev_indent
-        *s = prepend  *s, "{"
-        prev_indent += TAB
+        *s = prepend  *s, "{"  , prev_indent += TAB
 int crap  char *name
     char buf[MAX_LINE_LEN + BACK_BUFFER_LEN], *b
     FILE *f = stdin
@@ -139,12 +125,7 @@ int crap  char *name
     if  has_main  strcpy  b, "    return 0;\n}\n"
     else strcpy  b, "    \n}\n"
     decorate  &b  ;puts  b
-    //free macro list
-    while  maclist
-        struct macro *next = maclist->next
-        free  maclist->match  ;free  maclist->replace
-        free  maclist
-        maclist = next
+    macro_free  &maclist
     return 0
 main
     if  argc < 2  puts  "usage: crap infile [> outfile]"

@@ -14,6 +14,39 @@ suitability of this software for any purpose. It is provided "as is"
 without express or implied warranty.
 */
 #include "reg.h"
+char *unescape_octal  char *replace
+    char pat[3]="\\8"; while  --pat[1] >= '0'
+        char *j; while  (j = strstr(replace, pat))
+            *j++ = pat[1]-'0'; while  (*j++ = *j)
+    return replace
+void macro_append  struct macro **sm, char *match, char *replace
+    struct macro *head = *sm
+    while  head && head->next  head = head->next
+    unless  head
+        head = *sm = malloc  sizeof (struct macro)
+    else head = head->next = malloc  sizeof (struct macro)
+    unless  head
+        fprintf  stderr, "Out of memory."
+        exit  1
+    else
+        head->match = match
+        head->replace = unescape_octal  replace
+        head->next = NULL
+        printf  "[[[%s]]]", match
+    return
+void macro_prepend  struct macro **sm, char *match, char *replace
+    struct macro *next = *sm
+    if  (*sm = malloc(sizeof (struct macro)))
+        (*sm)->replace = unescape_octal  replace
+        (*sm)->match = match, (*sm)->next = next
+    else fprintf  stderr, "Out of memory."
+    return
+void macro_free  struct macro **sm
+    while  *sm
+        struct macro *next = (*sm)->next
+        free  (*sm)->match  ;free  (*sm)->replace
+        free  *sm  ;*sm = next
+    return
 char *resub  const char *text, const char *pattern, const char *replacement
     // text replacement with up to \7 octal backref substitutions
 	int status

@@ -1,5 +1,8 @@
 //bin/crap "$0" | tcc -run - "$@"; exit 0
 #include "asprintf.h"
+/** Crap's #replace /pattern/replacement/ macros extend
+the familiar cpp macros, and may also modify them!
+Up to 100 replacements per line, defined in `crap.h`.*/
 #replace /print\((.*)\) /puts(\1)/
 main
 	// declare pointers and arrays just like C
