@@ -1,10 +1,13 @@
-#ifndef __ASPRINTF_H__
-#define __ASPRINTF_H__
+#ifndef __CRAPDEFS_H__
+#define __CRAPDEFS_H__
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <alloca.h>
 
+// len(array) is required by for.in to return array length.
+// One may #undef it for functions that use a sentinel.
+// Or have it query struct->len for various user types.
 #define len(list) \
  (sizeof list / sizeof list[0])
 
@@ -25,4 +28,4 @@
    s = alloca(snprintf(NULL, 0, __VA_ARGS__)+1); \
    sprintf(s, __VA_ARGS__)
 
-#endif //__ASPRINTF_H__
+#endif //__CRAPDEFS_H__

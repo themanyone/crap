@@ -48,9 +48,9 @@ void macros(char **s){
         SUB("repeat\\s*\\(([^, ]+)[, ]*([^)]+)?\\)",
          "for(size_t \2_index=\1;\2_index--;)");
         // until
-        SUB("until\\s*\\(([^);]+)\\)", "while(!(\1))");
+        SUB("until\\s*\\((.+)\\)", "while(!(\1))");
         // unless
-        SUB("unless\\s*\\(([^);]+)\\)", "if(!(\1))");
+        SUB("unless\\s*\\((.+)\\)", "if(!(\1))");
         // skip over multi-line comments
         if((tmp = resub(*s,"(/\\*)(.*[^/]$)", "\1\2"))){
             strcpy(skip.to, "(\\*/)");
@@ -96,7 +96,7 @@ void decorate(char **s){
         *s = prepend(*s, "}");
         prev_indent -= TAB;}
     cut_eol(&fc, &lc);
-    if(!(*(skip.end)) || indent != prev_indent){
+    if(!(*(skip.end) || indent != prev_indent)){
         *s = prepend(*s, ";");}
     macros(&fc);
     if(*(skip.to) || (*(skip.end) && --(*(skip.end)))) return;
@@ -117,7 +117,7 @@ int crap(char *name){
     if(!(f)){
         fprintf(stderr, "crap: Unable to open \"%s\" for reading.\n", name);
         return 1;}
-    while(!(feof(f)) || ferror(f)){
+    while(!(feof(f) || ferror(f))){
         b = buf + BACK_BUFFER_LEN;
         if(fgets(b, MAX_LINE_LEN, f)){
             decorate(&b) ;printf("%s", b);}}
