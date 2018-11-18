@@ -32,7 +32,6 @@ void macro_append  struct macro **sm, char *match, char *replace
         head->match = match
         head->replace = unescape_octal  replace
         head->next = NULL
-        printf  "[[[%s]]]", match
     return
 void macro_prepend  struct macro **sm, char *match, char *replace
     struct macro *next = *sm

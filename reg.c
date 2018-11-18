@@ -31,8 +31,7 @@ void macro_append(struct macro **sm, char *match, char *replace){
     else{
         head->match = match;
         head->replace = unescape_octal(replace);
-        head->next = NULL;
-        printf("[[[%s]]]", match);}
+        head->next = NULL;}
     return;}
 void macro_prepend(struct macro **sm, char *match, char *replace){
     struct macro *next = *sm;
