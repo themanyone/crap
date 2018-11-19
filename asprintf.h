@@ -1,15 +1,14 @@
-#ifndef __CRAPDEFS_H__
-#define __CRAPDEFS_H__
+#ifndef __ASPRINTF_H__
+#define __ASPRINTF_H__
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <alloca.h>
 
-// len(array) is required by for.in to return array length.
-// One may #undef it for functions that use a sentinel.
-// Or have it query struct->len for various user types.
-#define len(list) \
- (sizeof list / sizeof list[0])
+// iterators
+
+// This should work for most array types
+#define len(array) (sizeof array / sizeof array[0])
 
 // msprintf() uses malloc().
 // It returns a pointer to allocated memory or NULL.
@@ -28,4 +27,4 @@
    s = alloca(snprintf(NULL, 0, __VA_ARGS__)+1); \
    sprintf(s, __VA_ARGS__)
 
-#endif //__CRAPDEFS_H__
+#endif //__ASPRINTF_H__

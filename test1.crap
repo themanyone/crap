@@ -1,9 +1,8 @@
-//bin/crap "$0" |tcc -run - "$@";exit 0;
+#if 0
+./crap "$0" | tcc -run - "$@"; exit 0
+#endif
+// test1.crap example and tests
 #include <stdio.h>
-#define FOO  x         \
-if  x                  \
-    printf  "%s\n", x  \
-    puts  x
 int plus  int x, int y
     // do simple addition
     return x+y
@@ -17,6 +16,5 @@ int y
     * oink  55  */
 
 main
-    repeat  5
-        puts  "eek"
-    printf  "1+1=%i\n", plus(1,1)
+    repeat  2
+        puts  "Test passed."

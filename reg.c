@@ -17,7 +17,7 @@ without express or implied warranty.
 char *unescape_octal(char *replace){
     char pat[3]="\\8"; while(--pat[1] >= '0'){
         char *j; while((j = strstr(replace, pat))){
-            *j++ = pat[1]-'0'; while((*j++ = *j));}}
+            *j++ = pat[1]-'0'; while((*j = *(j+1))) j++;}}
     return replace;}
 void macro_append(struct macro **sm, char *match, char *replace){
     struct macro *head = *sm;

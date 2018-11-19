@@ -69,8 +69,10 @@ move overly-indented blocks into separate functions or libraries.
 
 An extendable and growing set of rules turns `crap` code into C.
 
-**Includes.** Like C, Crap programs `#include <stdio.h>` if they 
-want to print to, or read from, consoles or files in a standard way.
+**Includes.** Like C, Crap programs `#include <stdio.h>` if they want to 
+print to, or read from, consoles or files in a standard way. See 
+`test2.crap` for a demo that uses `"asprintf.h"` for string and array 
+manipulation.
 
 **Expand `main` and return**. The optional `main` macro, when it occurs all by 
 itself, expands to `int main(int argc, char **argv)`. Using `main` causes 
@@ -92,28 +94,52 @@ things manually, as with logical operators and "truth y" value
 assignments. Those who dislike the feature do not have to use it, but 
 it persists for the author's convenience.
 
-**Semicolons.** Added to every line, except the line above an indented 
-block (like if, for or while), and lines that end with any of the 
-characters "<>;,.\"=*/&|^!". Ending a line with one of those characters or 
-a space permits long statements to be broken up across multiple lines.
+**Semicolons.** Added to every line, except the line above an indented block 
+(probably if, for or while), `#define` arguments, and lines that end with 
+any of the characters `<>;,."=*/&|^!`. Ending a line with one of those 
+characters or a space permits long statements to be broken up across 
+multiple lines.
 
-**Return.** Again, `crap` adds a final `return 0` only when `main` is used.
+**Return.** Again, `crap` adds a final `return 0` only when `main` is used. 
+In other words, please supply functions with `return` values.
 
-**Custom rules** Crap's `#replace /pattern/replacement/` macros support 
-up to `\7` octal backref substitutions almost like `sed` scripts. They 
-are no replacement for `sed`, nor do they supersede other preprocessor 
-directives. But they could change things up. Up to 100 replacements per 
-line, defined in `crap.h`. Rules may be added to `crap`'s source code for 
-all uses, or embedded into individual files where desired. Embedded 
-`#replace` rules do not persist across transaction units, so do not put 
-them in headers and expect them to work everywhere. 
+## Crap language extensions
 
-**What isn't `crap`?** The C programming language. Compilers like the 
-Gnu C Compiler (GCC), TinyCC. Mention of tools and technoligies is for 
-information purposes and does not constitute endorsement or 
-affiliation. `Sed` and `grep` have more robust regex engines and are 
-thoroughly tested, so use those instead of `crap` for handling 
-arbitrary data streams.
+**`repeat`** The `repeat n[, mylabel]` construct loops n times. A local 
+`_index` variable is created that may not be accessed outside the loop. The 
+optional `mylabel` attribute causes `_index` to take on a unique name, 
+`mylabel_index` so nested `repeat` loops are possible.
+
+**`for pointer in array[[start][:end]]`** Loops over an `array`, assigning 
+up to `end` (`array_len` - 1) elements to supplied `pointer`, in turn. The 
+`loop` and `array` labels help define local variables, `pointer_index` and 
+`array_len` which can not be negative and are not available outside the 
+loop. If no optional `[:end]` is provided, `crap` will loop over all 
+elements, including `NULL` elements. Also, `[:end]` is required for dynamic 
+arrays and other arbitrary-length data, or expect "endless" trouble!
+
+**`while pointer in array[[start][:end]]`** *Exactly* like `for pointer in 
+array` but with an additional dereference to bail out at the first sign of 
+`NULL` data. Typically, a plain `while(*data)` statement is sufficient to 
+loop through `NULL`-terminated structures. But this extension inherits the 
+safer end limits, indexing, and slight speed penalty, of the above `for` 
+loop.
+
+**Custom rules** Crap's `#replace /pattern/replacement/` macros support up 
+to `\7` octal backref substitutions almost like `sed` scripts. They are no 
+replacement for `sed`, nor do they supersede other preprocessor directives. 
+But they could change things up. Up to 100 replacements per line, defined in 
+`crap.h`. Rules may be added to `crap`'s source code for all users, or 
+embedded into individual files where desired. Embedded `#replace` rules do 
+not persist across transaction units, so do not put them in headers and 
+expect them to work everywhere.
+
+**What isn't `crap`?** The C programming language. Compilers like the Gnu C 
+Compiler (GCC), TinyCC, most other free software. Mention of tools and 
+technoligies is for information purposes and does not constitute endorsement 
+or affiliation. `Sed`, `awk`, `perl`, and `grep` have more robust regex 
+engines and are thoroughly tested, so use those instead of `crap` for 
+handling arbitrary data streams.
 
 ## Spreading `crap` around.
 
@@ -127,11 +153,11 @@ crap holy.crap > holy.c
 
 ## A legacy of `crap`.
 
-Crap's predecessor, [Anchor](http://anch.org/anchor.html), is 
-remarkably stable. But don't look at the code! It abused `flex` in 
-horrible ways and was otherwise unmaintainable. To make matters worse, 
-`flex` grinds through confusing modes of operation during parsing, 
-tripping flags, and interpreting things differently as it goes.
+Crap's predecessor, [Anchor](http://anch.org/anchor.html), is remarkably 
+stable. But don't look at the code! It abused `flex` in horrible ways and 
+was otherwise unmaintainable. To make matters worse, `flex` grinds through 
+confusing modes of operation during parsing, tripping flags, and 
+interpreting things differently as it goes.
 
 Crap drops the `flex` dependency and implements its own simplified regex calls.
 
@@ -165,7 +191,7 @@ There is no `./configure` file. Edit the `Makefile` to change paths
 relevant to your system before running `make`. If the build complains 
 about a missing library or header file, use the system package manager 
 to find it or search the web. Developers, testers, and those who want 
-to improve upon our crappy regex engine, or include it into other 
+to improve upon `crap`'s regex engine, or include it into other 
 projects, may desire to `make shared` to build shared libraries.
 
 ```
