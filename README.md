@@ -33,7 +33,7 @@ After processing, it becomes more or less standard C.
 #include <stdio.h>
 int main(int argc, char **argv){
     for(size_t _=5;_--;){
-        puts ("hello");
+        puts ("hello world");
     return 0;
 }
 ```
@@ -94,11 +94,11 @@ things manually, as with logical operators and "truth y" value
 assignments. Those who dislike the feature do not have to use it, but 
 it persists for the author's convenience.
 
-**Semicolons.** Added to every line, except the line above an indented block 
-(probably if, for or while), `#define` arguments, and lines that end with 
-any of the characters `<>;,."=*/&|^!`. Ending a line with one of those 
-characters or a space permits long statements to be broken up across 
-multiple lines.
+**Semicolons.** Added to every line, except the line above an indented 
+block (probably if, for or while), `#define` arguments, and lines that end 
+with any of the characters `<>;,."=*/&|^!`. End a line with one of those 
+characters permits long statements to be broken up across multiple lines, 
+without receiving unwanted semicolons.
 
 **Return.** Again, `crap` adds a final `return 0` only when `main` is used. 
 In other words, please supply functions with `return` values.
@@ -106,17 +106,21 @@ In other words, please supply functions with `return` values.
 ## Crap language extensions
 
 **`repeat`** The `repeat n[, mylabel]` construct loops n times. A local 
-`_index` variable is created that may not be accessed outside the loop. The 
+`_index` variable is created that may not be accessed outside the loop. An 
 optional `mylabel` attribute causes `_index` to take on a unique name, 
 `mylabel_index` so nested `repeat` loops are possible.
 
-**`for pointer in array[[start][:end]]`** Loops over an `array`, assigning 
-up to `end` (`array_len` - 1) elements to supplied `pointer`, in turn. The 
-`loop` and `array` labels help define local variables, `pointer_index` and 
+**`for pointer in array[[start][:end]]`** Loops over `array`, assigning up 
+to `end` elements to supplied, predefined `pointer`, in turn. The `pointer` 
+and `array` labels help declare local variables, `pointer_index` and 
 `array_len` which can not be negative and are not available outside the 
-loop. If no optional `[:end]` is provided, `crap` will loop over all 
-elements, including `NULL` elements. Also, `[:end]` is required for dynamic 
-arrays and other arbitrary-length data, or expect "endless" trouble!
+loop. Note that `array_len` is 1 + the optional `[:end]` argument which, if 
+supplied, will probably not be the real length of the array. If no optional 
+`[:end]` is provided, `crap` will calculate `array_len` using the `sizeof` 
+operator, stepping through all remaining elements, including `NULL` or 
+`undefined` elements. And finally, `[:end]` (or a sentinel `break` inside 
+the loop) will be necessary for dynamic arrays and other arbitrary-length 
+data, or expect "endless" trouble!
 
 **`while pointer in array[[start][:end]]`** *Exactly* like `for pointer in 
 array` but with an additional dereference to quit at the first sign of 
@@ -130,17 +134,17 @@ loop.
 **`until`** Shorthand for while(!()).
 
 ```
-x = 5; do  something()  until  --x == 0
+unless  wrong  ; do  something()  until  breaktime
 ```
 
 **Custom rules** Crap's `#replace /pattern/replacement/` macros support up 
 to `\7` octal backref substitutions almost like `sed` scripts. They are no 
 replacement for `sed`, nor do they supersede other preprocessor directives. 
-But they could change things up. Up to 100 replacements per line, defined in 
-`crap.h`. Rules may be added to `crap`'s source code for all users, or 
-embedded into individual files where desired. Embedded `#replace` rules do 
-not persist across transaction units, so do not put them in headers and 
-expect them to work everywhere.
+But they could change things up. Up to 100 replacements per line, defined 
+in `crap.h`. Rules may be added to `crap`'s source code for all users, or 
+embedded into individual transaction units where desired. Embedded 
+`#replace` rules do not persist across transaction units, so do not put 
+them in headers and expect them to work everywhere.
 
 **What isn't `crap`?** The C programming language. Compilers like the Gnu C 
 Compiler (GCC), TinyCC, most other free software. Mention of tools and 

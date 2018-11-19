@@ -5,26 +5,28 @@
 #include <stdlib.h>
 #include <alloca.h>
 
-// iterators
+// TODO: iterators
 
 // This should work for most array types
 #define len(array) (sizeof array / sizeof array[0])
 
-// msprintf() uses malloc().
-// It returns a pointer to allocated memory or NULL.
-// It does not return the number of characters written.
-// The resulting pointer is safe to return from functions.
-// Do not forget to free() it to prevent a memory leak!
+/** inline msprintf() macro
+    * "returns" a pointer to allocated memory or NULL.
+    * does not return number of characters written.
+    * is safe to return from functions.
+    * result must be free()'d after use. */
 #define msprintf(s, ...) \
-   s = malloc(snprintf(NULL, 0, __VA_ARGS__)+1); \
-   if(s) sprintf(s, __VA_ARGS__); \
-   else fprintf(stderr, "msprintf: out of memory")
+   s = (s = malloc(snprintf(NULL, 0, __VA_ARGS__)+1), \
+   s? (sprintf(s, __VA_ARGS__), s)                    \
+   : (fprintf(stderr, "msprintf: out of memory\n"), s))
 
-// asprintf() uses alloca().
-// It returns a pointer to local stack space.
-// Do not attempt to free or return the pointer.
+/** inline asprintf() uses alloca(), inherits quirks.
+ DO NOT
+    * free() the pointer.
+    * return the result from functions.
+    * use this macro in function arguments. */
 #define asprintf(s, ...) \
-   s = alloca(snprintf(NULL, 0, __VA_ARGS__)+1); \
-   sprintf(s, __VA_ARGS__)
+   s = (s = alloca(snprintf(NULL, 0, __VA_ARGS__)+1), \
+   sprintf(s, __VA_ARGS__), s)
 
 #endif //__ASPRINTF_H__

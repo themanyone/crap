@@ -26,7 +26,7 @@ void macros(char **s){
         free(tmp);
         skip.to[0] = '\0', skip.end[0] = 2;}
     else{
-        // put non-function macros here
+        // put keyword macros here
         // main becomes int main()
         if(!(has_main || strcmp(*s, "main"))){
             has_main = strcpy(*s, "int main(int argc, char **argv)");}

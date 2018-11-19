@@ -26,7 +26,7 @@ void macros  char **s
         free  tmp
         skip.to[0] = '\0', skip.end[0] = 2
     else
-        // put non-function macros here
+        // put keyword macros here
         // main becomes int main()
         unless  has_main || strcmp(*s, "main")
             has_main = strcpy  *s, "int main(int argc, char **argv)"
@@ -63,8 +63,8 @@ void macros  char **s
         for  struct macro *m = maclist;m ;m = m->next
             SUB  m->match, m->replace
         // read embedded macros
-        match = resub(*s, "#replace\\s+/(.*)/(.*)/", "\1")
-        replace= resub(*s, "#replace\\s+/(.*)/(.*)/","\2")
+        match = resub  *s, "#replace\\s+/(.*)/(.*)/", "\1"
+        replace= resub  *s, "#replace\\s+/(.*)/(.*)/","\2"
         if  match && replace
             macro_append  &maclist, match, replace
         else
