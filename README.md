@@ -24,7 +24,7 @@ The following crap-worthy example prints "hello world" five times.
 #include <stdio.h>
 main
     repeat  5
-        puts  "hello"
+        puts  "hello world"
 ```
 
 After processing, it becomes more or less standard C.
@@ -119,11 +119,19 @@ elements, including `NULL` elements. Also, `[:end]` is required for dynamic
 arrays and other arbitrary-length data, or expect "endless" trouble!
 
 **`while pointer in array[[start][:end]]`** *Exactly* like `for pointer in 
-array` but with an additional dereference to bail out at the first sign of 
+array` but with an additional dereference to quit at the first sign of 
 `NULL` data. Typically, a plain `while(*data)` statement is sufficient to 
 loop through `NULL`-terminated structures. But this extension inherits the 
 safer end limits, indexing, and slight speed penalty, of the above `for` 
 loop.
+
+**`unless`** Another way to write `if(!())`.
+
+**`until`** Shorthand for while(!()).
+
+```
+x = 5; do  something()  until  --x == 0
+```
 
 **Custom rules** Crap's `#replace /pattern/replacement/` macros support up 
 to `\7` octal backref substitutions almost like `sed` scripts. They are no 

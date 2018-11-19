@@ -28,8 +28,8 @@ void macros  char **s
     else
         // put non-function macros here
         // main becomes int main()
-        if  !has_main && !strcmp(*s, "main")
-            has_main = strcpy(*s, "int main(int argc, char **argv)")
+        unless  has_main || strcmp(*s, "main")
+            has_main = strcpy  *s, "int main(int argc, char **argv)"
         int max
         #define SUB  match, rep                     \
         max = MAX_REPLACE                           \
@@ -75,7 +75,7 @@ void macros  char **s
 void cut_eol  char **fc, char **lc
     // slice off end of line comments, store in $eol
     // needed to insert semicolon before comments
-    char *broil = resub(*fc,"([ \t]*/\\*[^/]*\\*/)?[\\ \n\t]*$|[/]{2}.*$", "")
+    char *broil = resub  *fc,"([ \t]*/\\*[^/]*\\*/)?[\\ \n\t]*$|[/]{2}.*$", ""
     *lc = *fc + strlen  broil  ;free  broil
     strcpy  eol, *lc  ;**lc = '\0'; (*lc)--
 char *prepend  char *dest, char *src

@@ -28,7 +28,7 @@ void macros(char **s){
     else{
         // put non-function macros here
         // main becomes int main()
-        if(!has_main && !strcmp(*s, "main")){
+        if(!(has_main || strcmp(*s, "main"))){
             has_main = strcpy(*s, "int main(int argc, char **argv)");}
         int max;
         #define SUB(match, rep)                     \

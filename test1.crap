@@ -16,5 +16,5 @@ int y
     * oink  55  */
 
 main
-    repeat  2
-        puts  "Test passed."
+    repeat  4, t
+        printf  "Test %i\n", t_index
