@@ -35,13 +35,17 @@ void macros  char **s
         max = MAX_REPLACE                           \
         while  max-- && (tmp=resub(*s, match, rep)) \
             strcpy  *s, tmp  ;free  tmp
-        // for..x..in..y
-        SUB("for\\s*(\\w+)\\s+in\\s+(\\w+)\\s*(\\[([^]:]+)?:?([^]:]+)?\\])?",
-          "for(size_t \1_index=\4+0,\2_len=\5+0?\5+1:sizeof \2/sizeof \2[0];"
+        // for pointer in array[[start][:end]] (may be negative)
+        SUB("for\\s*(\\w+)\\s+in\\s+(\\w+)\\s*(\\[(-[^]:]+)?([^]:]+)?:?"
+        "(-[^]:]+)?([^]:]+)?\\])?",
+          "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4:\5+0,"
+          "\2_len=\7+0?\7+1:sizeof \2/sizeof \2[0]\6;"
           "\1_index<\2_len&&(\1=\2[\1_index]);\1_index++)")
-        // while..x..in..y
-        SUB("while\\s*(\\w+)\\s+in\\s+(\\w+)\\s*(\\[([^]:]+)?:?([^]:]+)?\\])?",
-          "for(size_t \1_index=\4+0,\2_len=\5+0?\5+1:sizeof \2/sizeof \2[0];"
+        // while pointer in array[[start][:end]] (may be negative)
+        SUB("while\\s*(\\w+)\\s+in\\s+(\\w+)\\s*(\\[(-[^]:]+)?([^]:]+)?:?"
+        "(-[^]:]+)?([^]:]+)?\\])?",
+          "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4:\5+0,"
+          "\2_len=\7+0?\7+1:sizeof \2/sizeof \2[0]\6;"
           "\1_index<\2_len&&\2[\1_index]&&(\1=\2[\1_index]);\1_index++)")
         // double-space = parenthesis
         SUB("(\\w)  (( ?[^ \"]+| ?\".*\")*) ?([ ;]|$)", "\1(\2)\4")

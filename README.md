@@ -110,24 +110,27 @@ In other words, please supply functions with `return` values.
 optional `mylabel` attribute causes `_index` to take on a unique name, 
 `mylabel_index` so nested `repeat` loops are possible.
 
-**`for pointer in array[[start][:end]]`** Loops over `array`, assigning up 
-to `end` elements to supplied, predefined `pointer`, in turn. The `pointer` 
-and `array` labels help declare local variables, `pointer_index` and 
-`array_len` which can not be negative and are not available outside the 
-loop. Note that `array_len` is 1 + the optional `[:end]` argument which, if 
-supplied, will probably not be the real length of the array. If no optional 
-`[:end]` is provided, `crap` will calculate `array_len` using the `sizeof` 
-operator, stepping through all remaining elements, including `NULL` or 
-`undefined` elements. And finally, `[:end]` (or a sentinel `break` inside 
-the loop) will be necessary for dynamic arrays and other arbitrary-length 
-data, or expect "endless" trouble!
+**`for pointer in array[[start][:end]]`** Loops over `array`, assigning 
+each element to the supplied, predefined `pointer`, in turn. An optional 
+`start` and `end` may be preceded with a `-` sign, which will be subtracted 
+from the last element (calculated with `sizeof`, so negative indexes will 
+not work with dynamic arrays). The `pointer` and `array` labels help 
+declare local unsigned variables, `pointer_index` and `array_len` which are 
+not available outside the loop. Note that `array_len` is 1 + the optional 
+`[:end]` argument which, if supplied, will probably not be the real length 
+of the array. If no optional `[:end]` is provided, `crap` will calculate 
+`array_len` using the `sizeof` operator, stepping through all remaining 
+elements, including `NULL` or `undefined` elements. And finally, a 
+non-negative `[:end]` *is* necessary for dynamic arrays to prevent out of 
+bounds conditions.
 
 **`while pointer in array[[start][:end]]`** *Exactly* like `for pointer in 
 array` but with an additional dereference to quit at the first sign of 
 `NULL` data. Typically, a plain `while(*data)` statement is sufficient to 
 loop through `NULL`-terminated structures. But this extension inherits the 
 safer end limits, indexing, and slight speed penalty, of the above `for` 
-loop.
+loop. Again, a non-negative `[:end]` is necessary for dynamic arrays to 
+prevent out of bounds conditions.
 
 **`unless`** Another way to write `if(!())`.
 
@@ -135,6 +138,19 @@ loop.
 
 ```
 unless  wrong  ; do  something()  until  breaktime
+
+Array indexes start at [zero].
+This array has 5 indexes, numbered 0 - 4.
+  0 < 5: zero
+  1 < 5: one
+  2 < 5: two
+  3 < 5: three
+  4 < 5: four
+words[1:3] = { "one", "two", "three" }
+words[2:] = { "two", "three", "four" }
+words[:2] = { "zero", "one", "two" }
+words[:-3] = { "zero", "one" }
+words[-3:-1] = { "two", "three" }
 ```
 
 **Custom rules** Crap's `#replace /pattern/replacement/` macros support up 
