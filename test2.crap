@@ -46,5 +46,5 @@ main
     for word in words[:-3]
         printf  " \"%s\"%s", word, word_index == 1?" }\n":","
     printf  "words[-3:-1] = {"
-    for word in words[-3:-1]
+    for word in words[ -3 : -1 ]
         printf  " \"%s\"%s", word, word_index == 3?" }\n":","

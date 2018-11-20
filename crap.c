@@ -29,22 +29,22 @@ void macros(char **s){
         // put keyword macros here
         // main becomes int main()
         if(!(has_main || strcmp(*s, "main"))){
-            has_main = strcpy(*s, "int main(int argc, char **argv)");}
+            has_main = strcpy(*s, "int main(int argc, char **argv, char** env)");}
         int max;
         #define SUB(match, rep)                     \
         max = MAX_REPLACE;                           \
         while(max-- && (tmp=resub(*s, match, rep))){ \
             strcpy(*s, tmp) ;free(tmp);}
         // for pointer in array[[start][:end]] (may be negative)
-        SUB("for\\s*(\\w+)\\s+in\\s+(\\w+)\\s*(\\[(-[^]:]+)?([^]:]+)?:?"
-        "(-[^]:]+)?([^]:]+)?\\])?",
-          "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4:\5+0,"
+        SUB("for\\s*(\\w+)\\s+in\\s+(\\w+)\\s*(\\[\\s*(-[^]:]+)?([^]:]+)?"
+          "\\s*:?\\s*(-[^]:]+)?([^]:]+)?\\s*\\])?",
+          "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4-1:\5+0,"
           "\2_len=\7+0?\7+1:sizeof \2/sizeof \2[0]\6;"
           "\1_index<\2_len&&(\1=\2[\1_index]);\1_index++)");
         // while pointer in array[[start][:end]] (may be negative)
-        SUB("while\\s*(\\w+)\\s+in\\s+(\\w+)\\s*(\\[(-[^]:]+)?([^]:]+)?:?"
-        "(-[^]:]+)?([^]:]+)?\\])?",
-          "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4:\5+0,"
+        SUB("while\\s*(\\w+)\\s+in\\s+(\\w+)\\s*(\\[\\s*(-[^]:]+)?([^]:]+)?"
+          "\\s*:?\\s*(-[^]:]+)?([^]:]+)?\\s*\\])?",
+          "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4-1:\5+0,"
           "\2_len=\7+0?\7+1:sizeof \2/sizeof \2[0]\6;"
           "\1_index<\2_len&&\2[\1_index]&&(\1=\2[\1_index]);\1_index++)");
         // double-space = parenthesis

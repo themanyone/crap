@@ -112,7 +112,7 @@ optional `mylabel` attribute causes `_index` to take on a unique name,
 
 **`for pointer in array[[start][:end]]`** Loops over `array`, assigning 
 each element to the supplied, predefined `pointer`, in turn. An optional 
-`start` and `end` may be preceded with a `-` sign, which will be subtracted 
+`start` and `end` may be preceded with a `-` sign, which means subtracted 
 from the last element (calculated with `sizeof`, so negative indexes will 
 not work with dynamic arrays). The `pointer` and `array` labels help 
 declare local unsigned variables, `pointer_index` and `array_len` which are 
@@ -121,8 +121,8 @@ not available outside the loop. Note that `array_len` is 1 + the optional
 of the array. If no optional `[:end]` is provided, `crap` will calculate 
 `array_len` using the `sizeof` operator, stepping through all remaining 
 elements, including `NULL` or `undefined` elements. And finally, a 
-non-negative `[:end]` *is* necessary for dynamic arrays to prevent out of 
-bounds conditions.
+non-negative `[:end]` must be supplied for dynamic (malloc'd) objects which 
+are subject to change. How could `crap` calculate such things?
 
 **`while pointer in array[[start][:end]]`** *Exactly* like `for pointer in 
 array` but with an additional dereference to quit at the first sign of 
@@ -131,6 +131,12 @@ loop through `NULL`-terminated structures. But this extension inherits the
 safer end limits, indexing, and slight speed penalty, of the above `for` 
 loop. Again, a non-negative `[:end]` is necessary for dynamic arrays to 
 prevent out of bounds conditions.
+
+Note that `for __ in __` and `while __ in __` are currently the only places 
+where negative or unspecified indexes make sense, and then only with data 
+types specifically declared as an array such as, but not limited to `int 
+w[]...` or `char s[][30]`. As with C, the first array length does not need 
+to be specified in the declaration.
 
 **`unless`** Another way to write `if(!())`.
 
@@ -147,10 +153,10 @@ This array has 5 indexes, numbered 0 - 4.
   3 < 5: three
   4 < 5: four
 words[1:3] = { "one", "two", "three" }
-words[2:] = { "two", "three", "four" }
-words[:2] = { "zero", "one", "two" }
-words[:-3] = { "zero", "one" }
-words[-3:-1] = { "two", "three" }
+words[ 2:] = { "two", "three", "four" }
+words[ :2] = { "zero", "one", "two" }
+words[ :-3] = { "zero", "one" }
+words[ -3 : -1 ] = { "one", "two", "three" }
 ```
 
 **Custom rules** Crap's `#replace /pattern/replacement/` macros support up 
@@ -158,9 +164,9 @@ to `\7` octal backref substitutions almost like `sed` scripts. They are no
 replacement for `sed`, nor do they supersede other preprocessor directives. 
 But they could change things up. Up to 100 replacements per line, defined 
 in `crap.h`. Rules may be added to `crap`'s source code for all users, or 
-embedded into individual transaction units where desired. Embedded 
-`#replace` rules do not persist across transaction units, so do not put 
-them in headers and expect them to work everywhere.
+embedded into individual `crap` files where desired. Embedded `#replace` 
+rules do not cross file boundaries, so do not put them in headers and 
+expect them to work elsewhere.
 
 **What isn't `crap`?** The C programming language. Compilers like the Gnu C 
 Compiler (GCC), TinyCC, most other free software. Mention of tools and 
