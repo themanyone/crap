@@ -31,7 +31,7 @@ After processing, it becomes more or less standard C.
 
 ```
 #include <stdio.h>
-int main(int argc, char **argv){
+int main(int argc, char **argv, char** env){
     for(size_t _=5;_--;){
         puts ("hello world");
     return 0;
@@ -74,9 +74,10 @@ print to, or read from, consoles or files in a standard way. See
 `test2.crap` for a demo that uses `"asprintf.h"` for string and array 
 manipulation.
 
-**Expand `main` and return**. The optional `main` macro, when it occurs all by 
-itself, expands to `int main(int argc, char **argv)`. Using `main` causes 
-`return 0` to be appended, so make sure `main` is the last function in the file.
+**Expand `main` and return**. The optional `main` macro, when it occurs all 
+by itself, expands to `int main(int argc, char **argv, char** env)`. Using 
+`main` causes `return 0` to be appended, so make sure `main` is the last 
+function in the file.
 
 **Curly brackets (braces).** Braces magically appear around indented 
 code blocks of four spaces or a tab (the default, as defined in 

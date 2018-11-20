@@ -134,7 +134,7 @@ int crap(char *name){
     decorate(&b) ;puts(b);
     macro_free(&maclist);
     return 0;}
-int main(int argc, char **argv){
+int main(int argc, char **argv, char** env){
     if(argc < 2) puts("usage: crap infile [> outfile]");
     else return crap(argv[1]);
     return 0;
