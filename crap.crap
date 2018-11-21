@@ -14,19 +14,21 @@ suitability of this software for any purpose. It is provided "as is"
 without express or implied warranty.
 */
 #include "crap.h"
+#include "join.h"
 struct
-    char to[7], end[2]
+    char to[7], end[3]
 skip = {{'\0'}, {'\2'}}
 char *has_main=NULL, eol[255]={'\0'}
 struct macro *maclist = NULL
 void macros  char **s
     char *tmp, *match, *replace
-    // check if we are done skipping over a multiline comment
+    // check if we are done skipping over a multiline comment, triple-quote
     if  skip.to[0] && (tmp = resub(*s, skip.to, skip.end))
         free  tmp
         skip.to[0] = '\0', skip.end[0] = 2
     else
         // put keyword macros here
+        // TODO: exclude content inside strings
         // main becomes int main()
         unless  has_main || strcmp(*s, "main")
             has_main = strcpy  *s, "int main(int argc, char **argv, char** env)"
@@ -35,18 +37,26 @@ void macros  char **s
         max = MAX_REPLACE                           \
         while  max-- && (tmp=resub(*s, match, rep)) \
             strcpy  *s, tmp  ;free  tmp
+        // array[:] notation now works most places (do not free)
+        //   \1        \2         [ \3      :    \4     ]   \5
+        SUB("([(*,=]\\s*|  )([^[\" ]+)\\s*\\[(\\w*):(\\w*)\\]([[);, ]+|$)",
+          "\1({void *t;typeof(\2) tmp = {0};"
+          "size_t len = sizeof \2 / sizeof \2[0];"
+          "size_t start= \3+0>=0?\3+0:\3 +len - 1;"
+          "size_t end = \4+0?\4:len\4;"
+          "for(size_t i=start;i<end;i++) tmp[i-start]=\2[i]; tmp;})\5")
         // for pointer in array[[start][:end]] (may be negative)
-        SUB("for\\s*(\\w+)\\s+in\\s+(\\w+)\\s*(\\[\\s*(-[^]:]+)?([^]:]+)?"
+        SUB("for\\s*(\\w+)\\s+in\\s+([^[\" ]+)\\s*(\\[\\s*(-[^]:]+)?([^]:]+)?"
           "\\s*:?\\s*(-[^]:]+)?([^]:]+)?\\s*\\])?",
           "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4-1:\5+0,"
-          "\2_len=\7+0?\7+1:sizeof \2/sizeof \2[0]\6;"
-          "\1_index<\2_len&&(\1=\2[\1_index]);\1_index++)")
+          "\1_end=\7+0?\7:sizeof \2/sizeof \2[0]\6;"
+          "\1_index<\1_end&&(\1=\2[\1_index]);\1_index++)")
         // while pointer in array[[start][:end]] (may be negative)
-        SUB("while\\s*(\\w+)\\s+in\\s+(\\w+)\\s*(\\[\\s*(-[^]:]+)?([^]:]+)?"
+        SUB("while\\s*(\\w+)\\s+in\\s+([^[\" ]+)\\s*(\\[\\s*(-[^]:]+)?([^]:]+)?"
           "\\s*:?\\s*(-[^]:]+)?([^]:]+)?\\s*\\])?",
           "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4-1:\5+0,"
-          "\2_len=\7+0?\7+1:sizeof \2/sizeof \2[0]\6;"
-          "\1_index<\2_len&&\2[\1_index]&&(\1=\2[\1_index]);\1_index++)")
+          "\1_end=\7+0?\7:sizeof \2/sizeof \2[0]\6;"
+          "\1_index<\1_end&&\2[\1_index]&&(\1=\2[\1_index]);\1_index++)")
         // double-space = parenthesis
         SUB("(\\w)  (( ?[^ \"]+| ?\".*\")*) ?([ ;]|$)", "\1(\2)\4")
 
@@ -59,10 +69,15 @@ void macros  char **s
         // unless
         SUB("unless\\s*\\((.+)\\)", "if(!(\1))")
         // skip over multi-line comments
-        if  (tmp = resub(*s,"(/\\*)(.*[^/]$)", "\1\2"))
+        if  (tmp = resub(*s,"(/\\*)(.*[^/)]$)", "\1\2"))
             strcpy  skip.to, "(\\*/)"
             strcpy  skip.end, "\1"
             free  tmp  ;return
+        // FIXME: triple quotes
+        if  (tmp = resub(*s,"\"\"\"(([^\"]+\"?)*)", "\"\2"))
+            strcpy  skip.to, "(.*)\"\"\""
+            strcpy  skip.end, "\1\""
+            strcpy  *s, tmp  ;free  tmp  ;return
         // apply embedded macros
         for  struct macro *m = maclist;m ;m = m->next
             SUB  m->match, m->replace
@@ -109,9 +124,9 @@ void decorate  char **s
     if  *(skip.to) || (*(skip.end) && --(*(skip.end)))  return
     lc = *s + strlen(*s) - 1; if  lc < *s  return
     // skip semicolon on lines ending with punc.
-    if  strchr("<>;,.\"=*/&|^!", *lc)  *(skip.end) = 1
+    if  strchr(" <>;,.\"=*/&|^!", *lc)  *(skip.end) = 1
     // skip semicolon on blank lines
-    if  strlen(fc) < 3  *(skip.end) = 1
+    if  strlen(fc) < 1  *(skip.end) = 1
     // skip semicolon on defines
     if  *fc=='#'  *(skip.end) = 1
     // add braces
@@ -129,9 +144,10 @@ int crap  char *name
         if  fgets(b, MAX_LINE_LEN, f)
             decorate  &b  ;printf  "%s", b
     fclose  f
-    if  has_main  strcpy  b, "    return 0;\n}\n"
-    else strcpy  b, "    \n}\n"
-    decorate  &b  ;puts  b
+    unless  strstr(b, "#endif")
+        if  has_main  strcpy  b, "    return 0;\n}\n"
+        else strcpy  b, "    \n}\n"
+        decorate  &b  ;puts  b
     macro_free  &maclist
     return 0
 main

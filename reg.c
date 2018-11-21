@@ -14,6 +14,7 @@ suitability of this software for any purpose. It is provided "as is"
 without express or implied warranty.
 */
 #include "reg.h"
+//TODO: Needs updated to support octal up to \037
 char *unescape_octal(char *replace){
     char pat[3]="\\8"; while(--pat[1] >= '0'){
         char *j; while((j = strstr(replace, pat))){
@@ -47,26 +48,28 @@ void macro_free(struct macro **sm){
         free(*sm) ;*sm = next;}
     return;}
 char *resub(const char *text, const char *pattern, const char *replacement){
-    // text replacement with up to \7 octal backref substitutions
+    // text replacement with up to \37 octal backref substitutions
     int status;
     char *output = calloc(100,1);
-    regmatch_t pm[8];
+    regmatch_t pm[NMATCH];
     regex_t re;
     if (!(status = regcomp(&re, pattern, REG_EXTENDED)) &&
-      !(status = regexec(&re, text, 8, pm, 0))){
+      !(status = regexec(&re, text, NMATCH, pm, 0))){
         int i, len;
-        CAT(output, text, pm[0].rm_so);
+        STRNCAT(output, text, pm[0].rm_so);
+        char oct[32]={};
+        for(int x=32;--x;) oct[x-1]=x;
         while(1){
-            len = strcspn(replacement, "\1\2\3\4\5\6\7");
+            len = strcspn(replacement, oct);
             // append output up-to backref
-            CAT(output, replacement, len);
+            STRNCAT(output, replacement, len);
             if(!(i = replacement[len])) break;
             replacement += len + 1;
             // append pattern match pm[i]
             len = pm[i].rm_eo - pm[i].rm_so;
-            CAT(output, text+pm[i].rm_so, len);}
+            STRNCAT(output, text+pm[i].rm_so, len);}
         text += pm[0].rm_eo; len = strlen(text);
-        CAT(output, text, len);}
+        STRNCAT(output, text, len);}
     else if(regerror(status, &re, output, 99)){
         free(output);
         return NULL;}

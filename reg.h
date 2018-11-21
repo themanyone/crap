@@ -6,11 +6,17 @@
 #include <string.h>
 #include <regex.h>
 
-#define CAT(buf, s, len) 		\
-do { size_t sb = strlen(buf);		\
+// Our implementation limit is 31 octal backrefs
+// because chr(32) is a space, and we need that!
+#define NMATCH 31
+
+// Concatenate part of s onto buf.
+// We only want part of s, not the whole string.
+#define STRNCAT(buf, s, len) 		\
+({ size_t sb = strlen(buf);			\
 buf = realloc(buf, sb + len + 1); 	\
-*(buf + sb + len) = '\0'; 		\
-memcpy(buf + sb, s, len);}while(0);
+*(buf + sb + len) = '\0'; 			\
+memcpy(buf + sb, s, len); })
 
 struct macro{
     char *match, *replace;

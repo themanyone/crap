@@ -1,0 +1,1 @@
+./bootstrap_test test2.crap|tcc -run -

@@ -3,48 +3,51 @@
 #endif
 // test2.crap example and tests
 #include "asprintf.h"
-/** Crap's #replace /pattern/replacement/ directive extends
+
+/** Crap's #replace 
+/pattern/replacement/ directive extends
 the familiar cpp directives, and may also modify them!
 Up to 100 replacements per line, defined in `crap.h`.*/
 #replace /print\((.*)\)/puts(\1)/
 main
 	// declare pointers and arrays just like C
-	char *word, words[][10] = { "zero", "one", "two", "three", "four" }
+	char *word, *words[] = { "zero", "one", "two", "three", "four" }
 
 	// The asprintf() macro is alloca() + sprintf().
 	// Do not attempt to free or return the resulting pointer.
 	// (Use msprintf() for that.)
 	asprintf  word, "Array indexes start at [%s].", words[0]
-	print  word  // temporary local stack space.
+	print  word  ;// temporary local stack space.
 
 	// Macros permit declaring pointer at time of use.
 	// This follows the design pattern of least duplication.
 	char * asprintf  blah, "This array has %i indexes, numbered 0 - %i.", len(words), len(words)-1
-	print  blah  // the newly-declared pointer
+	print  blah  ;// the newly-declared pointer
 
 	// The for..in pattern loops over arrays with a pointer.
 	// Use any previously-declared pointer for "word".
 	for word in words
 		// _index and _len are local loop variables.
 		// They do not exist outside the loop.
-		printf  "  %i < %i: %s\n", word_index, words_len, word
+		printf  "  %i < %i: %s\n", word_index, word_end, word
 
     // for..in also permits array[[start][:end]] pattern
     // words [1:3] ...             from words[1] to words[3] inclusive
     // words [2] or words[2:] ...  from words[2] to words[len - 1]
     // words [:2] ...              from words[0] to words[2]
-    printf  "words[1:3] = {"
-    for word in words[1:3]
+    printf  "words[1:4] = {"
+    for word in words[1:4]
         printf  " \"%s\"%s", word, word_index == 3?" }\n":","
     printf  "words[2:] = {"
     for word in words[2]
         printf  " \"%s\"%s", word, word_index == 4?" }\n":","
-    printf  "words[:2] = {"
-    for word in words[:2]
+    printf  "words[2:][1] = \"%s\"\n", words[2:][1]
+    printf  "words[:3] = {"
+    for word in words[:3]
         printf  " \"%s\"%s", word, word_index == 2?" }\n":","
     printf  "words[:-3] = {"
     for word in words[:-3]
         printf  " \"%s\"%s", word, word_index == 1?" }\n":","
     printf  "words[-3:-1] = {"
     for word in words[ -3 : -1 ]
-        printf  " \"%s\"%s", word, word_index == 3?" }\n":","
+        printf  " \"%s\"%s", word, word_index == word_end - 1?" }\n":","
