@@ -42,19 +42,19 @@ void macros(char **s){
         SUB("([(*,=]\\s*|  )([^[\" ]+)\\s*\\[(\\w*):(\\w*)\\]([[);, ]+|$)",
           "\1({void *t;typeof(\2) tmp = {0};"
           "size_t len = sizeof \2 / sizeof \2[0];"
-          "size_t start= \3+0>=0?\3+0:\3 +len - 1;"
+          "size_t start= \3+0>=0?\3+0:\3 +len;"
           "size_t end = \4+0?\4:len\4;"
           "for(size_t i=start;i<end;i++) tmp[i-start]=\2[i]; tmp;})\5");
         // for pointer in array[[start][:end]] (may be negative)
         SUB("for\\s*(\\w+)\\s+in\\s+([^[\" ]+)\\s*(\\[\\s*(-[^]:]+)?([^]:]+)?"
           "\\s*:?\\s*(-[^]:]+)?([^]:]+)?\\s*\\])?",
-          "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4-1:\5+0,"
+          "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4:\5+0,"
           "\1_end=\7+0?\7:sizeof \2/sizeof \2[0]\6;"
           "\1_index<\1_end&&(\1=\2[\1_index]);\1_index++)");
         // while pointer in array[[start][:end]] (may be negative)
         SUB("while\\s*(\\w+)\\s+in\\s+([^[\" ]+)\\s*(\\[\\s*(-[^]:]+)?([^]:]+)?"
           "\\s*:?\\s*(-[^]:]+)?([^]:]+)?\\s*\\])?",
-          "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4-1:\5+0,"
+          "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4:\5+0,"
           "\1_end=\7+0?\7:sizeof \2/sizeof \2[0]\6;"
           "\1_index<\1_end&&\2[\1_index]&&(\1=\2[\1_index]);\1_index++)");
         // double-space = parenthesis

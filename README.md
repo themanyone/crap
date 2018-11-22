@@ -108,27 +108,27 @@ In other words, please supply functions with `return` values.
 
 ## Crap language extensions
 
-**`repeat`** The `repeat n[, mylabel]` construct loops n times. A local 
-`_index` variable is created that may not be accessed outside the loop. An 
-optional `mylabel` attribute causes `_index` to take on a unique name, 
-`mylabel_index` so nested `repeat` loops are possible.
+**`repeat`** The `repeat n[, mylabel]` constructor pastes a `for` loop into 
+the code to repeat `n` times. A local `_index` variable is defined that may 
+not be accessed outside the loop. An optional `mylabel` attribute causes 
+`_index` to take on a unique name, `mylabel_index` so nested `repeat` loops 
+are possible.
 
-**`for pointer in array[[start][:end]]`** Loops over `array`, assigning each 
-element to the supplied, predefined `pointer`, in turn. An optional `start` 
-and `end` may be preceded with a `-` sign, which means subtracted from the 
-last element (calculated with `sizeof`, so negative indexes will not work 
-with dynamic arrays). The `pointer` and `array` labels help declare local 
-`unsigned int`, `pointer_index` and `pointer_end` which are not available 
-outside the loop. Note that `pointer_end` *is* the optional `[:end]` 
-argument (or `length`) which is "one past" the last element. The `end`, if 
-supplied, will probably not be the real length of the array. If no optional 
-`[:end]` is provided, `crap` will calculate `pointer_end` using the `sizeof` 
-operator, stepping through all remaining elements, including `NULL` or 
-`undefined` elements. And finally, a non-negative `[:end]` must be supplied 
-for dynamic (malloc'd) objects which are subject to change. How could `crap` 
-calculate such things before compilation?
+**`for mylabel in array[[start][:end]]`** Loops over `array`, assigning each 
+element to the supplied, predefined variable (or pointer), in turn. An 
+optional `start` and `end` may be preceded with a `-` sign, which means 
+subtracted from the last element (calculated with `sizeof`, so negative indexes 
+will not work with dynamic arrays). The `mylabel` and `array` labels help 
+declare local unsigned variables, `mylabel_index` and `mylabel_end` which are 
+not available outside the loop. Note that `mylabel_end` is 1 + the optional 
+`[:end]` argument which, if supplied, will probably not be the real length of 
+the array. If no optional `[:end]` is provided, `crap` will calculate 
+`mylabel_end` using the `sizeof` operator, stepping through all remaining 
+elements, including `NULL` or `undefined` elements. And finally, a non-negative 
+`[:end]` must be supplied for dynamic (malloc'd) objects which are subject to 
+change. How could `crap` calculate such things before compilation?
 
-**`while pointer in array[[start][:end]]`** *Exactly* like `for pointer in 
+**`while mylabel in array[[start][:end]]`** *Exactly* like `for mylabel in 
 array` but with an additional dereference to quit at the first sign of 
 `NULL` data. Typically, a plain `while(*data)` statement is sufficient to 
 loop through `NULL`-terminated arrays. But this extension inherits the safer 
@@ -136,43 +136,39 @@ end limits, indexing, and slight speed penalty, of the above `for` loop.
 Again, a non-negative `[:end]` is necessary for dynamic arrays to prevent 
 out of bounds conditions.
 
-**`array[[start]:[end]]`** This particular style of array notation returns 
-a duplicate array, but with the same or fewer elements assigned to it. 
-Trying to use `[start:end]` notation on the resulting pointer with negative
- and unspecified indexes will get results based on the old lengths, which 
-might get confusing as the array gets passed around. `Crap` merely 
-rearranges source code. The programmer is responsible for keeping track of 
-runtime lengths and values!
+**`array[[start]:[end]]`** This particular style of array notation drops in 
+a code block that attempts to create a duplicate array, but with the same or 
+fewer elements assigned to it. Trying to use `[start:end]` notation on the 
+resulting array with negative and unspecified indexes will get results 
+based on the old lengths, which might get confusing as the array gets passed 
+around. `Crap` merely rearranges source code. The programmer is responsible 
+for keeping track of runtime lengths and values!
 
-Arrays may be initialized in a manner exactly like C: `int w[]={1,2,3,4,5}` 
-or `char *s[]={"this","and","that"}`. As with C, the first array length 
-does not need to be specified in the declaration.
+Arrays may be initialized in a manner exactly like C: `int w[]={1,2,3,4,5}` or 
+`char *s[]={"this","and","that"}`. The first array length does not need to be 
+specified in the declaration.
 
-Yes, our macros can walk through 2D arrays, but be sure to use the 
-appropriate type declaration. Think `int *row` is the right type of pointer
-  to loop over rows? Nope. What about `int *row[N]`? No again! That's an 
-`array[N] of pointer to int`. What we want is a pointer to array[N] of 
-int` , or `int (*row)[N]`. How crazy is that? We are doing our best with C'
-s goofy syntax.
-
-There is a handy program called [cdecl](https://cdecl.org/) that can 
-explain declarations and help design accessors.
+**More `crap` examples** Our code pastes can walk through multidimensional 
+arrays, but be sure to use the appropriate type declaration. In the 
+following example, the first loop uses a pointer because it's returning a 
+whole row. The inner loop, `j`, uses an `int` type because the innermost 
+type of the 2D array, the one we want to print, is `int`.
 
 ```
     int test_image[M][N]=
      {{1,2,3,4},
       {5,6,7,8},
-      {9,10,11,12}}, *j
-      
-    // (*yes)[look] at this!
-    (*row)[N]
-    
-    for row in test_image[:3]
-        for j in (*row)[:4]
-            printf  "%i%s ", j, j_index==3?"\n":","
+      {9,10,11,12}},
+
+    *i, j
+
+    for i in test_image
+        for j in i[:4] // specify :4 here 'cause `i` could point to anything
+            printf  "%i%s ", j, j_index==j_end-1?"\n":","
 ```
 
-The macros work with strings as well as any other data that can fit in an array.
+There is a handy program and website called [cdecl](https://cdecl.org/) that 
+explains C's type declarations.
 
 ```
 Array indexes start at [zero].
@@ -182,17 +178,19 @@ This array has 5 indexes, numbered 0 - 4.
   2 < 5: two
   3 < 5: three
   4 < 5: four
+
+Like Python, `:end` is 1-past the `last` element.
 words[1:4] = { "one", "two", "three" }
-words[2:] = { "two", "three", "four" }
-words[2:][1] = "three"
-words[:-3] = { "zero", "one" }
-words[-3:-1] = { "one", "two", "three" }
+words[ 2:] = { "two", "three", "four" }
+words[ :3] = { "zero", "one", "two" }
+words[ :-3] = { "zero", "one" }
+words[ -3 : -1 ] = { "two", "three" }
 ```
 
 **`unless`** Another way to write `if(!())`.
 
 **`until`** Shorthand for while(!()).
-
+    
 **Custom `crap`** Crap's `#replace /pattern/replacement/` macros support up 
 to `\7` octal backref substitutions almost like `sed` scripts. They are no 
 replacement for `sed`, nor do they supersede other preprocessor directives. 
@@ -202,12 +200,12 @@ embedded into individual `crap` files where desired. Embedded `#replace`
 rules do not cross file boundaries, so do not put them in headers and 
 expect them to work elsewhere.
 
-**What isn't `crap`?** The C programming language. Compilers like the Gnu C 
-Compiler (GCC), TinyCC, most other free software. Mention of tools and 
-technoligies is for information purposes and does not constitute endorsement 
-or affiliation. `Sed`, `awk`, `perl`, and `grep` have more robust regex 
-engines and are thoroughly tested, so use those instead of `crap` for 
-handling arbitrary data streams.
+**What isn't `crap`?** [The C programming language](http://c-faq.com/index.html). Compilers like the [Gnu C 
+Compiler](https://gcc.gnu.org/) (GCC), [TinyCC](https://repo.or.cz/tinycc.git), 
+most other free software. Mention of tools and technoligies is for information 
+purposes and does not constitute endorsement or affiliation. `Sed`, `awk`, 
+`perl`, and `grep` have more robust regex engines and are thoroughly tested, so 
+use those instead of `crap` for handling arbitrary data streams.
 
 ## Spreading `crap` around.
 

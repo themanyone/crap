@@ -14,9 +14,9 @@ MING=/usr/bin/i686-pc-mingw32-gcc
 CC=gcc
 
 %.c : %.crap
-	./crap "$<" > "$@"
+	crap "$<" > "$@"
 %.h : %.hh
-	./crap "$<" > "$@"
+	crap "$<" > "$@"
 %.o : %.c %.h
 	$(CC) $(CFLAGS) -c "$<" -o "$@" $(INCLUDES)
 % : %.o $(BUILD_LIBS)
