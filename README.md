@@ -69,6 +69,13 @@ move overly-indented blocks into separate functions or libraries.
 
 An extendable and growing set of rules turns `crap` code into C.
 
+**String mangling** The `crap` preprocessor is good at corrupting strings 
+because it has difficulty determining what is inside or outside a string. 
+It's actually a feature. We like having our strings modified. Any strings 
+that you do not want nuked on their way to becoming C source code should go 
+into another file or header and `#include` them. It is good programming 
+practice to put important data and resources outside the compiled source.
+
 **Includes.** Like C, Crap programs `#include <stdio.h>` if they want to 
 print to, or read from, consoles or files in a standard way. See 
 `test2.crap` for a demo that uses `"asprintf.h"` for string and array 
@@ -163,6 +170,10 @@ whole row. The inner loop, `j`, uses an `int` type because the innermost
 type of the 2D array, the one we want to print, is `int`.
 
 ```
+#include <stdio.h>
+#define M 3
+#define N 4
+main
     int test_image[M][N]=
      {{1,2,3,4},
       {5,6,7,8},
