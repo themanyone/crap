@@ -106,7 +106,15 @@ receiving unwanted semicolons.
 **Return.** Again, `crap` adds a final `return 0` only when `main` is used. 
 In other words, please supply functions with `return` values.
 
-## Crap language extensions
+## `Crap` language extensions.
+
+### Decisions.
+
+**`unless`** Another way to write `if(!())`.
+
+**`until`** Shorthand for while(!()).
+
+### Pasted loops.
 
 **`repeat`** The `repeat n[, mylabel]` constructor pastes a `for` loop into 
 the code to repeat `n` times. A local `_index` variable is defined that may 
@@ -186,11 +194,8 @@ words[ :3] = { "zero", "one", "two" }
 words[ :-3] = { "zero", "one" }
 words[ -3 : -1 ] = { "two", "three" }
 ```
+### Embedded `crap` macros.
 
-**`unless`** Another way to write `if(!())`.
-
-**`until`** Shorthand for while(!()).
-    
 **Custom `crap`** Crap's `#replace /pattern/replacement/` macros support up 
 to `\7` octal backref substitutions almost like `sed` scripts. They are no 
 replacement for `sed`, nor do they supersede other preprocessor directives. 
