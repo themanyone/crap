@@ -129,19 +129,20 @@ not be accessed outside the loop. An optional `mylabel` attribute causes
 `_index` to take on a unique name, `mylabel_index` so nested `repeat` loops 
 are possible.
 
-**`for mylabel in array[[start][:end]]`** Loops over `array`, assigning each 
-element to the supplied, predefined variable (or pointer), in turn. An 
+**`for mylabel in array[[start]:[end]]`** Loops over `array`, assigning 
+each element to the supplied, predefined variable (or pointer), in turn. An 
 optional `start` and `end` may be preceded with a `-` sign, which means 
-subtracted from the last element (calculated with `sizeof`, so negative indexes 
-will not work with dynamic arrays). The `mylabel` and `array` labels help 
-declare local unsigned variables, `mylabel_index` and `mylabel_end` which are 
-not available outside the loop. Note that `mylabel_end` is 1 + the optional 
-`[:end]` argument which, if supplied, will probably not be the real length of 
-the array. If no optional `[:end]` is provided, `crap` will calculate 
-`mylabel_end` using the `sizeof` operator, stepping through all remaining 
-elements, including `NULL` or `undefined` elements. And finally, a non-negative 
-`[:end]` must be supplied for dynamic (malloc'd) objects which are subject to 
-change. How could `crap` calculate such things before compilation?
+subtracted from the end (1-past the last element as calculated with 
+`sizeof`, so negative indexes can not work with dynamic arrays). The 
+`mylabel` and `array` labels help declare local unsigned variables, 
+`mylabel_index` and `mylabel_end` which are not available outside the loop. 
+Note that `mylabel_end` is 1 + the optional `[:end]` argument which, if 
+supplied, will probably not be the real length of the array. If no optional 
+`[:end]` is provided, `crap` will calculate `mylabel_end` using the 
+`sizeof` operator, stepping through all remaining elements, including 
+`NULL` or `undefined` elements. And finally, a non-negative `[:end]` must 
+be supplied for dynamic (malloc'd) objects which are subject to change. How 
+could `crap` guess such things by merely inspecting the source code?
 
 **`while mylabel in array[[start][:end]]`** *Exactly* like `for mylabel in 
 array` but with an additional dereference to quit at the first sign of 
@@ -151,13 +152,17 @@ end limits, indexing, and slight speed penalty, of the above `for` loop.
 Again, a non-negative `[:end]` is necessary for dynamic arrays to prevent 
 out of bounds conditions.
 
-**`array[[start]:[end]]`** This particular style of array notation drops in 
-a code block that attempts to create a duplicate array, but with the same or 
-fewer elements assigned to it. Trying to use `[start:end]` notation on the 
-resulting array with negative and unspecified indexes will get results 
-based on the old lengths, which might get confusing as the array gets passed 
-around. `Crap` merely rearranges source code. The programmer is responsible 
-for keeping track of runtime lengths and values!
+**`array[[start]:[end]]`** Using `somevar = array[start:end]` drops in a 
+[non-standard GNU 
+extension](https://stackoverflow.com/questions/34476003/are-code-blocks-inside-parenthesis-in-c-c-legal-and-can-mscl-compile-it) 
+code block at that location. Although putting block statements inside 
+parenthesis is not part of the ISO C standard, it works with many compilers 
+without warnings lately. The code creates a duplicate array, but with the 
+same or fewer elements assigned to it. Trying to use `[start:end]` notation 
+on the resulting array with negative and unspecified indexes will get 
+results based on the old lengths, which might get confusing as the array 
+gets passed around. `Crap` merely rearranges source code. The programmer is 
+responsible for keeping track of runtime lengths and values!
 
 Arrays may be initialized in a manner exactly like C: `int w[]={1,2,3,4,5}` or 
 `char *s[]={"this","and","that"}`. The first array length does not need to be 

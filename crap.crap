@@ -38,7 +38,7 @@ void macros  char **s
         while  max-- && (tmp=resub(*s, match, rep)) \
             strcpy  *s, tmp  ;free  tmp
         // array[:] notation now works most places (do not free)
-        //   \1        \2         [ \3      :    \4     ]   \5
+        // this is a non-standard GNU extension
         SUB("([(*,=]\\s*|  )([^[\" ]+)\\s*\\[(\\w*):(\\w*)\\]([[);, ]+|$)",
           "\1({void *t;typeof(\2) tmp = {0};"
           "size_t len = sizeof \2 / sizeof \2[0];"
@@ -47,13 +47,13 @@ void macros  char **s
           "for(size_t i=start;i<end;i++) tmp[i-start]=\2[i]; tmp;})\5")
         // for pointer in array[[start][:end]] (may be negative)
         SUB("for\\s*(\\w+)\\s+in\\s+([^[\" ]+)\\s*(\\[\\s*(-[^]:]+)?([^]:]+)?"
-          "\\s*:?\\s*(-[^]:]+)?([^]:]+)?\\s*\\])?",
+          "\\s*:\\s*(-[^]:]+)?([^]:]+)?\\s*\\])?",
           "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4:\5+0,"
           "\1_end=\7+0?\7:sizeof \2/sizeof \2[0]\6;"
           "\1_index<\1_end&&(\1=\2[\1_index]);\1_index++)")
         // while pointer in array[[start][:end]] (may be negative)
         SUB("while\\s*(\\w+)\\s+in\\s+([^[\" ]+)\\s*(\\[\\s*(-[^]:]+)?([^]:]+)?"
-          "\\s*:?\\s*(-[^]:]+)?([^]:]+)?\\s*\\])?",
+          "\\s*:\\s*(-[^]:]+)?([^]:]+)?\\s*\\])?",
           "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4:\5+0,"
           "\1_end=\7+0?\7:sizeof \2/sizeof \2[0]\6;"
           "\1_index<\1_end&&\2[\1_index]&&(\1=\2[\1_index]);\1_index++)")

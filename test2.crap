@@ -39,7 +39,7 @@ main
     for word in words[1:4]
         printf  " \"%s\"%s", word, word_index == 3?" }\n":","
     printf  "words[2:] = {"
-    for word in words[2]
+    for word in words[2:]
         printf  " \"%s\"%s", word, word_index == 4?" }\n":","
     printf  "words[2:][1] = \"%s\"\n", words[2:][1]
     printf  "words[:3] = {"
