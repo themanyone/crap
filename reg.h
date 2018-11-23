@@ -12,11 +12,12 @@
 
 // Concatenate part of s onto buf.
 // We only want part of s, not the whole string.
+// Null-terminate AND realloc makes s bigger
 #define STRNCAT(buf, s, len) 		\
-({ size_t sb = strlen(buf);			\
+{ size_t sb = strlen(buf);			\
 buf = realloc(buf, sb + len + 1); 	\
 *(buf + sb + len) = '\0'; 			\
-memcpy(buf + sb, s, len); })
+memcpy(buf + sb, s, len); }
 
 struct macro{
     char *match, *replace;

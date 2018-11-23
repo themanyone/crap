@@ -51,3 +51,7 @@ main
     printf  "words[-3:-1] = {"
     for word in words[ -3 : -1 ]
         printf  " \"%s\"%s", word, word_index == word_end - 1?" }\n":","
+    char c
+    for c in words[2]
+        putchar  c
+    putchar  '\n'

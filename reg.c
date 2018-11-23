@@ -14,12 +14,15 @@ suitability of this software for any purpose. It is provided "as is"
 without express or implied warranty.
 */
 #include "reg.h"
-//TODO: Needs updated to support octal up to \037
-char *unescape_octal(char *replace){
-    char pat[3]="\\8"; while(--pat[1] >= '0'){
-        char *j; while((j = strstr(replace, pat))){
-            *j++ = pat[1]-'0'; while((*j = *(j+1))) j++;}}
-    return replace;}
+char *unescape_backref(char *ss){
+    char *s = ss, *e = strrchr(s, '\0');
+    while((s+=strcspn(s, "\\")) < e){
+        unsigned long int backref = strtoul(++s, NULL, 10);
+        if(!(backref && backref < 32)) continue;
+        *(s-1)=backref;
+        int s2 = strspn(s, "0123456789");
+        memmove(s, s+s2, strlen(s+s2)+1);}
+    return ss;}
 void macro_append(struct macro **sm, char *match, char *replace){
     struct macro *head = *sm;
     while(head && head->next) head = head->next;
@@ -31,13 +34,13 @@ void macro_append(struct macro **sm, char *match, char *replace){
         exit(1);}
     else{
         head->match = match;
-        head->replace = unescape_octal(replace);
+        head->replace = unescape_backref(replace);
         head->next = NULL;}
     return;}
 void macro_prepend(struct macro **sm, char *match, char *replace){
     struct macro *next = *sm;
     if((*sm = malloc(sizeof (struct macro)))){
-        (*sm)->replace = unescape_octal(replace);
+        (*sm)->replace = unescape_backref(replace);
         (*sm)->match = match, (*sm)->next = next;}
     else fprintf(stderr, "Out of memory.");
     return;}
@@ -48,7 +51,7 @@ void macro_free(struct macro **sm){
         free(*sm) ;*sm = next;}
     return;}
 char *resub(const char *text, const char *pattern, const char *replacement){
-    // text replacement with up to \37 octal backref substitutions
+    // text replacement with up to \31 decimal backrefs
     int status;
     char *output = calloc(100,1);
     regmatch_t pm[NMATCH];
@@ -57,10 +60,10 @@ char *resub(const char *text, const char *pattern, const char *replacement){
       !(status = regexec(&re, text, NMATCH, pm, 0))){
         int i, len;
         STRNCAT(output, text, pm[0].rm_so);
-        char oct[32]={};
-        for(int x=32;--x;) oct[x-1]=x;
+        char dec[32]={'\0'};
+        for(int x=32;--x;) dec[x-1]=x;
         while(1){
-            len = strcspn(replacement, oct);
+            len = strcspn(replacement, dec);
             // append output up-to backref
             STRNCAT(output, replacement, len);
             if(!(i = replacement[len])) break;
@@ -71,8 +74,7 @@ char *resub(const char *text, const char *pattern, const char *replacement){
         text += pm[0].rm_eo; len = strlen(text);
         STRNCAT(output, text, len);}
     else if(regerror(status, &re, output, 99)){
-        free(output);
-        return NULL;}
+        free(output) ;output = NULL;}
     regfree(&re);
     return output;
     

@@ -175,20 +175,25 @@ whole row. The inner loop, `j`, uses an `int` type because the innermost
 type of the 2D array, the one we want to print, is `int`.
 
 ```
+#if 0
+crap $0 | tcc -run -; exit 0
+#endif
 #include <stdio.h>
+
 #define M 3
 #define N 4
 main
+    // defined length [M][N] is computable
     int test_image[M][N]=
      {{1,2,3,4},
       {5,6,7,8},
       {9,10,11,12}},
-
+    // undefined length *i is not
     *i, j
 
-    for i in test_image
-        for j in i[:4] // specify :4 here 'cause `i` could point to anything
-            printf  "%i%s ", j, j_index==j_end-1?"\n":","
+    for i in test_image // computable length, optional
+        for j in i[:N] // undefined length, add [:N]
+            printf  "%i%s", j, j_index==N-1?"\n":", "
 ```
 
 There is a handy program and website called [cdecl](https://cdecl.org/) that 
@@ -213,13 +218,13 @@ words[ -3 : -1 ] = { "two", "three" }
 ### Embedded `crap` macros.
 
 **Custom `crap`** Crap's `#replace /pattern/replacement/` macros support up 
-to `\7` octal backref substitutions almost like `sed` scripts. They are no 
-replacement for `sed`, nor do they supersede other preprocessor directives. 
-But they could change things up. Up to 100 replacements per line, defined 
-in `crap.h`. Rules may be added to `crap`'s source code for all users, or 
-embedded into individual `crap` files where desired. Embedded `#replace` 
-rules do not cross file boundaries, so do not put them in headers and 
-expect them to work elsewhere.
+to `\31` decimal backref substitutions almost like `sed` scripts. They are 
+no replacement for `sed`, nor do they supersede other preprocessor 
+directives. But they could change things up. Up to 100 replacements per 
+line, defined in `crap.h`. Rules may be added to `crap`'s source code for 
+all users, or embedded into individual `crap` files where desired. Embedded 
+`#replace` rules do not cross file boundaries, so do not put them in headers 
+and expect them to work elsewhere.
 
 **What isn't `crap`?** [The C programming language](http://c-faq.com/index.html). Compilers like the [Gnu C 
 Compiler](https://gcc.gnu.org/) (GCC), [TinyCC](https://repo.or.cz/tinycc.git), 
