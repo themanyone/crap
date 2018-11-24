@@ -1,1 +1,1 @@
-./bootstrap_test test2.crap|tcc -run -
+./bootstrap_test tests/test2.crap|tcc -run -

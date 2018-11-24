@@ -1,0 +1,10 @@
+//bin/bash -c "../crap "$0" |tcc -I../include -L../libs -lreg -run -"$@""&&exit 0;
+#include "reg.h"
+int main  int argc, char **argv
+    char s[100], *t
+    strcpy  s, "MISSISSIPPI"  ;puts  s
+    while  (t = resub(s, "S", "_s_"))  strcpy  s, t  ;free  t
+    puts  s
+    strcpy  s, "    /* This /is/ a comment */"
+    t = resub  s, "(\\s*)(/\\*.+\\*/)", "(\2)"  ;puts  t
+    free  t

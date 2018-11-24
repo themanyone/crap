@@ -1,0 +1,16 @@
+#if 0
+crap "$0" |tcc -run - "$@";exit 0
+#endif
+#include <stdio.h>
+void swap  int * a, int * b
+    int temp = *a; *a = *b, *b = temp
+void array_reverse  int *begin, int *end
+    while  begin < end  swap  begin++, end--
+void print_array  int * first, int * last
+    do printf  "%i%s", *first, first == last? "\n" : ", "
+    until  first++ == last
+main
+    int a[] = {1,2,3,4,5,6,7,8,9,10}
+    print_array  a, a+9
+    array_reverse  a, a+9
+    print_array  a, a+9

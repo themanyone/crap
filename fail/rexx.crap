@@ -1,0 +1,21 @@
+#if 0
+crap "$0" |tcc -lreg -run - "$@"; exit 0;
+#endif
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+//replace every \0.. backref with its ascii char
+char *unescape_backref  char *ss
+    char *s = ss, *e = strrchr  s, '\0'
+    while  (s+=strcspn(s, "\\")) < e
+        unsigned long int backref = strtoul(++s, NULL, 10)
+        unless  backref && backref < 32  continue
+        *(s-1)=backref
+        int s2 = strspn(s, "0123456789")
+        memmove  s, s+s2, strlen(s+s2)+1
+    return ss
+main
+    char w[]={"[\\4Testing\\029wax \\8 \\31 ]"}
+    unescape_backref  w
+    printf  "\n%s\n", w
+    
