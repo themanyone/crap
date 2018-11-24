@@ -23,19 +23,19 @@ CC=gcc
 %.so : CFLAGS+=-fPIC
 %.so : LDFLAGS=-shared
 %.so : %.o
-	$(CC) $(LDFLAGS) $< -Wl,-soname,"lib$@.1" -o "libs/lib$@.1.0.1"
-	ln -sf "lib$@.1.0.1" "libs/lib$@.1"
-	ln -sf "lib$@.1.0.1" "libs/lib$@"
+	$(CC) $(LDFLAGS) $< -Wl,-soname,"lib$@.1" -o "lib/lib$@.1.0.1"
+	ln -sf "lib$@.1.0.1" "lib/lib$@.1"
+	ln -sf "lib$@.1.0.1" "lib/lib$@"
 
 .PHONY: all $(SUBDIRS)
 
-#~ defauilt rule builds target[s] [libs]
+#~ defauilt rule builds target[s] lib[s]
 all: $(SUBDIRS) $(BUILD_TARGETS:.o=) $(BUILD_TARGETS) $(BUILD_LIBS)
 $(SUBDIRS):
 	$(MAKE) $(CLEAN) -C $@
 
 shared: $(BUILD_LIBS:.o=.so) $(BUILD_TARGETS)
-	$(CC) $(BUILD_TARGETS) -o "$(NAME)$(EXT)" -Llibs -lreg
+	$(CC) $(BUILD_TARGETS) -o "$(NAME)$(EXT)" -Llib -lreg
 
 #~ do not delete after build
 .PRECIOUS: %.c %.h
@@ -59,7 +59,7 @@ s:
 
 clean: #CLEAN="clean"
 clean: #$(SUBDIRS)
-	$(RM) $(BUILD_TARGETS) $(BUILD_TARGETS:.o=) $(BUILD_TARGETS:.o=.exe) $(BUILD_LIBS) *.asm libs/*
+	$(RM) $(BUILD_TARGETS) $(BUILD_TARGETS:.o=) $(BUILD_TARGETS:.o=.exe) $(BUILD_LIBS) *.asm lib/*
 
 pub:
 	-strip $(BUILD_TARGETS:.o=)
@@ -69,7 +69,7 @@ install:
 	install -D README.md "$(DOCDIR)/README.md"
 	install -D LICENSE   "$(DOCDIR)/LICENSE"
 	install -D "$(NAME)" "$(INSTALLDIR)/$(NAME)"
-	-install -D "libs/lib$(BUILD_LIBS:.o=.so)" "$(LIBDIR)"
+	-install -D "lib/lib$(BUILD_LIBS:.o=.so)" "$(LIBDIR)"
 	install -D "include/asprintf.h" "$(INCLUDEDIR)"
 
 uninstall:

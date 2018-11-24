@@ -1,5 +1,5 @@
 #if 0
-crap "$0" |tcc -Llibs -lreg -run - "$@";exit 0
+crap "$0" |tcc -Llib -lreg -run - "$@";exit 0
 #endif
 /** Concise, Regex-Aware Preprocessor (CRAP)
  * a C (computer language) code decorator and language maker
