@@ -108,7 +108,8 @@ reason, just add it manually. Other lines that do not receive a semicolon
 are preprocessor statements like `#define`, `//comment`s, and lines that end 
 with any of the characters ` <>;,."=*/&|^!`. Ending lines with one of those 
 characters or a c99 `//comment` permits long statements to be broken up 
-across multiple lines, without receiving unwanted semicolons.
+across multiple lines, without receiving unwanted semicolons. Trouble is, 
+you'll have to manually add a semicolon when lines end with a `quote`.
 
 **Return.** Again, `crap` adds a final `return 0` only when `main` is used. 
 In other words, please supply functions with `return` values.
@@ -129,8 +130,11 @@ not be accessed outside the loop. An optional `mylabel` attribute causes
 `_index` to take on a unique name, `mylabel_index` so nested `repeat` loops 
 are possible.
 
-**`for mylabel in array[[start]:[end]]`** Loops over `array`, assigning 
-each element to the supplied, predefined variable (or pointer), in turn. An 
+These loop extensions insert long lines of crappy-looking code, but it gets 
+optimized out in the compiler.
+
+**`for mylabel in array[[start]:[end]]`** Loops over `array`, assigning each 
+element to the supplied, predefined variable (or pointer), in turn. An 
 optional `start` and `end` may be preceded with a `-` sign, which means 
 subtracted from the end (1-past the last element as calculated with 
 `sizeof`, so negative indexes can not work with dynamic arrays). The 
@@ -138,19 +142,20 @@ subtracted from the end (1-past the last element as calculated with
 `mylabel_index` and `mylabel_end` which are not available outside the loop. 
 Note that `mylabel_end` is 1 + the optional `[:end]` argument which, if 
 supplied, will probably not be the real length of the array. If no optional 
-`[:end]` is provided, `crap` will calculate `mylabel_end` using the 
-`sizeof` operator, stepping through all remaining elements, including 
-`NULL` or `undefined` elements. And finally, a non-negative `[:end]` must 
-be supplied for dynamic (malloc'd) objects which are subject to change. How 
-could `crap` guess such things by merely inspecting the source code?
+`[:end]` is provided, `crap` will calculate `mylabel_end` using the `sizeof` 
+operator, stepping through each element, unless it reaches a `NULL`. And 
+finally, a non-negative `[:end]` ought to be supplied for dynamic (malloc'd) 
+objects, unless they have been neatly `NULL`-terminated.
 
 **`while mylabel in array[[start][:end]]`** *Exactly* like `for mylabel in 
-array` but with an additional dereference to quit at the first sign of 
-`NULL` data. Typically, a plain `while(*data)` statement is sufficient to 
-loop through `NULL`-terminated arrays. But this extension inherits the safer 
-end limits, indexing, and slight speed penalty, of the above `for` loop. 
-Again, a non-negative `[:end]` is necessary for dynamic arrays to prevent 
-out of bounds conditions.
+array` but with constant, paranoid checking to make sure `array` stays valid 
+(in case of bad array at start, destruction inside the loop, other 
+threads?). If you don't trust the `array`, then use `while`. The `for` 
+construction and even a plain `while(*data)` statement is sufficient to loop 
+through `NULL`-terminated arrays. But this extension inherits the safer end 
+limits, indexing, and slight speed penalty, of the above `for` loop. Again, 
+a non-negative `[:end]` is necessary for dynamic arrays to prevent out of 
+bounds conditions.
 
 **`array[[start]:[end]]`** Using `somevar = array[start:end]` drops in a 
 [non-standard GNU 
@@ -188,7 +193,7 @@ main
      {{1,2,3,4},
       {5,6,7,8},
       {9,10,11,12}},
-    // undefined length *i is not
+    // undefined length *i is unknown
     *i, j
 
     for i in test_image // computable length, optional
@@ -227,10 +232,12 @@ all users, or embedded into individual `crap` files where desired. Embedded
 and expect them to work elsewhere.
 
 **Debugging** Some care is taken to make sure the resulting `.c` sources 
-have the same line numbers (no extra linebreaks). Use debuggers on the 
-executable as with any C program.
+have the same line numbers (no extra linebreaks). Compile with -g option and 
+use debuggers on the executable as with any C program. The `make debug` 
+target makes a debug build of `crap` for stepping through that as well.
 
 ```
+make debug
 gdb -tui -args ./myProgram myArgs
 ```
 

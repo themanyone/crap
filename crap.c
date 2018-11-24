@@ -58,7 +58,7 @@ void macros(char **s){
           "\\s*:\\s*(-[^]:]+)?([^]:]+)?\\s*\\])?",
           "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4:\5+0,"
           "\1_end=\7+0?\7:sizeof \2/sizeof \2[0]\6;"
-          "\1_index<\1_end&&\2[\1_index]&&(\1=\2[\1_index]);\1_index++)");
+          "\1_index<\1_end&&\2&&(\1=\2[\1_index]);\1_index++)");
         // double-space = parenthesis
         SUB("(\\w)  (( ?[^ \"]+| ?\".*\")*) ?([ ;]|$)", "\1(\2)\4");
 

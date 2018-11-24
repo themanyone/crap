@@ -52,6 +52,11 @@ main
     for word in words[ -3 : -1 ]
         printf  " \"%s\"%s", word, word_index == word_end - 1?" }\n":","
     char c
-    for c in words[2]
-        putchar  c
+    char *test = "testing";
+    for c in test
+        printf  "[%c]%s", c, c_index==c_end-1?"\n": ""
     putchar  '\n'
+    test = NULL; // testing :)
+    while c in test
+        //never reached
+        exit  1

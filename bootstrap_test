@@ -1,1 +1,1 @@
-LD_LIBRARY_PATH=libs ./crap crap.crap|tcc -Llibs -lreg -run - "$@"
+LD_LIBRARY_PATH=libs ./crap crap.crap|tcc -Iinclude -Llibs -lreg -run - "$@"
