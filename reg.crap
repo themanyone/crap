@@ -14,15 +14,15 @@ suitability of this software for any purpose. It is provided "as is"
 without express or implied warranty.
 */
 #include "reg.h"
-char *unescape_backref  char *ss
-    char *s = ss, *e = strrchr  s, '\0'
-    while  (s+=strcspn(s, "\\")) < e
-        unsigned long int backref = strtoul(++s, NULL, 10)
+char *unescape_backref  char * const s
+    char *s1 = s, *e = strrchr  s1, '\0'
+    while  (s1+=strcspn(s1, "\\")) < e
+        unsigned long int backref = strtoul(++s1, NULL, 10)
         unless  backref && backref < 32  continue
-        *(s-1)=backref
-        int s2 = strspn(s, "0123456789")
-        memmove  s, s+s2, strlen(s+s2)+1
-    return ss
+        *(s1-1)=backref
+        int s2 = strspn(s1, "0123456789")
+        memmove  s1, s1+s2, strlen(s1+s2)+1
+    return s
 void macro_append  struct macro **sm, char *match, char *replace
     struct macro *head = *sm
     while  head && head->next  head = head->next

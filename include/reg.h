@@ -6,7 +6,7 @@
 #include <string.h>
 #include <regex.h>
 
-// Our implementation limit is 31 octal backrefs
+// Our implementation limit is \31 decimal backrefs
 // because chr(32) is a space, and we need that!
 #define NMATCH 31
 

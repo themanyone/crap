@@ -5,9 +5,9 @@ INSTALLDIR=$(PREFIX)/bin
 DOCDIR=    $(PREFIX)/share/$(NAME)
 LIBDIR=    $(PREFIX)/lib64
 BUILD_TARGETS=$(NAME).o
-BUILD_HEADERS=join.h
 BUILD_LIBS=reg.o
-INCLUDES=-I.
+INCLUDES=-Iinclude
+SUBDIRS=include
 LDFLAGS=-L.
 CFLAGS=-g -Wall -pipe -O2 -std=c99
 MING=/usr/bin/i686-pc-mingw32-gcc
@@ -15,9 +15,7 @@ CC=gcc
 
 %.c : %.crap
 	crap "$<" > "$@"
-%.h : %.hh
-	crap "$<" > "$@"
-%.o : %.c %.h
+%.o : %.c
 	$(CC) $(CFLAGS) -c "$<" -o "$@" $(INCLUDES)
 % : %.o $(BUILD_LIBS)
 	$(CC) "$<" $(BUILD_LIBS) -o "$@$(EXT)" $(LDFLAGS)
@@ -29,19 +27,26 @@ CC=gcc
 	ln -sf "lib$@.1.0.1" "libs/lib$@.1"
 	ln -sf "lib$@.1.0.1" "libs/lib$@"
 
-#~ defauilt rule builds target[s] [libs]
-all: $(BUILD_HEADERS) $(BUILD_TARGETS:.o=) $(BUILD_TARGETS) $(BUILD_LIBS)
+.PHONY: all $(SUBDIRS)
 
-shared: $(BUILD_HEADERS) $(BUILD_LIBS:.o=.so) $(BUILD_TARGETS)
+#~ defauilt rule builds target[s] [libs]
+all: $(SUBDIRS) $(BUILD_TARGETS:.o=) $(BUILD_TARGETS) $(BUILD_LIBS)
+$(SUBDIRS):
+	$(MAKE) $(CLEAN) -C $@
+
+shared: $(BUILD_LIBS:.o=.so) $(BUILD_TARGETS)
 	$(CC) $(BUILD_TARGETS) -o "$(NAME)$(EXT)" -Llibs -lreg
 
-#~ do not delete .c files after build
-.PRECIOUS: %.c
+#~ do not delete after build
+.PRECIOUS: %.c %.h
 
 #~ other targets
 win: CC=$(MINGW)
 win: EXT=.exe
 win: all
+
+tcc: CC=$(TCC)
+tcc: all
 
 debug: CFLAGS+=-g -pedantic -O0
 debug: all
@@ -50,10 +55,11 @@ debug: all
 	objdump -Sx $< > $@
 
 s:
-	SciTE Makefile *.h *.anch&
+	SciTE Makefile *.crap&
 
-clean:
-	rm -f $(BUILD_TARGETS) $(BUILD_TARGETS:.o=) $(BUILD_TARGETS:.o=.exe) $(BUILD_LIBS) *.asm libs/*
+clean: #CLEAN="clean"
+clean: #$(SUBDIRS)
+	$(RM) $(BUILD_TARGETS) $(BUILD_TARGETS:.o=) $(BUILD_TARGETS:.o=.exe) $(BUILD_LIBS) *.asm libs/*
 
 pub:
 	-strip $(BUILD_TARGETS:.o=)
