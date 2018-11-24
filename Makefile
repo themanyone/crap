@@ -70,7 +70,7 @@ install:
 	install -D LICENSE   "$(DOCDIR)/LICENSE"
 	install -D "$(NAME)" "$(INSTALLDIR)/$(NAME)"
 	-install -D "libs/lib$(BUILD_LIBS:.o=.so)" "$(LIBDIR)"
-	install -D "asprintf.h" "$(INCLUDEDIR)"
+	install -D "include/asprintf.h" "$(INCLUDEDIR)"
 
 uninstall:
 	$(RM) "$(DOCDIR)/README.md"

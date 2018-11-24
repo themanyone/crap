@@ -105,10 +105,10 @@ it persists for the author's convenience.
 **Semicolons.** Added to every line, except the line above the indented code 
 block (probably if, for or while). If that line needs a semicolon for some 
 reason, just add it manually. Other lines that do not receive a semicolon 
-are preprocessor statements like `#define`, and lines that end with any of 
-the characters ` <>;,."=*/&|^!`. Ending lines with one of those characters 
-permits long statements to be broken up across multiple lines, without 
-receiving unwanted semicolons.
+are preprocessor statements like `#define`, `//comment`s, and lines that end 
+with any of the characters ` <>;,."=*/&|^!`. Ending lines with one of those 
+characters or a c99 `//comment` permits long statements to be broken up 
+across multiple lines, without receiving unwanted semicolons.
 
 **Return.** Again, `crap` adds a final `return 0` only when `main` is used. 
 In other words, please supply functions with `return` values.
@@ -225,6 +225,14 @@ line, defined in `crap.h`. Rules may be added to `crap`'s source code for
 all users, or embedded into individual `crap` files where desired. Embedded 
 `#replace` rules do not cross file boundaries, so do not put them in headers 
 and expect them to work elsewhere.
+
+**Debugging** Some care is taken to make sure the resulting `.c` sources 
+have the same line numbers (no extra linebreaks). Use debuggers on the 
+executable as with any C program.
+
+```
+gdb -tui -args ./myProgram myArgs
+```
 
 **What isn't `crap`?** [The C programming language](http://c-faq.com/index.html). Compilers like the [Gnu C 
 Compiler](https://gcc.gnu.org/) (GCC), [TinyCC](https://repo.or.cz/tinycc.git), 
