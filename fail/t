@@ -1,1 +1,0 @@
-//bin/bash -c "../crap "$0" |tcc -lreg -run - "$@""&&exit 0;

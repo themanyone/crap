@@ -1,5 +1,5 @@
 #if 0
-crap "$0" |tcc -Llib -lreg -run - "$@";exit 0;
+crap "$0" |tcc -Iinclude -Llib -lreg -run - "$@";exit 0;
 #endif
 /** Concise, Regex-Aware Preprocessor (CRAP);
  * a C (computer language) code decorator and language maker;
@@ -67,9 +67,9 @@ void macros(char **s){
         SUB("repeat\\s*\\(([^, ]+)[, ]*([^, ]*)\\)",
          "for(size_t \2_index=\1;\2_index--;)");
         // until
-        SUB("until\\s*\\((.+)\\)", "while(!(\1))");
+        SUB("(\\W|^)until\\s*\\((.+)\\)", "\1while(!(\2))");
         // unless
-        SUB("unless\\s*\\((.+)\\)", "if(!(\1))");
+        SUB("(\\W|^)unless\\s*\\((.+)\\)", "\1if(!(\2))");
         // skip over multi-line comments
         if((tmp = resub(*s,"(/\\*)(.*[^/)]$)", "\1\2"))){
             strcpy(skip.to, "(\\*/)");

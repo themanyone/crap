@@ -34,12 +34,12 @@
   * returns ARRAY_MAX elements in dynamic array
   */
 #define ARRAY_MAX 100
-#define SPLIT(s, sep, ...) ({                           \
-    size_t len = __VA_ARGS__+0?__VA_ARGS__+0:99;          \
-    char *a[ARRAY_MAX] = {NULL};                          \
-    int i=0; for (a[i++] = strtok(s, sep);                \
-    (a[i++] = strtok(NULL, sep) );                       \
-    );a[len]=NULL;a;}                                     \
+#define SPLIT(s, sep)  ({                               \
+    size_t len = strlen(sep);                            \
+    char *a[ARRAY_MAX] = {NULL};                         \
+    int i=0; for (a[i++] = strtok(s, sep);               \
+    (a[i++] = strtok(NULL, sep) );                      \
+    );a[len]=NULL;a;}                                    \
 ) //
 
 #endif 

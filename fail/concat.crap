@@ -1,7 +1,9 @@
-//bin/bash -c "../crap "$0" |tcc -I../include -run - "$@""&&exit 0;
+//bin/sh -c "../crap "$0" |tcc -I../include -run - "$@"";exit 0;
 #include "join.h"
+
+#include <stdarg.h>
 main
-    // deprecated macros depend on non-standard compiler extensions
+    // deprecated macros, non-standard compiler extensions
     // TODO: build this functionality into a library
     char *s=ARGJOIN("_, /_", "c:", "dog", "cat" + 1, strchr("horse", 'o'),
     "foo","bar")

@@ -1,4 +1,4 @@
-//bin/bash -c "../crap "$0" |tcc -I../include -L../libs -lreg -run -"$@""&&exit 0;
+//bin/bash -c "../crap "$0" |tcc -I../include -L../libs -lreg -run -"$@"";exit 0;
 #include "reg.h"
 int main  int argc, char **argv
     char s[100], *t

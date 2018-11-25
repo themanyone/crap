@@ -1,4 +1,3 @@
-//usr/local/bin/anch -keep -run "$0" "$@"; exit 0;
 /** resub
  * a terse regex library for code decorating
  */
@@ -17,7 +16,7 @@ without express or implied warranty.
 char *unescape_backref(char * const s){
     char *s1 = s, *e = strrchr(s1, '\0');
     while((s1+=strcspn(s1, "\\")) < e){
-        unsigned long int backref = strtoul(++s1, NULL, 10);
+        int backref = atoi(++s1);
         if(!(backref && backref < 32)) continue;
         *(s1-1)=backref;
         int s2 = strspn(s1, "0123456789");
