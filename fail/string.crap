@@ -1,7 +1,7 @@
 #if 0
-crap "$0"|tcc -DUDE -run - "$@";exit 0;
+crap "$0"|tcc -I../include -DUDE -run - "$@";exit 0;
 #endif
-// The tcc -DUDE option makes headers executable!
+// Our -DUDE option runs headers directly, no linking!
 #include "sjoin.h"
 /**##SplitJoin
 

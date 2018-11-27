@@ -1,4 +1,4 @@
-/*  sjoin
+/*  sjoin.h
     
     string split, join, replace library
     
@@ -23,21 +23,21 @@
 #include <string.h>
 #include <alloca.h>
 
-#define BUF_MAX 4096
+#define BUF_MAX BUFSIZ
 #define ARRAY_MAX 100
 #ifndef WARN
 #define WARN(msg)   \
-fprintf(stderr, "line %i: %s", __LINE__, msg);
+fprintf(stderr, "sjoin %i: %s\n", __LINE__, msg);
 #endif
 #define malloc_maybe(buf){                               \
-    if(!(buf || (buf = malloc(BUF_MAX)))){              \
+    if(!(buf || (buf = malloc(BUF_MAX + 1)))){          \
         WARN("Out of memory\n");                         \
         exit(1);}}         
 #define bufcpy(buf, str){                                \
-    strncpy(buf, str, BUF_MAX - 1);                      \
-    buf[BUF_MAX-1] = '\0';                               \
-    if(strlen(buf) == BUF_MAX-1){                        \
-        WARN("Buffer full! Truncated...");}}
+    strncpy(buf, str, BUF_MAX);                          \
+    buf[BUF_MAX] = '\0';                                 \
+    if(strlen(buf) == BUF_MAX){                          \
+        WARN("Buffer full! Increase BUF_MAX.");}}
 /* argjoin
 Join args, inserting separator, sep between each
 subsequent argument. Assumes buf is a valid array[]
@@ -61,13 +61,13 @@ or pointer to allocated memory.                         */
    with var hanging out there for convenience.
    Usage: char * aargjoin(myVar, "/", "foo,"bar",...)  */
 #define aargjoin(var, s1, ...)                          \
-   var = (var = alloca(BUF_MAX) ,                       \
+   var = (var = alloca(BUF_MAX + 1) ,                  \
    _argjoin(strcpy(var, s1), __VA_ARGS__, NULL) )      //
 /* aargcat: alloca'd argcat, optionally declarable
    with var hanging out there for convenience.
    Usage: char * aargcat(myVar, "foo,"bar",...)         */
 #define aargcat(var, ...)                               \
-   var = (var = alloca(BUF_MAX) ,                       \
+   var = ( var = alloca(BUF_MAX + 1) ,                 \
    argcat(strcpy(var, ""), __VA_ARGS__) )              //
 /* _argjoin: concatenate args into a string
 
@@ -86,19 +86,19 @@ or pointer to allocated memory.                         */
 
  *  The last argument must be NULL! Use macros...
  */
-#define ajoin(buf, ...)                                 \
- buf =(buf=alloca(BUF_MAX) ,join(buf, __VA_ARGS__) )  //
-#define asplit(arr, ...)                                \
- arr =(arr=alloca(BUF_MAX) ,split(arr, __VA_ARGS__) ) //
+#define ajoin(buf, ...) buf =                          \
+(buf = alloca(BUF_MAX + 1) ,join(buf, __VA_ARGS__) )  //
+#define asplit(arr, ...) arr =                         \
+(arr = alloca(BUF_MAX + 1) ,split(arr, __VA_ARGS__) ) //
 #define mjoin(buf, ...)                                 \
- buf = join(NULL,) __VA_ARGS__()                      //
+ buf = join(NULL, __VA_ARGS__)                         //
 #define msplit(arr, ...)                                \
  arr = split(NULL, arr, __VA_ARGS__)                   //
 #define astrsplit(arr, ...)                             \
- arr =( arr = alloca(ARRAY_MAX) ,                      \
+ arr =( arr = alloca(ARRAY_MAX + 1) ,                  \
  strsplit(arr, __VA_ARGS__) )                          //
 #define mstrsplit(arr, ...)                             \
- arr = strsplit ( NULL,  __VA_ARGS__())                //
+ arr = strsplit(NULL, __VA_ARGS__)                     //
 
 char *_argjoin(char* s1, ...);
 char *join(char *buf, char *sep, char **arr);
@@ -109,7 +109,7 @@ char *replace(char *s, char *find, char *repl);
 #ifdef UDE // User-defined Executable (UDE) header
 char *_argjoin(char* s1, ...){
     va_list ap; va_start(ap, s1);
-    int nul; char *s2, sep[BUF_MAX];
+    int nul; char *s2, sep[BUF_MAX + 1];
     if((nul = !s1)){
         s2 = va_arg(ap, char *);
         malloc_maybe(s1);
@@ -128,7 +128,7 @@ char *join(char *buf, char *sep, char **arr){
     malloc_maybe(buf);
     char *ele="", *pbuf = buf;
     for (size_t ele_index=0, sep_len = strlen(sep);
-      (ele = arr[ele_index]) && ele_index < ARRAY_MAX;
+      ele_index < ARRAY_MAX && (ele = arr[ele_index]);
       ele_index++){
         if(ele_index){
             argcat(pbuf , sep) ;pbuf += sep_len;}
