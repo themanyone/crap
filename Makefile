@@ -9,7 +9,7 @@ export
 BUILD_TARGETS=$(NAME).o
 BUILD_LIBS=lib/reg.o
 SUBDIRS=include lib
-LDFLAGS=-Llib
+LDFLAGS=-Llib -Wl,-rpath=$(LIBDIR)
 CFLAGS=-Iinclude -g -Wall -pipe -O2 -std=c99
 MING=/usr/bin/i686-pc-mingw32-gcc
 CC=gcc
