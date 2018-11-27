@@ -50,9 +50,9 @@ lucrative, uses please contact the author.
 
 ## Crap has `crap`ped itself!
 
-Crap bootstrapped itself some time ago, so its source code is `crap`. As 
-future development progresses in `crap` code, rest assured that `crap` will 
-always remain 100% `crap`.
+Crap bootstrapped itself some time ago, so its source code is `crap`. 
+As future development progresses in `crap` code, rest assured that 
+`crap` will always remain 100% `crap`.
 
 Generated C source files are included, so thankfully there is no 
 prerequisite for `crap` to compile `crap`.
@@ -69,15 +69,16 @@ move overly-indented blocks into separate functions or libraries.
 
 An extendable and growing set of rules turns `crap` code into C.
 
-**String mangling** The `crap` preprocessor is good at corrupting strings 
-because it has difficulty determining what is inside or outside a string. 
-It's actually a feature. We like having our strings modified. Any strings 
-that you do not want nuked on their way to becoming C source code should go 
-into another file or header and `#include` them. It is good programming 
-practice to put important data and resources outside the compiled source.
+**String mangling** The `crap` preprocessor is good at corrupting 
+strings because it has difficulty determining what is inside or outside 
+a string. It's actually a feature. We like having our strings modified. 
+Any strings that you do not want nuked on their way to becoming C 
+source code should go into another file or header and `#include` them. 
+It is good programming practice to put important data and resources 
+outside the compiled source.
 
-**Includes.** Like C, Crap programs `#include <stdio.h>` if they want to 
-print to, or read from, consoles or files in a standard way. See 
+**Includes.** Like C, Crap programs `#include <stdio.h>` if they want 
+to print to, or read from, consoles or files in a standard way. See 
 `test2.crap` for a demo that uses `"asprintf.h"` for string and array 
 manipulation.
 
@@ -102,14 +103,15 @@ things manually, as with logical operators and "truth y" value
 assignments. Those who dislike the feature do not have to use it, but 
 it persists for the author's convenience.
 
-**Semicolons.** Added to every line, except the line above the indented code 
-block (probably if, for or while). If that line needs a semicolon for some 
-reason, just add it manually. Other lines that do not receive a semicolon 
-are preprocessor statements like `#define`, `//comment`s, and lines that end 
-with any of the characters ` <>;,."=*/&|^!`. Ending lines with one of those 
-characters or a c99 `//comment` permits long statements to be broken up 
-across multiple lines, without receiving unwanted semicolons. Trouble is, 
-you'll have to manually add a semicolon when lines end with a `quote`.
+**Semicolons.** Added to every line, except the line above the indented 
+code block (probably if, for or while). If that line needs a semicolon 
+for some reason, just add it manually. Other lines that do not receive 
+a semicolon are preprocessor statements like `#define`, `//comment`s, 
+and lines that end with any of the characters ` <>;,."=*/&|^!`. Ending 
+lines with one of those characters or a c99 `//comment` permits long 
+statements to be broken up across multiple lines, without receiving 
+unwanted semicolons. Trouble is, you'll have to manually add a 
+semicolon when lines end with a `quote`.
 
 **Return.** Again, `crap` adds a final `return 0` only when `main` is used. 
 In other words, please supply functions with `return` values.
@@ -124,11 +126,11 @@ In other words, please supply functions with `return` values.
 
 ### Pasted loops.
 
-**`repeat`** The `repeat n[, mylabel]` constructor pastes a `for` loop into 
-the code to repeat `n` times. A local `_index` variable is defined that may 
-not be accessed outside the loop. An optional `mylabel` attribute causes 
-`_index` to take on a unique name, `mylabel_index` so nested `repeat` loops 
-are possible.
+**`repeat`** The `repeat n[, mylabel]` constructor pastes a `for` loop 
+into the code to repeat `n` times. A local `_index` variable is defined 
+that may not be accessed outside the loop. An optional `mylabel` 
+attribute causes `_index` to take on a unique name, `mylabel_index` so 
+nested `repeat` loops are possible.
 
 These loop extensions insert long lines of crappy-looking code, but it gets 
 optimized out in the compiler.
@@ -146,6 +148,13 @@ supplied, will probably not be the real length of the array. If no optional
 operator, stepping through each element, unless it reaches a `NULL`. And 
 finally, a non-negative `[:end]` ought to be supplied for dynamic (malloc'd) 
 objects, unless they have been neatly `NULL`-terminated.
+
+Compilers can be configured to gnerate warnings when these loops are 
+uable to compute array sizes. From `make debug`:
+
+```
+gcc -g -Wall -pedantic ...
+```
 
 **`while mylabel in array[[start][:end]]`** *Exactly* like `for mylabel in 
 array` but with constant, paranoid checking to make sure `array` stays valid 
@@ -241,17 +250,20 @@ make debug
 gdb -tui -args ./myProgram myArgs
 ```
 
-**What isn't `crap`?** [The C programming language](http://c-faq.com/index.html). Compilers like the [Gnu C 
-Compiler](https://gcc.gnu.org/) (GCC), [TinyCC](https://repo.or.cz/tinycc.git), 
-most other free software. Mention of tools and technoligies is for information 
-purposes and does not constitute endorsement or affiliation. `Sed`, `awk`, 
-`perl`, and `grep` have more robust regex engines and are thoroughly tested, so 
-use those instead of `crap` for handling arbitrary data streams.
+**What isn't `crap`?** [The C programming 
+language](http://c-faq.com/index.html). Compilers like the [Gnu C 
+Compiler](https://gcc.gnu.org/) (GCC), 
+[TinyCC](https://repo.or.cz/tinycc.git), most other free software. 
+Mention of tools and technoligies is for information purposes and does 
+not constitute endorsement or affiliation. `Sed`, `awk`, `perl`, and 
+`grep` have more robust regex engines and are thoroughly tested, so use 
+those instead of `crap` for handling arbitrary data streams.
 
 ## Spreading `crap` around.
 
-Usage couldn't be simpler. There are no command options. Use standard shell 
-pipes '|' to fling `crap` at compilers, or '>' to `crap` descreetly into a file.
+Usage couldn't be simpler. There are no command options. Use standard 
+shell pipes '|' to fling `crap` at compilers, or '>' to `crap` 
+descreetly into a file.
 
 ```
 # Let's make holy.c from holy.crap.
@@ -270,11 +282,12 @@ Crap drops the `flex` dependency and implements its own simplified regex calls.
 
 ## Crapping for executives, using the three C shells.
 
-Shell commands may be embedded into the first line to make executable scripts 
-for rapid testing and development. The following comment at the top of the file 
-tells the shell to use `crap` to pipe '|' generated C code to the tinycc compiler. 
-The `-run` option tells `tcc` to execute the compiled code. A well-placed `exit 
-0` prevents shells from attempting to execute the remaining `crap` as shell code.
+Shell commands may be embedded into the first line to make executable 
+scripts for rapid testing and development. The following comment at the 
+top of the file tells the shell to use `crap` to pipe '|' generated C 
+code to the tinycc compiler. The `-run` option tells `tcc` to execute 
+the compiled code. A well-placed `exit 0` prevents shells from 
+attempting to execute the remaining `crap` as shell code.
 
 ```
 //bin/crap "$0" |tcc -run - "$@";exit 0
@@ -284,8 +297,9 @@ You may use other compilers or shells. Get creative!
 
 ## Now we're just making `crap` up.
 
-Crap works like any lexer, Vala, or C preprocessor. This `Makefile` target tells 
-GNU `make` to turn `.crap` files into `.c` files as needed.
+Crap works like any lexer, Vala, or C preprocessor. This `Makefile` 
+target tells GNU `make` to turn `.crap` files into `.c` files as 
+needed.
 
 ```
 %.c : %.crap
@@ -332,11 +346,11 @@ from just anyone. Get a fresh pile from
 
 Copyright (C) 2018-2019 Henry Kroll III, https://thenerdshow.com
 
-Permission to use, copy, modify, distribute, and sell this software and its 
-documentation for any purpose is hereby granted without fee, provided that the 
-above copyright notice appears in all copies and that both that copyright notice 
-and this permission notice appear in supporting documentation, including About 
-boxes in derived user interfaces or web front-ends. No representations are made 
-about the suitability of this software for any purpose. It is provided "as is" 
+Permission to use, copy, modify, distribute, and sell this software and 
+its documentation for any purpose is hereby granted without fee, 
+provided that the above copyright notice appears in all copies and that 
+both that copyright notice and this permission notice appear in 
+supporting documentation, including About boxes in derived user 
+interfaces or web front-ends. No representations are made about the 
+suitability of this software for any purpose. It is provided "as is" 
 without express or implied warranty.
-

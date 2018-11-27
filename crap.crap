@@ -16,7 +16,7 @@ suitability of this software for any purpose. It is provided "as is"
 without express or implied warranty.
 */
 #include "crap.h"
-#include "join.h"
+#include "sjoin.h"
 struct
     char to[7], end[3]
 skip = {{'\0'}, {'\2'}}
@@ -30,7 +30,6 @@ void macros  char **s
         skip.to[0] = '\0', skip.end[0] = 2
     else
         // put keyword macros here
-        // TODO: exclude content inside strings
         // main becomes int main()
         unless  has_main || strcmp(*s, "main")
             has_main = strcpy  *s, "int main(int argc, char **argv, char** env)"
@@ -47,20 +46,21 @@ void macros  char **s
           "size_t start= \3+0>=0?\3+0:\3 +len;"
           "size_t end = \4+0?\4:len\4;"
           "for(size_t i=start;i<end;i++) tmp[i-start]=\2[i]; tmp;})\5")
-        // for pointer in array[[start][:end]] (may be negative)
-        SUB("for\\s*(\\w+)\\s+in\\s+([^:\" ]+)\\s*(\\[\\s*(-[^]:]+)?([^]:]+)?"
-          "\\s*:\\s*(-[^]:]+)?([^]:]+)?\\s*\\])?",
-          "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4:\5+0,"
-          "\1_end=\7+0?\7+0:sizeof \2/sizeof \2[0]\6;"
-          "\1_index<\1_end&&(\1=\2[\1_index]);\1_index++)")
-        // while pointer in array[[start][:end]] (may be negative)
-        SUB("while\\s*(\\w+)\\s+in\\s+([^:\" ]+)\\s*(\\[\\s*(-[^]:]+)?([^]:]+)?"
-          "\\s*:\\s*(-[^]:]+)?([^]:]+)?\\s*\\])?",
-          "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4:\5+0,"
-          "\1_end=\7+0?\7+0:sizeof \2/sizeof \2[0]\6;"
-          "\1_index<\1_end&&\2&&(\1=\2[\1_index]);\1_index++)")
+        // Implements `myCmd myLabel in array[[start][:end]]`
+        #define INARRAY \
+          "\\s*(\\w+)\\s+in\\s+([^:\" ]+)\\s*(\\[\\s*(-[^]:]+)?([^]:]+)?"   \
+          "\\s*:\\s*(-[^]:]+)?([^]:]+)?\\s*\\])?"
+        #define LOOP \
+          "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4:\5+0,"          \
+          "\1_end=\7+0?\7+0:sizeof \2/sizeof \2[0]\6;\1_index<\1_end"
+        #define DOSTUFF \
+        "&&(\1=\2[\1_index]);\1_index++)"
+        // for myLabel in array[[start][:end]]
+        SUB  "for" INARRAY, LOOP DOSTUFF
+        // while myLabel in array[[start][:end]]
+        SUB  "while" INARRAY, LOOP "&&\2" DOSTUFF
         // double-space = parenthesis
-        SUB("(\\w)  (( ?[^ \"]+| ?\".*\")*) ?([ ;]|$)", "\1(\2)\4")
+        SUB("(\\w)  (( ?[^ \"]+| ?\".*\")*) ?([ ;]+|$)", "\1(\2)\4")
 
         // Put function-like macros here
         // repeat
@@ -146,10 +146,11 @@ int crap  char *name
         if  fgets(b, MAX_LINE_LEN, f)
             decorate  &b  ;printf  "%s", b
     fclose  f
-    unless  strstr(b, "#endif")
+    unless  strchr("#}()<", b[0])  // final #endif, brace, tag?
         if  has_main  strcpy  b, "    return 0;\n}\n"
         else strcpy  b, "    \n}\n"
         decorate  &b  ;puts  b
+    else puts  ""
     macro_free  &maclist
     return 0
 main

@@ -1,0 +1,34 @@
+#if 0
+crap "$0"|tcc -DUDE -run - "$@";exit 0;
+#endif
+// The tcc -DUDE option makes headers executable!
+#include "sjoin.h"
+/**##SplitJoin
+
+   Split, join, cat, and replace
+
+   Copyright 2019 by Henry Kroll III, http://thenerdshow.com
+
+   Licese: Modified BSD. See LICENSE terms.
+*/
+main
+    /** Split functions require mutable strings. */
+    char msg[]="this, is a+test.          ";
+    char *i, ** asplit  arr, msg, " +,."
+    for i in arr[1:4] puts  i
+    ajoin  i, "_", arr
+    puts  i
+    char buf[100]
+    join  buf, "--", arr
+    puts  buf
+    puts ( argjoin  buf, "\\", "one", "two", "three" )
+    puts ( argcat  buf, "\\", "one", "two", "three" )
+    char * aargjoin  bar, "___", "good", "deal", buf
+    puts  bar
+    char * aargcat  foo, "\\", "that", "old", "house"
+    puts  foo
+    puts ( argjoin  foo,"/","was",argcat(buf,bar,"very"),"bad")
+    char * margjoin  s, "_", "foo", "bar", "baz"
+    puts  s  ;free  s
+    margcat  s, "_", "foo", "bar", "baz"
+    puts  s  ;free  s

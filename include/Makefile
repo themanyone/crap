@@ -2,6 +2,11 @@ HEADERS=$(wildcard *.hh)
 %.h : %.hh
 	crap "$<" > "$@"
 all: $(HEADERS:.hh=.h)
-.PHONY: clean
+.PHONY: clean shared
 clean:
-	#$(RM) -f $(HEADERS:.hh=.h)
+	#$(RM) $(HEADERS:.hh=.h)
+install: all
+	-install -D $(HEADERS:.hh=.h) -t $(INCLUDEDIR)
+uninstall: all
+	$(foreach header,$(HEADERS:.hh=.h), \
+	$(RM) $(INCLUDEDIR)/$(header);)
