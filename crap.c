@@ -60,7 +60,7 @@ void macros(char **s){
         // while myLabel in array[[start][:end]]
         SUB("while" INARRAY, LOOP "&&\2" DOSTUFF);
         // double-space = parenthesis
-        SUB("(\\w)  (( ?[^ \"]+| ?\".*\")*) ?([ ;]+|$)", "\1(\2)\4");
+        SUB("(\\w)  (( ?[^ \"]+| ?\".*\")*) ?([ ]+|$)", "\1(\2)\4");
 
         // Put function-like macros here
         // repeat
@@ -96,7 +96,7 @@ void macros(char **s){
 void cut_eol(char **fc, char **lc){
     // slice off end of line comments, store in $eol
     // needed to insert semicolon before comments
-    char *broil = resub(*fc,"([ \t]*/\\*[^/]*\\*/)?[\\ \n\t]*$|[/]{2}.*$", "");
+    char *broil = resub(*fc,"([ \t]*/\\*[^/]*\\*/)?[\\ \n]*$|[/]{2}.*$", "");
     *lc = *fc + strlen(broil) ;free(broil);
     strcpy(eol, *lc) ;**lc = '\0'; (*lc)--;}
 char *prepend(char *dest, char *src){

@@ -1,5 +1,5 @@
 #if 0
-crap "$0"|tcc -I../include -DUDE -run - "$@";exit 0;
+../crap "$0"|tcc -I../include -DUDE -run - "$@";exit 0;
 #endif
 // Our -DUDE option runs headers directly, no linking!
 #include "sjoin.h"

@@ -1,5 +1,5 @@
 #if 0
-./crap "$0" | tcc -run - "$@"; exit 0
+../crap "$0" | tcc -run - "$@"; exit 0
 #endif
 // test1.crap example and tests
 #include <stdio.h>
@@ -16,5 +16,11 @@ int y
     * oink  55  */
 
 main
-    repeat  4, t
-        printf  "Test %i\n", t_index
+    repeat  5
+        printf  "%i", _index
+    repeat  5, t
+        printf  "%i", t_index
+    for  int t_index=5;t_index--;
+        printf  "%i", t_index
+    puts  ""
+    
