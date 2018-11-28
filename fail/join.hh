@@ -51,7 +51,7 @@ without express or implied warranty.
     char *a[ARRAY_MAX] = {NULL}                         \
     int i=0; for (a[i++] = strtok  s, sep               \
     (a[i++] = strtok  NULL, sep  )                      \
-    );a[len]=NULL;a;                                    \
+    );a[i]=NULL;a;                                    \
 ) //
 
 #endif // __JOIN_H__
