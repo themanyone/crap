@@ -21,12 +21,12 @@ CC=gcc
 % : %.o
 	$(CC) "$<"  $(BUILD_LIBS) -o "$@$(EXT)" $(LDFLAGS)
 
-.PHONY: shared $(SUBDIRS)
+.PHONY: shared tests $(SUBDIRS)
 
 #~ defauilt rule builds target[s] lib[s]
 all: $(SUBDIRS) $(BUILD_TARGETS:.o=) $(BUILD_TARGETS) $(BUILD_LIBS)
 $(SUBDIRS):
-	$(MAKE) $(OPTIONS) -C $@ $(MAKECMDGOALS)
+	$(MAKE) -C $@ $(MAKECMDGOALS)
 
 shared: BUILD_LIBS=
 shared: LDFLAGS+=-lreg -Wl,-rpath=$(LIBDIR)
@@ -56,6 +56,8 @@ s:
 clean: $(SUBDIRS)
 	$(RM) $(BUILD_TARGETS) $(BUILD_TARGETS:.o=) $(BUILD_TARGETS:.o=.exe) $(BUILD_LIBS) *.asm
 
+tests:
+	$(MAKE) -C $@
 pub:
 	-strip $(BUILD_TARGETS:.o=)
 	-i686-pc-mingw32-strip $(BUILD_TARGETS:.o=.exe)
