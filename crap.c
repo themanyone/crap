@@ -1,5 +1,5 @@
 #if 0
-crap "$0" |tcc -Iinclude -Llib -lreg -run - "$@";exit 0;
+crap "$0" |tcc -Iinclude -Llib -lreg -lsjoin -run - "$@";exit 0;
 #endif
 /** Concise, Regex-Aware Preprocessor (CRAP);
  * a C (computer language) code decorator and language maker;
@@ -18,20 +18,22 @@ without express or implied warranty.
 #include "crap.h"
 #include "sjoin.h"
 struct{
-    char to[7], end[3];}
+    char to[10], end[5];}
 skip = {{'\0'}, {'\2'}};
 char *has_main=NULL, eol[255]={'\0'};
 struct macro *maclist = NULL;
 void macros(char **s){
-    char *tmp, *match, *replace;
+    char *tmp, *match, *changed;
     // check if we are done skipping over a multiline comment, triple-quote
-    if(skip.to[0] && (tmp = resub(*s, skip.to, skip.end))){
-        free(tmp);
+    if(*(skip.to) && (tmp = resub(*s, skip.to, skip.end))){
+        strcpy(*s, tmp) ; free(tmp);
         skip.to[0] = '\0', skip.end[0] = 2;}
     else{
+        if(!strcmp(skip.to, "(.*)\"{3}")){
+            addcslashes(*s);}
         // put keyword macros here
         // main becomes int main()
-        if(!(has_main || strcmp(*s, "main"))){
+        if (!(has_main || strcmp(*s, "main"))){
             has_main = strcpy(*s, "int main(int argc, char **argv, char** env)");}
         int max;
         #define SUB(match, rep)                     \
@@ -59,11 +61,11 @@ void macros(char **s){
         SUB("for" INARRAY, LOOP DOSTUFF);
         // while myLabel in array[[start][:end]]
         SUB("while" INARRAY, LOOP "&&\2" DOSTUFF);
-        #define ARGSP "(( ?[^ \"]| ?\"(\\\\.|[^\\\"])*\")*)"
+        #define ARGSP "(( ?[^ \"]| ?\"(\\\\.|[^\\\"])*\")*) ?([ ]+|$)"
         // until
-         SUB("(\\W|^)until\\s\\s" ARGSP, "\1while  !(\2)");
+        SUB("(\\s|^)until\\s*" ARGSP, "\1while (!(\2))\5");
         // unless
-        SUB("(\\W|^)unless\\s\\s" ARGSP, "\1if  !(\2)");
+        SUB("(\\s|^)unless\\s*" ARGSP, "\1if (!(\2))\5");
         // double-space = parenthesis
         SUB("(\\w)  " ARGSP, "\1(\2)\5");
 
@@ -76,9 +78,9 @@ void macros(char **s){
             strcpy(skip.to, "(\\*/)");
             strcpy(skip.end, "\1");
             free(tmp) ;return;}
-        // FIXME: triple quotes
-        if((tmp = resub(*s,"\"\"\"(([^\"]+\"?)*)", "\"\2"))){
-            strcpy(skip.to, "(.*)\"\"\"");
+        // triple quotes
+        if((tmp = resub(*s,"\"{3}(([^\"]+\"?)*)", "\"\2"))){
+            strcpy(skip.to, "(.*)\"{3}");
             strcpy(skip.end, "\1\"");
             strcpy(*s, tmp) ;free(tmp) ;return;}
         // apply embedded macros
@@ -86,11 +88,11 @@ void macros(char **s){
             SUB(m->match, m->replace);}
         // read embedded macros
         match = resub(*s, "#replace\\s+/(.*)/(.*)/", "\1");
-        replace= resub(*s, "#replace\\s+/(.*)/(.*)/","\2");
-        if(match && replace){
-            macro_append(&maclist, match, replace);}
+        changed= resub(*s, "#replace\\s+/(.*)/(.*)/","\2");
+        if(match && changed){
+            macro_append(&maclist, match, changed);}
         else{
-            free(match) ;free(replace);}
+            free(match) ;free(changed);}
         SUB("#replace\\s+/(.*)/(.*)/", "\x2f/ crap: replaced \1 with \2");}
     return;
 }
@@ -126,7 +128,7 @@ void decorate(char **s){
         *s = prepend(*s, "}");
         prev_indent -= TAB;}
     cut_eol(&fc, &lc);
-    if(!(*(skip.end) || indent != prev_indent)){
+    if (!(*(skip.end) || indent != prev_indent)){
         *s = prepend(*s, ";");}
     macros(&fc);
     if(*(skip.to) || (*(skip.end) && --(*(skip.end)))) return;
@@ -144,16 +146,16 @@ int crap(char *name){
     char buf[MAX_LINE_LEN + BACK_BUFFER_LEN], *b;
     FILE *f = stdin;
     if (strcmp(name, "-")) f = fopen(name, "r");
-    if(!(f)){
+    if (!(f)){
         fprintf(stderr, "crap: Unable to open \"%s\" for reading.\n", name);
         return 1;}
-    while(!(feof(f) || ferror(f))){
+    while (!(feof(f) || ferror(f))){
         b = buf + BACK_BUFFER_LEN;
         if(fgets(b, MAX_LINE_LEN, f)){
             if(b[strlen(b)-1]!='\n') strcat(b, "\n");
             decorate(&b) ;printf("%s", b);}}
     fclose(f);
-    if(!(strchr("#}()<", b[0]))) {// final #endif, brace, tag?
+    if (!(strchr("#}()<", b[0]))) {// final #endif, brace, tag?
         if(has_main) strcpy(b, SPACES "return 0;\n}\n");
         else strcpy(b, SPACES "\n}\n");
         decorate(&b) ;puts(b);}

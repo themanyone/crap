@@ -105,6 +105,7 @@ char *join(char *buf, char *sep, char **arr);
 char **split(char **arr, char *s, char *sep);
 char **strsplit(char **arr, char *s, char *sep);
 char *replace(char *s, char *find, char *repl);
+char *addcslashes(char *s);
 
 #ifdef UDE // User-defined Executable (UDE) header
 char *_argjoin(char* s1, ...){
@@ -151,6 +152,12 @@ char *replace(char *s, char *find, char *repl){
     size_t lr = strlen(repl) , lf = strlen(find);
     while((ss = strstr(ss, find))){
         memmove(ss+lr, ss+lf, strlen(ss+lf)+1);
-        memcpy(ss, repl, lr);}}
+        memcpy(ss, repl, lr);
+        ss+=lr;}
+    return s;}
+char *addcslashes(char *s){
+    replace(s, "\\", "\\\\");
+    replace(s, "\"", "\\x22");
+    return s;}
 #endif
 #endif

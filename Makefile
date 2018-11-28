@@ -7,7 +7,7 @@ DOCDIR=    $(PREFIX)/share/$(NAME)
 LIBDIR=    $(PREFIX)/lib64
 export
 BUILD_TARGETS=$(NAME).o
-BUILD_LIBS=lib/reg.o
+BUILD_LIBS=lib/reg.o lib/sjoin.o
 SUBDIRS=include lib
 LDFLAGS=-Llib
 CFLAGS=-Iinclude -g -Wall -pipe -O2 -std=c99
@@ -29,7 +29,7 @@ $(SUBDIRS):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
 
 shared: BUILD_LIBS=
-shared: LDFLAGS+=-lreg -Wl,-rpath=$(LIBDIR)
+shared: LDFLAGS+=-lreg -lsjoin -Wl,-rpath=$(LIBDIR)
 shared: lib all
 #$(CC) $(BUILD_TARGETS) -o "$(NAME)$(EXT)" $(LDFLAGS) -lreg
 

@@ -1,1 +1,1 @@
-LD_LIBRARY_PATH=lib ./crap crap.crap|tcc -Iinclude -Llib -lreg -run - "$@"
+LD_LIBRARY_PATH=lib ./crap crap.crap|tcc -Iinclude -Llib -lreg -lsjoin -run - "$@"

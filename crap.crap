@@ -1,5 +1,5 @@
 #if 0
-crap "$0" |tcc -Iinclude -Llib -lreg -run - "$@";exit 0
+crap "$0" |tcc -Iinclude -Llib -lreg -lsjoin -run - "$@";exit 0
 #endif
 /** Concise, Regex-Aware Preprocessor (CRAP)
  * a C (computer language) code decorator and language maker
@@ -18,17 +18,19 @@ without express or implied warranty.
 #include "crap.h"
 #include "sjoin.h"
 struct
-    char to[7], end[3]
+    char to[10], end[5]
 skip = {{'\0'}, {'\2'}}
 char *has_main=NULL, eol[255]={'\0'}
 struct macro *maclist = NULL
 void macros  char **s
-    char *tmp, *match, *replace
+    char *tmp, *match, *changed
     // check if we are done skipping over a multiline comment, triple-quote
-    if  skip.to[0] && (tmp = resub(*s, skip.to, skip.end))
-        free  tmp
+    if  *(skip.to) && (tmp = resub(*s, skip.to, skip.end))
+        strcpy  *s, tmp  ; free  tmp
         skip.to[0] = '\0', skip.end[0] = 2
     else
+        if  !strcmp(skip.to, "(.*)\"{3}")
+            addcslashes  *s
         // put keyword macros here
         // main becomes int main()
         unless  has_main || strcmp(*s, "main")
@@ -59,11 +61,11 @@ void macros  char **s
         SUB  "for" INARRAY, LOOP DOSTUFF
         // while myLabel in array[[start][:end]]
         SUB  "while" INARRAY, LOOP "&&\2" DOSTUFF
-        #define ARGSP "(( ?[^ \"]| ?\"(\\\\.|[^\\\"])*\")*)"
+        #define ARGSP "(( ?[^ \"]| ?\"(\\\\.|[^\\\"])*\")*) ?([ ]+|$)"
         // until
-         SUB("(\\W|^)until\\s\\s" ARGSP, "\1while  !(\2)")
+        SUB("(\\s|^)until\\s*" ARGSP, "\1while (!(\2))\5")
         // unless
-        SUB("(\\W|^)unless\\s\\s" ARGSP, "\1if  !(\2)")
+        SUB("(\\s|^)unless\\s*" ARGSP, "\1if (!(\2))\5")
         // double-space = parenthesis
         SUB("(\\w)  " ARGSP, "\1(\2)\5")
 
@@ -76,9 +78,9 @@ void macros  char **s
             strcpy  skip.to, "(\\*/)"
             strcpy  skip.end, "\1"
             free  tmp  ;return
-        // FIXME: triple quotes
-        if  (tmp = resub(*s,"\"\"\"(([^\"]+\"?)*)", "\"\2"))
-            strcpy  skip.to, "(.*)\"\"\""
+        // triple quotes
+        if  (tmp = resub(*s,"\"{3}(([^\"]+\"?)*)", "\"\2"))
+            strcpy  skip.to, "(.*)\"{3}"
             strcpy  skip.end, "\1\""
             strcpy  *s, tmp  ;free  tmp  ;return
         // apply embedded macros
@@ -86,11 +88,11 @@ void macros  char **s
             SUB  m->match, m->replace
         // read embedded macros
         match = resub  *s, "#replace\\s+/(.*)/(.*)/", "\1"
-        replace= resub  *s, "#replace\\s+/(.*)/(.*)/","\2"
-        if  match && replace
-            macro_append  &maclist, match, replace
+        changed= resub  *s, "#replace\\s+/(.*)/(.*)/","\2"
+        if  match && changed
+            macro_append  &maclist, match, changed
         else
-            free  match  ;free  replace
+            free  match  ;free  changed
         SUB("#replace\\s+/(.*)/(.*)/", "\x2f/ crap: replaced \1 with \2")
     return
 

@@ -6,5 +6,5 @@
 char* pass  char **v, char*fmt, char *s
     return msprintf  *v, fmt, s
 main
-    char *b = pass  &b, "%s", "All tests passed."
+    char *b = pass  &b, "%s", "Passed."
     puts  b  ;free  b
