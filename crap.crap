@@ -59,17 +59,18 @@ void macros  char **s
         SUB  "for" INARRAY, LOOP DOSTUFF
         // while myLabel in array[[start][:end]]
         SUB  "while" INARRAY, LOOP "&&\2" DOSTUFF
+        #define ARGSP "(( ?[^ \"]| ?\"(\\\\.|[^\\\"])*\")*)"
+        // until
+         SUB("(\\W|^)until\\s\\s" ARGSP, "\1while  !(\2)")
+        // unless
+        SUB("(\\W|^)unless\\s\\s" ARGSP, "\1if  !(\2)")
         // double-space = parenthesis
-        SUB("(\\w)  (( ?[^ \"]+| ?\".*\")*) ?([ ]+|$)", "\1(\2)\4")
+        SUB("(\\w)  " ARGSP, "\1(\2)\5")
 
         // Put function-like macros here
         // repeat
-        SUB("repeat\\s*\\(([^, ]+)[, ]*([^, ]*)\\)",
+        SUB("repeat\\s*\\(([^, ]+)[, ]*(\\w*)\\)",
          "for(size_t \2_index=\1;\2_index--;)")
-        // until
-        SUB("(\\W|^)until\\s*\\((.+)\\)", "\1while(!(\2))")
-        // unless
-        SUB("(\\W|^)unless\\s*\\((.+)\\)", "\1if(!(\2))")
         // skip over multi-line comments
         if  (tmp = resub(*s,"(/\\*)(.*[^/)]$)", "\1\2"))
             strcpy  skip.to, "(\\*/)"
@@ -92,6 +93,11 @@ void macros  char **s
             free  match  ;free  replace
         SUB("#replace\\s+/(.*)/(.*)/", "\x2f/ crap: replaced \1 with \2")
     return
+
+#undef ARGSP
+#undef INARRAY
+#undef LOOP
+#undef DOSTUFF
 #undef SUB
 void cut_eol  char **fc, char **lc
     // slice off end of line comments, store in $eol
@@ -109,7 +115,7 @@ void decorate  char **s
     static int prev_indent = 0, indent = 0
     char *t
     // convert tabs to spaces
-    while  (t = resub(*s, "\t", "    "))
+    while  (t = resub(*s, "\t", SPACES))
     	strcpy  *s, t  ;free  t
     // locate first non-whitespace char
     int spaces = strspn(*s, " ")
@@ -144,11 +150,12 @@ int crap  char *name
     until  feof(f) || ferror(f)
         b = buf + BACK_BUFFER_LEN
         if  fgets(b, MAX_LINE_LEN, f)
+            if  b[strlen(b)-1]!='\n'  strcat  b, "\n"
             decorate  &b  ;printf  "%s", b
     fclose  f
     unless  strchr("#}()<", b[0])  // final #endif, brace, tag?
-        if  has_main  strcpy  b, "    return 0;\n}\n"
-        else strcpy  b, "    \n}\n"
+        if  has_main  strcpy  b, SPACES "return 0;\n}\n"
+        else strcpy  b, SPACES "\n}\n"
         decorate  &b  ;puts  b
     else puts  ""
     macro_free  &maclist

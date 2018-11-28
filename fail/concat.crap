@@ -9,4 +9,3 @@ main
     "foo","bar")
     puts  s
     puts  JOIN(SPLIT(s, "_, "))
-
