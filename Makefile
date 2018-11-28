@@ -25,6 +25,7 @@ CC=gcc
 
 #~ defauilt rule builds target[s] lib[s]
 all: $(SUBDIRS) $(BUILD_TARGETS:.o=) $(BUILD_TARGETS) $(BUILD_LIBS)
+
 $(SUBDIRS):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
 
@@ -44,7 +45,7 @@ win: all
 tcc: CC=$(TCC)
 tcc: all
 
-debug: CFLAGS+=-g -pedantic -O0
+debug: CFLAGS+=-g -Wall -pedantic
 debug: all
 
 %.asm : %.o

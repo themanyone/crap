@@ -1,0 +1,12 @@
+//bin/bash -c "../crap "$0" |tcc -run - "$@"";exit 0;
+#include <stdio.h>
+main
+    puts ("""
+        This is a test!
+    
+        // triple quotes
+        if  (tmp = resub(*s,"\"{3}(([^\"]+\"?)*)", "\"\2"))
+            strcpy  skip.to, "(.*)\"{3}"
+            strcpy  skip.end, "\1\""
+            strcpy  *s, tmp  ;free  tmp  ;return
+    """);

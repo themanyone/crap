@@ -13,7 +13,7 @@ CFLAGS=-I../include
 	ln -sf "lib$@.1.0.1" "lib$@"
 all:
 	$(foreach exe, $(wildcard *.crap), \
-	./$(exe);)
+	./$(exe) || exit;)
 clean:
 	$(RM) $(CRAP:.crap=.c)
 shared: $(LIBS:.crap=.so)

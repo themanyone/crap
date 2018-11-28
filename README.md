@@ -1,9 +1,7 @@
 # Concise, Regex-Aware Preprocessor (CRAP)
-C (computer language) extender for `crap` coders, toy language 
-inventors.
+C (computer language) code decorator and language maker
 
-<img style="float:right"
-src="https://proxy.duckduckgo.com/iu/?u=http%3A%2F%2Ficons.iconarchive.com%2Ficons%2Fgoogle%2Fnoto-emoji-smileys%2F128%2F10104-pile-of-poo-icon.png&f=1">
+<img style="float:right" src="https://proxy.duckduckgo.com/iu/?u=http%3A%2F%2Ficons.iconarchive.com%2Ficons%2Fgoogle%2Fnoto-emoji-smileys%2F128%2F10104-pile-of-poo-icon.png&f=1">
 
 ## Giving everyone `crap` for writing crappy code.
 
@@ -82,10 +80,10 @@ to print to, or read from, consoles or files in a standard way. See
 `test2.crap` for a demo that uses `"asprintf.h"` for string and array 
 manipulation.
 
-**Expand `main` and return**. The optional `main` macro, when it occurs all 
-by itself, expands to `int main(int argc, char **argv, char** env)`. Using 
-`main` causes `return 0` to be appended, so make sure `main` is the last 
-function in the file.
+**Expand `main` and return**. The optional `main` macro, when it occurs 
+all by itself, expands to `int main(int argc, char **argv, char** 
+env)`. Using `main` causes `return 0` to be appended, so make sure 
+`main` is the last function in the file.
 
 **Curly brackets (braces).** Braces magically appear around indented 
 code blocks of four spaces or a tab (the default, as defined in 
@@ -113,10 +111,25 @@ statements to be broken up across multiple lines, without receiving
 unwanted semicolons. Trouble is, you'll have to manually add a 
 semicolon when lines end with a `quote`.
 
-**Return.** Again, `crap` adds a final `return 0` only when `main` is used. 
-In other words, please supply functions with `return` values.
+**Return.** Again, `crap` adds a final `return 0` only when `main` is 
+used. In other words, please supply functions with `return` values.
 
 ## `Crap` language extensions.
+
+**Triple-quoted strings** String literals may be triple-quoted. The 
+output will have backslashes and quotes properly escaped.
+
+```
+    puts ("""
+        This is a test!
+    
+        // triple quotes
+        if  (tmp = resub(*s,"\"{3}(([^\"]+\"?)*)", "\"\2"))
+            strcpy  skip.to, "(.*)\"{3}"
+            strcpy  skip.end, "\1\""
+            strcpy  *s, tmp  ;free  tmp  ;return
+    """);
+```
 
 ### Decisions.
 
@@ -132,61 +145,65 @@ that may not be accessed outside the loop. An optional `mylabel`
 attribute causes `_index` to take on a unique name, `mylabel_index` so 
 nested `repeat` loops are possible.
 
-These loop extensions insert long lines of crappy-looking code, but it gets 
-optimized out in the compiler.
+These loop extensions insert long lines of crappy-looking code, but it 
+gets optimized out in the compiler.
 
-**`for mylabel in array[[start]:[end]]`** Loops over `array`, assigning each 
-element to the supplied, predefined variable (or pointer), in turn. An 
-optional `start` and `end` may be preceded with a `-` sign, which means 
-subtracted from the end (1-past the last element as calculated with 
-`sizeof`, so negative indexes can not work with dynamic arrays). The 
-`mylabel` and `array` labels help declare local unsigned variables, 
-`mylabel_index` and `mylabel_end` which are not available outside the loop. 
-Note that `mylabel_end` is 1 + the optional `[:end]` argument which, if 
-supplied, will probably not be the real length of the array. If no optional 
-`[:end]` is provided, `crap` will calculate `mylabel_end` using the `sizeof` 
-operator, stepping through each element, unless it reaches a `NULL`. And 
-finally, a non-negative `[:end]` ought to be supplied for dynamic (malloc'd) 
-objects, unless they have been neatly `NULL`-terminated.
+**`for mylabel in array[[start]:[end]]`** Loops over `array`, assigning 
+each element to the supplied, predefined variable (or pointer), in 
+turn. An optional `start` and `end` may be preceded with a `-` sign, 
+which means subtracted from the end (1-past the last element as 
+calculated with `sizeof`, so negative indexes can not work with dynamic 
+arrays). The `mylabel` and `array` labels help declare local unsigned 
+variables, `mylabel_index` and `mylabel_end` which are not available 
+outside the loop. Note that `mylabel_end` is 1 + the optional `[:end]` 
+argument which, if supplied, will probably not be the real length of 
+the array. If no optional `[:end]` is provided, `crap` will calculate 
+`mylabel_end` using the `sizeof` operator, stepping through each 
+element, until it reaches a `NULL`. And finally, a non-negative 
+`[:end]` ought to be supplied for dynamic (malloc'd) objects, unless 
+they have been neatly `NULL`-terminated.
 
-Compilers can be configured to gnerate warnings when these loops are 
-uable to compute array sizes. From `make debug`:
+Compilers can be configured to generate warnings when these loops are 
+unable to compute array sizes. From `make debug`:
 
 ```
 gcc -g -Wall -pedantic ...
 ```
 
-**`while mylabel in array[[start][:end]]`** *Exactly* like `for mylabel in 
-array` but with constant, paranoid checking to make sure `array` stays valid 
-(in case of bad array at start, destruction inside the loop, other 
-threads?). If you don't trust the `array`, then use `while`. The `for` 
-construction and even a plain `while(*data)` statement is sufficient to loop 
-through `NULL`-terminated arrays. But this extension inherits the safer end 
-limits, indexing, and slight speed penalty, of the above `for` loop. Again, 
-a non-negative `[:end]` is necessary for dynamic arrays to prevent out of 
-bounds conditions.
+**`while mylabel in array[[start][:end]]`** *Exactly* like `for mylabel 
+in array` but with constant, paranoid checking to make sure `array` 
+stays valid (in case of bad array at start, destruction inside the 
+loop, other threads?). If you don't trust the `array`, then use 
+`while`. The `for` construction and even a plain `while(*data)` 
+statement is sufficient to loop through `NULL`-terminated arrays. But 
+this extension inherits the safer end limits, indexing, and slight 
+speed penalty, of the above `for` loop. Again, a non-negative `[:end]` 
+is necessary for dynamic arrays to prevent out of bounds conditions.
 
-**`array[[start]:[end]]`** Using `somevar = array[start:end]` drops in a 
-[non-standard GNU 
-extension](https://stackoverflow.com/questions/34476003/are-code-blocks-inside-parenthesis-in-c-c-legal-and-can-mscl-compile-it) 
-code block at that location. Although putting block statements inside 
-parenthesis is not part of the ISO C standard, it works with many compilers 
-without warnings lately. The code creates a duplicate array, but with the 
-same or fewer elements assigned to it. Trying to use `[start:end]` notation 
+**`array[[start]:[end]]`** Using `somevar = array[start:end]` drops in 
+a [non-standard GNU 
+extension](https://stackoverflow.com/questions/34476003/are-code-blocks-i
+nside-parenthesis-in-c-c-legal-and-can-mscl-compile-it) code block at 
+that location. Although putting block statements inside parenthesis is 
+not part of the ISO C standard, it works with many compilers without 
+warnings lately. The code creates a duplicate array, but with the same 
+or fewer elements assigned to it. Trying to use `[start:end]` notation 
 on the resulting array with negative and unspecified indexes will get 
-results based on the old lengths, which might get confusing as the array 
-gets passed around. `Crap` merely rearranges source code. The programmer is 
-responsible for keeping track of runtime lengths and values!
+results based on the old lengths, which might get confusing as the 
+array gets passed around. `Crap` merely rearranges source code. The 
+programmer is responsible for keeping track of run-time lengths and 
+values!
 
-Arrays may be initialized in a manner exactly like C: `int w[]={1,2,3,4,5}` or 
-`char *s[]={"this","and","that"}`. The first array length does not need to be 
-specified in the declaration.
+Arrays may be initialized in a manner exactly like C: `int 
+w[]={1,2,3,4,5}` or `char *s[]={"this","and","that"}`. The first array 
+length does not need to be specified in the declaration.
 
-**More `crap` examples** Our code pastes can walk through multidimensional 
-arrays, but be sure to use the appropriate type declaration. In the 
-following example, the first loop uses a pointer because it's returning a 
-whole row. The inner loop, `j`, uses an `int` type because the innermost 
-type of the 2D array, the one we want to print, is `int`.
+**More `crap` examples** Our code pastes can walk through 
+multidimensional arrays, but be sure to use the appropriate type 
+declaration. In the following example, the first loop uses a pointer 
+because it's returning a whole row. The inner loop, `j`, uses an `int` 
+type because the innermost type of the 2D array, the one we want to 
+print, is `int`.
 
 ```
 #if 0
@@ -209,9 +226,8 @@ main
         for j in i[:N] // undefined length, add [:N]
             printf  "%i%s", j, j_index==N-1?"\n":", "
 ```
-
-There is a handy program and website called [cdecl](https://cdecl.org/) that 
-explains C's type declarations.
+There is a handy program and website called 
+[cdecl](https://cdecl.org/) that explains C's type declarations.
 
 ```
 Array indexes start at [zero].
@@ -231,19 +247,21 @@ words[ -3 : -1 ] = { "two", "three" }
 ```
 ### Embedded `crap` macros.
 
-**Custom `crap`** Crap's `#replace /pattern/replacement/` macros support up 
-to `\31` decimal backref substitutions almost like `sed` scripts. They are 
-no replacement for `sed`, nor do they supersede other preprocessor 
-directives. But they could change things up. Up to 100 replacements per 
-line, defined in `crap.h`. Rules may be added to `crap`'s source code for 
-all users, or embedded into individual `crap` files where desired. Embedded 
-`#replace` rules do not cross file boundaries, so do not put them in headers 
-and expect them to work elsewhere.
+**Custom `crap`** Crap's `#replace /pattern/replacement/` macros 
+support up to `\31` decimal back-ref substitutions almost like `sed` 
+scripts. They are no replacement for `sed`, nor do they supersede other 
+preprocessor directives. But they could change things up. Up to 100 
+replacements per line, defined in `crap.h`. Rules may be added to 
+`crap`'s source code for all users, or embedded into individual `crap` 
+files where desired. Embedded `#replace` rules do not cross file 
+boundaries, so do not put them in headers and expect them to work 
+elsewhere.
 
-**Debugging** Some care is taken to make sure the resulting `.c` sources 
-have the same line numbers (no extra linebreaks). Compile with -g option and 
-use debuggers on the executable as with any C program. The `make debug` 
-target makes a debug build of `crap` for stepping through that as well.
+**Debugging** Some care is taken to make sure the resulting `.c` 
+sources have the same line numbers (no extra line breaks). Compile with 
+-g option and use debuggers on the executable as with any C program. 
+The `make debug` target makes a debug build of `crap` for stepping 
+through that as well.
 
 ```
 make debug
@@ -254,7 +272,7 @@ gdb -tui -args ./myProgram myArgs
 language](http://c-faq.com/index.html). Compilers like the [Gnu C 
 Compiler](https://gcc.gnu.org/) (GCC), 
 [TinyCC](https://repo.or.cz/tinycc.git), most other free software. 
-Mention of tools and technoligies is for information purposes and does 
+Mention of tools and technologies is for information purposes and does 
 not constitute endorsement or affiliation. `Sed`, `awk`, `perl`, and 
 `grep` have more robust regex engines and are thoroughly tested, so use 
 those instead of `crap` for handling arbitrary data streams.
@@ -263,7 +281,7 @@ those instead of `crap` for handling arbitrary data streams.
 
 Usage couldn't be simpler. There are no command options. Use standard 
 shell pipes '|' to fling `crap` at compilers, or '>' to `crap` 
-descreetly into a file.
+discreetly into a file.
 
 ```
 # Let's make holy.c from holy.crap.
@@ -272,13 +290,14 @@ crap holy.crap > holy.c
 
 ## A legacy of `crap`.
 
-Crap's predecessor, [Anchor](http://anch.org/anchor.html), is remarkably 
-stable. But don't look at the code! It abused `flex` in horrible ways and 
-was otherwise unmaintainable. To make matters worse, `flex` grinds through 
-confusing modes of operation during parsing, tripping flags, and 
-interpreting things differently as it goes.
+Crap's predecessor, [Anchor](http://anch.org/anchor.html), is 
+remarkably stable. But don't look at the code! It abused `flex` in 
+horrible ways and was otherwise unmaintainable. To make matters worse, 
+`flex` grinds through confusing modes of operation during parsing, 
+tripping flags, and interpreting things differently as it goes.
 
-Crap drops the `flex` dependency and implements its own simplified regex calls.
+Crap drops the `flex` dependency and implements its own simplified 
+regex calls.
 
 ## Crapping for executives, using the three C shells.
 
@@ -329,17 +348,17 @@ make clean
 
 ## Using `crap` for "boot tracking."
 
-Our privacy policy for `crap` strictly forbids tracking. Please scrub off 
-and leave boots outside.
+Our privacy policy for `crap` strictly forbids tracking. Please scrub 
+off and leave boots outside.
 
-Crap *does* include a tool for *boostrapping*, however. Developers 
+Crap *does* include a tool for *bootstrapping*, however. Developers 
 tweaking our engine should use `make shared` and `bootstrap_test` to 
 make sure everything works before installing untested `crap`.
 
 ## Picking up fresh `crap`.
 
-Didn't Mom warn you about playing with dirty old `crap`? Don't take `crap` 
-from just anyone. Get a fresh pile from 
+Didn't Mom warn you about playing with dirty old `crap`? Don't take 
+`crap` from just anyone. Get a fresh pile from 
 [GitHub](https://github.com/themanyone/crap).
 
 `git clone https://github.com/themanyone/crap.git`

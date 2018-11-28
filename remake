@@ -1,0 +1,6 @@
+touch crap.crap
+make shared
+sudo make install
+touch crap.crap
+make shared
+make tests

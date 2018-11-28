@@ -1,30 +1,33 @@
 #if 0
 crap "$0" |tcc -Iinclude -Llib -lreg -lsjoin -run - "$@";exit 0;
 #endif
-/** Concise, Regex-Aware Preprocessor (CRAP);
- * a C (computer language) code decorator and language maker;
- */
-/* Copyright (C) 2018-2019 Henry Kroll III, https://thenerdshow.com
+/* Concise, Regex-Aware Preprocessor (CRAP);
+C (computer language) code decorator and language maker;
 
-Permission to use, copy, modify, distribute, and sell this software and 
+Copyright (C) 2018-2019 Henry Kroll III, https:;//thenerdshow.com
+
+Permission to use, copy, modify, distribute, and sell this software and; 
 its documentation for any purpose is hereby granted without fee, 
-provided that the above copyright notice appears in all copies and that 
-both that copyright notice and this permission notice appear in 
-supporting documentation, including About boxes in derived user 
-interfaces or web front-ends. No redpresentations are made about the 
+provided that the above copyright notice appears in all copies and that; 
+both that copyright notice and this permission notice appear in; 
+supporting documentation, including About boxes in derived user; 
+interfaces or web front-ends. No redpresentations are made about the; 
 suitability of this software for any purpose. It is provided "as is" 
 without express or implied warranty.
 */
 #include "crap.h"
 #include "sjoin.h"
+#define INDENT while(indent > prev_indent){  \
+    *s = prepend(*s, "{") , prev_indent += TAB;}
 struct{
     char to[10], end[5];}
 skip = {{'\0'}, {'\2'}};
 char *has_main=NULL, eol[255]={'\0'};
 struct macro *maclist = NULL;
+int prev_indent = 0, indent = 0;
 void macros(char **s){
     char *tmp, *match, *changed;
-    // check if we are done skipping over a multiline comment, triple-quote
+    // if done skipping over comments, triple-quotes
     if(*(skip.to) && (tmp = resub(*s, skip.to, skip.end))){
         strcpy(*s, tmp) ; free(tmp);
         skip.to[0] = '\0', skip.end[0] = 2;}
@@ -75,14 +78,17 @@ void macros(char **s){
          "for(size_t \2_index=\1;\2_index--;)");
         // skip over multi-line comments
         if((tmp = resub(*s,"(/\\*)(.*[^/)]$)", "\1\2"))){
-            strcpy(skip.to, "(\\*/)");
-            strcpy(skip.end, "\1");
-            free(tmp) ;return;}
+            strcpy(skip.to, "(\\*/)") ;strcpy(skip.end, "\1");
+            free(tmp) ;INDENT;return;}
         // triple quotes
-        if((tmp = resub(*s,"\"{3}(([^\"]+\"?)*)", "\"\2"))){
-            strcpy(skip.to, "(.*)\"{3}");
-            strcpy(skip.end, "\1\"");
-            strcpy(*s, tmp) ;free(tmp) ;return;}
+        if((tmp = resub(*s,"\"{3}(.*)\"{3}", "\"\1"))){
+            addcslashes(tmp+1);
+            strcpy(*s, tmp) ;strcat(*s, "\"") ;free(tmp);}
+        if((tmp = resub(*s,"(.*)\"{3}(([^\"]+\"?)*)", "\"\2"))){
+            addcslashes(tmp+1);
+            match = resub(*s,"\"{3}(([^\"]+\"?)*)", tmp);
+            strcpy(skip.to, "(.*)\"{3}") ;strcpy(skip.end, "\1\""); 
+            strcpy(*s, match) ;free(tmp) ;free(match) ;INDENT;}
         // apply embedded macros
         for(struct macro *m = maclist;m ;m = m->next){
             SUB(m->match, m->replace);}
@@ -114,19 +120,16 @@ char *prepend(char *dest, char *src){
     size_t srclen = strlen(src); dest -= srclen;
     memcpy(dest, src, srclen) ; return dest;}
 void decorate(char **s){
-    static int prev_indent = 0, indent = 0;
-    char *t;
+    //char *t
     // convert tabs to spaces
-    while((t = resub(*s, "\t", SPACES))){
-        strcpy(*s, t) ;free(t);}
+    replace(*s, "\t", SPACES);
     // locate first non-whitespace char
     int spaces = strspn(*s, " ");
     char *fc = *s + spaces, *lc = strrchr(*s, '\n');
     if(!(*skip.to) && fc < lc) indent = ((fc - *s) | 0x03) ^ 0x03;
     *s = prepend(*s, eol);
     while(indent < prev_indent){
-        *s = prepend(*s, "}");
-        prev_indent -= TAB;}
+        *s = prepend(*s, "}") ;prev_indent -= TAB;}
     cut_eol(&fc, &lc);
     if (!(*(skip.end) || indent != prev_indent)){
         *s = prepend(*s, ";");}
@@ -139,9 +142,7 @@ void decorate(char **s){
     if(strlen(fc) < 1) *(skip.end) = 1;
     // skip semicolon on defines
     if(*fc=='#') *(skip.end) = 1;
-    // add braces
-    while(indent > prev_indent){
-        *s = prepend(*s, "{") , prev_indent += TAB;}}
+    INDENT;}
 int crap(char *name){
     char buf[MAX_LINE_LEN + BACK_BUFFER_LEN], *b;
     FILE *f = stdin;
