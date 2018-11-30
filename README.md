@@ -67,7 +67,7 @@ move overly-indented blocks into separate functions or libraries.
 
 An extendable and growing set of rules turns `crap` code into C.
 
-**String mangling** The `crap` preprocessor is good at corrupting 
+**String mangling.** The `crap` preprocessor is good at corrupting 
 strings because it has difficulty determining what is inside or outside 
 a string. It's actually a feature. We like having our strings modified. 
 Any strings that you do not want nuked on their way to becoming C 
@@ -80,7 +80,7 @@ to print to, or read from, consoles or files in a standard way. See
 `test2.crap` for a demo that uses `"asprintf.h"` for string and array 
 manipulation.
 
-**Expand `main` and return**. The optional `main` macro, when it occurs 
+**Expand `main` and return.** The optional `main` macro, when it occurs 
 all by itself, expands to `int main(int argc, char **argv, char** 
 env)`. Using `main` causes `return 0` to be appended, so make sure 
 `main` is the last function in the file.
@@ -109,14 +109,14 @@ and lines that end with any of the characters ` <>;,."=*/&|^!`. Ending
 lines with one of those characters or a c99 `//comment` permits long 
 statements to be broken up across multiple lines, without receiving 
 unwanted semicolons. Trouble is, you'll have to manually add a 
-semicolon when lines end with a `quote`.
+semicolon after string literal assignments because they end with a `quote`.
 
 **Return.** Again, `crap` adds a final `return 0` only when `main` is 
 used. In other words, please supply functions with `return` values.
 
 ## `Crap` language extensions.
 
-**Triple-quoted strings** String literals may be triple-quoted. The 
+**Triple-quoted strings.** String literals may be triple-quoted. The 
 output will have backslashes and quotes properly escaped.
 
 ```
@@ -180,25 +180,23 @@ this extension inherits the safer end limits, indexing, and slight
 speed penalty, of the above `for` loop. Again, a non-negative `[:end]` 
 is necessary for dynamic arrays to prevent out of bounds conditions.
 
-**`array[[start]:[end]]`** Using `somevar = array[start:end]` drops in 
-a [non-standard GNU 
-extension](https://stackoverflow.com/questions/34476003/are-code-blocks-i
-nside-parenthesis-in-c-c-legal-and-can-mscl-compile-it) code block at 
-that location. Although putting block statements inside parenthesis is 
-not part of the ISO C standard, it works with many compilers without 
-warnings lately. The code creates a duplicate array, but with the same 
-or fewer elements assigned to it. Trying to use `[start:end]` notation 
-on the resulting array with negative and unspecified indexes will get 
-results based on the old lengths, which might get confusing as the 
-array gets passed around. `Crap` merely rearranges source code. The 
-programmer is responsible for keeping track of run-time lengths and 
+**`array[[start]:[end]]`** Using `somevar = array[start:end]` drops in a 
+[non-standard GNU extension](https://stackoverflow.com/questions/34476003/are-code-blocks-inside-parenthesis-in-c-c-legal-and-can-mscl-compile-it) code block at that 
+location. Although putting block statements inside parenthesis is not part 
+of the ISO C standard, it works with many compilers without warnings 
+lately. The code creates a duplicate array, but with the same or fewer 
+elements assigned to it. Trying to use `[start:end]` notation on the 
+resulting array with negative and unspecified indexes will get results 
+based on the old lengths, which might get confusing as the array gets 
+passed around. `Crap` merely rearranges source code. The programmer is 
+responsible for keeping track of run-time lengths and 
 values!
 
 Arrays may be initialized in a manner exactly like C: `int 
 w[]={1,2,3,4,5}` or `char *s[]={"this","and","that"}`. The first array 
 length does not need to be specified in the declaration.
 
-**More `crap` examples** Our code pastes can walk through 
+**More `crap` examples.** Our code pastes can walk through 
 multidimensional arrays, but be sure to use the appropriate type 
 declaration. In the following example, the first loop uses a pointer 
 because it's returning a whole row. The inner loop, `j`, uses an `int` 
@@ -207,7 +205,7 @@ print, is `int`.
 
 ```
 #if 0
-crap $0 | tcc -run -; exit 0
+crap $0 | tcc -run -; exit $?
 #endif
 #include <stdio.h>
 
@@ -247,7 +245,7 @@ words[ -3 : -1 ] = { "two", "three" }
 ```
 ### Embedded `crap` macros.
 
-**Custom `crap`** Crap's `#replace /pattern/replacement/` macros 
+**Custom `crap`.** Crap's `#replace /pattern/replacement/` macros 
 support up to `\31` decimal back-ref substitutions almost like `sed` 
 scripts. They are no replacement for `sed`, nor do they supersede other 
 preprocessor directives. But they could change things up. Up to 100 
@@ -257,7 +255,7 @@ files where desired. Embedded `#replace` rules do not cross file
 boundaries, so do not put them in headers and expect them to work 
 elsewhere.
 
-**Debugging** Some care is taken to make sure the resulting `.c` 
+**Debugging.** Some care is taken to make sure the resulting `.c` 
 sources have the same line numbers (no extra line breaks). Compile with 
 -g option and use debuggers on the executable as with any C program. 
 The `make debug` target makes a debug build of `crap` for stepping 
@@ -305,11 +303,12 @@ Shell commands may be embedded into the first line to make executable
 scripts for rapid testing and development. The following comment at the 
 top of the file tells the shell to use `crap` to pipe '|' generated C 
 code to the tinycc compiler. The `-run` option tells `tcc` to execute 
-the compiled code. A well-placed `exit 0` prevents shells from 
-attempting to execute the remaining `crap` as shell code.
+the compiled code. A well-placed `exit $?` preserves the return value 
+and prevents the interpreter from attempting to execute the remaining 
+`crap` as shell code.
 
 ```
-//bin/crap "$0" |tcc -run - "$@";exit 0
+//bin/crap "$0" |tcc -run - "$@";exit $?
 ```
 
 You may use other compilers or shells. Get creative!

@@ -51,6 +51,11 @@ debug: all
 %.asm : %.o
 	objdump -Sx $< > $@
 
+%.html : %.md
+	rdiscount $< > $@
+
+html: README.html
+
 s:
 	SciTE Makefile *.crap&
 
