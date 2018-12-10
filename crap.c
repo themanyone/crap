@@ -57,13 +57,13 @@ void macros(char **s){
           "\\s*:\\s*(-[^]:]+)?([^]:]+)?\\s*\\])?"
         #define LOOP \
           "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4:\5+0,"          \
-          "\1_end=\7+0?\7+0:sizeof \2/sizeof \2[0]\6;\1_index<\1_end"
+          "\1_end=\7+0?\7+0:sizeof \2/sizeof \2[0]\6;\2&&(\1=\2[\1_index])"
         #define DOSTUFF \
-        "&&(\1=\2[\1_index]);\1_index++)"
+        "\1_index<\1_end;\1_index++)"
         // for myLabel in array[[start][:end]]
-        SUB("for" INARRAY, LOOP DOSTUFF);
+        SUB("for" INARRAY, LOOP "," DOSTUFF);
         // while myLabel in array[[start][:end]]
-        SUB("while" INARRAY, LOOP "&&\2" DOSTUFF);
+        SUB("while" INARRAY, LOOP "&&" DOSTUFF);
         #define ARGSP "(( ?[^ \"]| ?\"(\\\\.|[^\\\"])*\")*) ?([ ]+|$)"
         // until
         SUB("(\\s|^)until\\s*" ARGSP, "\1while (!(\2))\5");

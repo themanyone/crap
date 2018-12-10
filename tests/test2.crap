@@ -52,9 +52,9 @@ main
     for word in words[ -3 : -1 ]
         printf  " \"%s\"%s", word, word_index == word_end - 1?" }\n":","
     char c
-    char *test = "testing";
-    for c in test
-        printf  "[%c]%s", c, c_index==c_end-1?"\n": ""
+    char *test = "testing it";
+    while c in test[:99]
+        printf  "[%c]", c
     putchar  '\n'
     test = NULL; // testing :)
     while c in test
