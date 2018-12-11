@@ -56,6 +56,3 @@ main
     while c in test[:99]
         printf  "[%c]", c
     putchar  '\n'
-    test = NULL; // testing :)
-    while c in test
-        exit  1

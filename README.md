@@ -1,5 +1,5 @@
 # Concise, Regex-Aware Preprocessor (CRAP)
-C (computer language) code decorator and language maker
+C (computer language) code mangler and language maker
 
 <img style="float:right" src="https://proxy.duckduckgo.com/iu/?u=http%3A%2F%2Ficons.iconarchive.com%2Ficons%2Fgoogle%2Fnoto-emoji-smileys%2F128%2F10104-pile-of-poo-icon.png&f=1">
 
@@ -13,10 +13,11 @@ C (computer language) code decorator and language maker
 
 ## Crap. It's not a compiler. It's a movement.
 
-Crap includes gentle macros to make coding sessions flow more 
-smoothly. The easiest way to explain it is to show some examples.
-
-The following crap-worthy example prints "hello world" five times.
+Crap is a new language maker. It has sort of become its own language to 
+demonstrate what it might be capable of. It may be used as-is, or 
+transformed to build any kind of computer language. The safest way to 
+explain it is in code. The following crap-worthy example prints "hello 
+world" five times.
 
 ```
 #include <stdio.h>
@@ -30,7 +31,7 @@ After processing, it becomes more or less standard C.
 ```
 #include <stdio.h>
 int main(int argc, char **argv, char** env){
-    for(size_t _=5;_--;){
+    for(size_t _index=5;_index--;){
         puts ("hello world");
     return 0;
 }
@@ -43,8 +44,8 @@ Yes, yes it is.
 *Crap is in alpha stages of development. Use at your own risk! In case 
 the name isn't good enough, there are no guarantees about its 
 fertilizer content or implied fitness for gardening. Have fun and 
-experiment under the terms of the included LICENSE. For other, 
-lucrative, uses please contact the author.
+experiment under the terms of the included LICENSE. For 
+more lucrative licensing please contact the author.
 
 ## Crap has `crap`ped itself!
 
@@ -57,11 +58,12 @@ prerequisite for `crap` to compile `crap`.
 
 ## Even `crap` has limits.
 
-Single lines are limited to 8000 characters (about 80 line breaks on a 
-100-character terminal). There is enough buffer space for perhaps 99 
-levels of indent. You can bump up the limits in `crap.h` at the expense 
-of more memory usage, but why? It is prudent to break up long lines and 
-move overly-indented blocks into separate functions or libraries.
+Single lines of code are limited to 8000 characters (about 80 line 
+wraps on a 100-character terminal). There is enough buffer space for 
+perhaps 99 levels of indent. You can bump up the limits in `crap.h` at 
+the expense of more memory usage, but why? It is prudent to break up 
+long lines and move overly-indented blocks into separate functions or 
+libraries.
 
 ## Craptastic rules.
 
@@ -101,15 +103,15 @@ things manually, as with logical operators and "truth y" value
 assignments. Those who dislike the feature do not have to use it, but 
 it persists for the author's convenience.
 
-**Semicolons.** Added to every line, except the line above the indented 
-code block (probably if, for or while). If that line needs a semicolon 
-for some reason, just add it manually. Other lines that do not receive 
-a semicolon are preprocessor statements like `#define`, `//comment`s, 
-and lines that end with any of the characters ` <>;,."=*/&|^!`. Ending 
-lines with one of those characters or a c99 `//comment` permits long 
-statements to be broken up across multiple lines, without receiving 
-unwanted semicolons. Trouble is, you'll have to manually add a 
-semicolon after string literal assignments because they end with a `quote`.
+**Semicolons.** Not usually necessary! If some line needs a semicolon 
+for some reason, just add it manually. Lines that may need manual 
+editing of semicolons are preprocessor statements like `#define`, 
+`//comment`s, and lines that end with any of the characters ` 
+<>;,."=*/&|^!`. Purposely ending lines with one of those characters or 
+a c99 `//comment` permits long statements to be broken up across 
+multiple lines, without receiving unwanted semicolons. Expect to 
+manually add a semicolon after string literal assignments because they 
+end with a `quote`.
 
 **Return.** Again, `crap` adds a final `return 0` only when `main` is 
 used. In other words, please supply functions with `return` values.
@@ -139,7 +141,7 @@ output will have backslashes and quotes properly escaped.
 
 ### Pasted loops.
 
-**`repeat`** The `repeat n[, mylabel]` constructor pastes a `for` loop 
+**`repeat`** The `repeat (n[, mylabel])` constructor pastes a `for` loop 
 into the code to repeat `n` times. A local `_index` variable is defined 
 that may not be accessed outside the loop. An optional `mylabel` 
 attribute causes `_index` to take on a unique name, `mylabel_index` so 
@@ -149,18 +151,19 @@ These loop extensions insert long lines of crappy-looking code, but it
 gets optimized out in the compiler.
 
 **`for mylabel in array[[start]:[end]]`** Loops over `array`, assigning 
-each element to the supplied, predefined variable (or pointer), in 
-turn. An optional `start` and `end` may be preceded with a `-` sign, 
-which means subtracted from the end (1-past the last element as 
-calculated with `sizeof`, so negative indexes can not work with dynamic 
-arrays). The `mylabel` and `array` labels help declare local unsigned 
-variables, `mylabel_index` and `mylabel_end` which are not available 
-outside the loop. Note that `mylabel_end` *is* the optional `[:end]` 
-argument which, if supplied, can exceed the real length of 
-the array. If no optional `[:end]` is provided, `crap` will calculate 
-`mylabel_end` using the `sizeof` operator, stepping through each 
-element, including `NULL` ones. And finally, a non-negative 
-`[:end]` ought to be supplied for dynamic (malloc'd) objects where the length is unknown at compile time.
+each element to the supplied, predefined variable (or pointer), stepping 
+through each element, including `zero` and `NULL` elements. An optional 
+`start` and `end` may be preceded with a `-` sign, which means 
+subtracted from the end (1-past the last element as calculated with 
+`sizeof`, so negative indexes can not work with dynamic arrays). The 
+`mylabel` and `array` labels help declare local unsigned variables, 
+`mylabel_index` and `mylabel_end` which are not available outside the 
+loop. Note that `mylabel_end` *is* the optional `[:end]` argument which, 
+if supplied, may exceed the real length of the array. If no optional 
+`[:end]` is provided, `crap` will calculate `mylabel_end` using the 
+`sizeof` operator. And finally, a non-negative `[:end]` ought to be 
+supplied for dynamic (malloc'd) objects where the length is unknown at 
+compile time.
 
 Compilers can be configured to generate warnings when these loops are 
 unable to compute array sizes. From `make debug`:
@@ -170,12 +173,12 @@ gcc -g -Wall -pedantic ...
 ```
 
 **`while mylabel in array[[start][:end]]`** *Exactly* like `for mylabel 
-in array` but will bail out at the first sign of `NULL` elements. A 
-plain `while(*data)` statement is sufficient to loop through 
-`NULL`-terminated arrays. But this extension inherits the safer end 
-limits, indexing, and slight speed penalty, of the above `for` loop. 
-Again, a non-negative `[:end]` is necessary for dynamic arrays to 
-prevent out of bounds conditions.
+in array` but will bail out at the first sign of zero `NULL` elements. 
+(Use the `for` to loop to loop through those.) A plain `while(*data)` 
+statement is sufficient to step through `NULL`-terminated arrays. But 
+this extension inherits the safer end limits, indexing, and slight speed 
+penalty, of the above `for` loop. Again, a non-negative `[:end]` is 
+necessary for dynamic arrays to prevent out of bounds conditions.
 
 **`array[[start]:[end]]`** Using `somevar = array[start:end]` drops in a 
 [non-standard GNU 
@@ -212,9 +215,9 @@ crap $0 | tcc -run -; exit $?
 main
     // defined length [M][N] is computable
     int test_image[M][N]=
-     {{1,2,3,4},
-      {5,6,7,8},
-      {9,10,11,12}},
+     { {1,2,3,4},
+      { 5,6,7,8},
+      { 9,10,11,12} },
     // undefined length *i is unknown
     *i, j
 
@@ -222,6 +225,7 @@ main
         for j in i[:N] // undefined length, add [:N]
             printf  "%i%s", j, j_index==N-1?"\n":", "
 ```
+
 There is a handy program and website called 
 [cdecl](https://cdecl.org/) that explains C's type declarations.
 
@@ -241,6 +245,7 @@ words[ :3] = { "zero", "one", "two" }
 words[ :-3] = { "zero", "one" }
 words[ -3 : -1 ] = { "two", "three" }
 ```
+
 ### Embedded `crap` macros.
 
 **Custom `crap`.** Crap's `#replace /pattern/replacement/` macros 
@@ -313,6 +318,7 @@ Or to create debuggable `.c` files along the way.
 ```
 //bin/crap "$0">"$0.c"&&tcc -run "$0.c";exit $?
 ```
+
 You may use other compilers or shells. Get creative!
 
 ## Now we're just making `crap` up.
