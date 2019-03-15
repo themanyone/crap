@@ -26,7 +26,7 @@ main
         puts  "hello world"
 ```
 
-After processing, it becomes more or less standard C.
+After processing, it becomes more or less standard C (`C99`).
 
 ```
 #include <stdio.h>
@@ -67,7 +67,7 @@ libraries.
 
 ## Craptastic rules.
 
-An extendable and growing set of rules turns `crap` code into C.
+An extendable and growing set of rules turns `crap` code into `C99`.
 
 **String mangling.** Beware, the `crap` preprocessor also processes 
 string literals (except for our special triple-quoted string extension, 
@@ -139,31 +139,31 @@ output will have backslashes and quotes properly escaped.
 
 **`until`** Shorthand for while(!()).
 
-### Pasted loops.
+### Loop templates.
 
 **`repeat`** The `repeat (n[, mylabel])` constructor pastes a `for` loop 
 into the code to repeat `n` times. A local `_index` variable is defined 
 that may not be accessed outside the loop. An optional `mylabel` 
 attribute causes `_index` to take on a unique name, `mylabel_index` so 
-nested `repeat` loops are possible.
+nested `repeat` loops make sense.
 
-These loop extensions insert long lines of crappy-looking code, but it 
-gets optimized out in the compiler.
+These loop templates insert long lines of crappy-looking code, but it 
+gets optimized out by the compiler.
 
-**`for mylabel in array[[start]:[end]]`** Loops over `array`, assigning 
-each element to the supplied, predefined variable (or pointer), stepping 
-through each element, including `zero` and `NULL` elements. An optional 
-`start` and `end` may be preceded with a `-` sign, which means 
-subtracted from the end (1-past the last element as calculated with 
-`sizeof`, so negative indexes can not work with dynamic arrays). The 
-`mylabel` and `array` labels help declare local unsigned variables, 
-`mylabel_index` and `mylabel_end` which are not available outside the 
-loop. Note that `mylabel_end` *is* the optional `[:end]` argument which, 
-if supplied, may exceed the real length of the array. If no optional 
-`[:end]` is provided, `crap` will calculate `mylabel_end` using the 
-`sizeof` operator. And finally, a non-negative `[:end]` ought to be 
-supplied for dynamic (malloc'd) objects where the length is unknown at 
-compile time.
+**`for mylabel in array[[start]:[end]]`** Loops over `array`, sort of 
+like Python would, assigning each element to the supplied, predefined 
+variable (or pointer), stepping through each element, including `zero` 
+and `NULL` elements. An optional `start` and `end` may be preceded with 
+a `-` sign, which means subtracted from the end (1-past the last 
+element as calculated with `sizeof`, so negative indexes can not work 
+with dynamic arrays). The `mylabel` and `array` labels help declare 
+local unsigned variables, `mylabel_index` and `mylabel_end` which are 
+not available outside the loop. Note that `mylabel_end` *is* the 
+optional `[:end]` argument which, if supplied, may exceed the real 
+length of the array. If no optional `[:end]` is provided, `cpp` will 
+calculate `mylabel_end` using the `sizeof` operator. And finally, a 
+non-negative `[:end]` ought to be supplied for dynamic (malloc'd) 
+objects where the length is unknown at compile time.
 
 Compilers can be configured to generate warnings when these loops are 
 unable to compute array sizes. From `make debug`:
@@ -174,7 +174,7 @@ gcc -g -Wall -pedantic ...
 
 **`while mylabel in array[[start][:end]]`** *Exactly* like `for mylabel 
 in array` but will bail out at the first sign of zero `NULL` elements. 
-(Use the `for` to loop to loop through those.) A plain `while(*data)` 
+(Use the `for` loop to loop through those.) A plain `while(*data)` 
 statement is sufficient to step through `NULL`-terminated arrays. But 
 this extension inherits the safer end limits, indexing, and slight speed 
 penalty, of the above `for` loop. Again, a non-negative `[:end]` is 
@@ -197,7 +197,7 @@ Arrays may be initialized in a manner exactly like C: `int
 w[]={1,2,3,4,5}` or `char *s[]={"this","and","that"}`. The first array 
 length does not need to be specified in the declaration.
 
-**More `crap` examples.** Our code pastes can walk through 
+**More `crap` examples.** Our loop templates can walk through 
 multidimensional arrays, but be sure to use the appropriate type 
 declaration. In the following example, the first loop uses a pointer 
 because it's returning a whole row. The inner loop, `j`, uses an `int` 
@@ -276,7 +276,7 @@ Compiler](https://gcc.gnu.org/) (GCC),
 Mention of tools and technologies is for information purposes and does 
 not constitute endorsement or affiliation. `Sed`, `awk`, `perl`, and 
 `grep` have more robust regex engines and are thoroughly tested, so use 
-those instead of `crap` for handling arbitrary data streams.
+those instead of `crap` for handling important data streams.
 
 ## Spreading `crap` around.
 
@@ -305,7 +305,8 @@ regex calls.
 Shell commands may be embedded into the first line to make executable 
 scripts for rapid testing and development. The following comment at the 
 top of the file tells the shell to use `crap` to pipe '|' generated C 
-code to the tinycc compiler. The `-run` option tells `tcc` to execute 
+code to the [TinyCC](https://repo.or.cz/tinycc.git) compiler. The
+`-run` option tells `tcc` to execute 
 the compiled code. A well-placed `exit $?` preserves the return value 
 and prevents the interpreter from attempting to execute the remaining 
 `crap` as shell code.
