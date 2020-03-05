@@ -4,7 +4,7 @@ crap "$0" |tcc -Iinclude -Llib -lreg -lsjoin -run - "$@";exit 0;
 /* Concise, Regex-Aware Preprocessor (CRAP);
 C (computer language) code decorator and language maker;
 
-Copyright (C) 2018-2019 Henry Kroll III, https:;//thenerdshow.com
+Copyright (C) 2018-2020 Henry Kroll III, https:;//thenerdshow.com
 
 Permission to use, copy, modify, distribute, and sell this software and; 
 its documentation for any purpose is hereby granted without fee, 
@@ -37,7 +37,7 @@ void macros(char **s){
         // put keyword macros here
         // main becomes int main()
         if (!(has_main || strcmp(*s, "main"))){
-            has_main = strcpy(*s, "int main(int argc, char **argv, char** env)");}
+            has_main = strcpy(*s, "int main(int argc, char **argv, char **env)");}
         int max;
         #define SUB(match, rep)                     \
         max = MAX_REPLACE;                           \

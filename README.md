@@ -1,5 +1,5 @@
 # Concise, Regex-Aware Preprocessor (CRAP)
-C (computer language) code mangler and language maker
+C (computer language) code mangler and language maker. [Website](https://themanyone.github.io/crap/).
 
 <img style="float:right" src="https://proxy.duckduckgo.com/iu/?u=http%3A%2F%2Ficons.iconarchive.com%2Ficons%2Fgoogle%2Fnoto-emoji-smileys%2F128%2F10104-pile-of-poo-icon.png&f=1">
 
@@ -15,20 +15,20 @@ C (computer language) code mangler and language maker
 
 Crap is a new language maker. It has sort of become its own language to 
 demonstrate what it might be capable of. It may be used as-is, or 
-transformed to build any kind of computer language. The safest way to 
+transformed to process any kind of computer language. The easiest way to 
 explain it is in code. The following crap-worthy example prints "hello 
 world" five times.
 
-```
+```c
 #include <stdio.h>
 main
     repeat  5
         puts  "hello world"
 ```
 
-After processing, it becomes more or less standard C (`C99`).
+After preprocessing, it becomes more or less standard C (`C99`).
 
-```
+```c
 #include <stdio.h>
 int main(int argc, char **argv, char** env){
     for(size_t _index=5;_index--;){
@@ -121,7 +121,7 @@ used. In other words, please supply functions with `return` values.
 **Triple-quoted strings.** String literals may be triple-quoted. The 
 output will have backslashes and quotes properly escaped.
 
-```
+```c
     puts ("""
         This is a test!
     
@@ -168,7 +168,7 @@ objects where the length is unknown at compile time.
 Compilers can be configured to generate warnings when these loops are 
 unable to compute array sizes. From `make debug`:
 
-```
+```makefile
 gcc -g -Wall -pedantic ...
 ```
 
@@ -204,7 +204,7 @@ because it's returning a whole row. The inner loop, `j`, uses an `int`
 type because the innermost type of the 2D array, the one we want to 
 print, is `int`.
 
-```
+```c
 #if 0
 crap $0 | tcc -run -; exit $?
 #endif
@@ -264,7 +264,7 @@ sources have the same line numbers (no extra line breaks). Compile with
 The `make debug` target makes a debug build of `crap` for stepping 
 through that as well.
 
-```
+```bash
 make debug
 gdb -tui -args ./myProgram myArgs
 ```
@@ -284,7 +284,7 @@ Usage couldn't be simpler. There are no command options. Use standard
 shell pipes '|' to fling `crap` at compilers, or '>' to `crap` 
 discreetly into a file.
 
-```
+```bash
 # Let's make holy.c from holy.crap.
 crap holy.crap > holy.c
 ```
@@ -311,12 +311,12 @@ the compiled code. A well-placed `exit $?` preserves the return value
 and prevents the interpreter from attempting to execute the remaining 
 `crap` as shell code.
 
-```
+```bash
 //bin/crap "$0" |tcc -run - "$@";exit $?
 ```
 Or to create debuggable `.c` files along the way.
 
-```
+```bash
 //bin/crap "$0">"$0.c"&&tcc -run "$0.c";exit $?
 ```
 
@@ -328,7 +328,7 @@ Crap works like any lexer, Vala, or C preprocessor. This `Makefile`
 target tells GNU `make` to turn `.crap` files into `.c` files as 
 needed.
 
-```
+```makefile
 %.c : %.crap
     crap "$<" > "$@"
 ```
@@ -342,14 +342,14 @@ to find it or search the web. Developers, testers, and those who want
 to improve upon `crap`'s regex engine, or include it into other 
 projects, may desire to `make shared` to build shared libraries.
 
-```
+```bash
 make
 sudo make install
 ```
 
 ## Wipe, and start over.
 
-```
+```bash
 make uninstall
 make clean
 ```
@@ -371,7 +371,7 @@ Didn't Mom warn you about playing with dirty old `crap`? Don't take
 
 `git clone https://github.com/themanyone/crap.git`
 
-Copyright (C) 2018-2019 Henry Kroll III, https://thenerdshow.com
+Copyright (C) 2018-2020 Henry Kroll III, https://thenerdshow.com
 
 Permission to use, copy, modify, distribute, and sell this software and 
 its documentation for any purpose is hereby granted without fee, 
