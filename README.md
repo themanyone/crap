@@ -291,7 +291,7 @@ crap holy.crap > holy.c
 
 ## A legacy of `crap`.
 
-Crap's predecessor, [Anchor](http://anch.org/anchor.html), is 
+Crap's predecessor, [Anchor](https://github.com/themanyone/anchor), is 
 remarkably stable. But don't look at the code! It abused `flex` in 
 horrible ways and was otherwise unmaintainable. To make matters worse, 
 `flex` grinds through confusing modes of operation during parsing, 
