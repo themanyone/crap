@@ -32,7 +32,7 @@ After preprocessing, it becomes more or less standard C (`C99`).
 #include <stdio.h>
 int main(int argc, char **argv, char** env){
     for(size_t _index=5;_index--;){
-        puts ("hello world");
+        puts ("hello world");}
     return 0;
 }
 ```
