@@ -2,9 +2,13 @@
 ../crap "$0" | tcc -run - "$@"; exit 0
 #endif
 // test1.crap example and tests
-#include "asprintf.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 char* pass  char **v, char*fmt, char *s
-    return msprintf  *v, fmt, s
+    *v = malloc  strlen(s) + 1
+    sprintf  *v, fmt, s
+    return *v
 main
     char *b = pass  &b, "%s", "Passed."
     puts  b  ;free  b
