@@ -2,26 +2,29 @@
 ../crap "$0" | tcc -run - "$@"; exit 0
 #endif
 // test2.crap example and tests
-#include "asprintf.h"
+#include <stdio.h>
 
 /** Crap's #replace 
 /pattern/replacement/ directive extends
 the familiar cpp directives, and may also modify them!
 Up to 100 replacements per line, defined in `crap.h`.*/
 #replace /print\((.*)\)/puts(\1)/
+
+int len  char *arr
+    return sizeof  arr  / sizeof  arr[0]
+
 main
 	// declare pointers and arrays just like C
 	char *word, *words[] = { "zero", "one", "two", "three", "four" }
-
+    word = alloca  12
 	// The asprintf() macro is alloca() + sprintf().
 	// Do not attempt to free or return the resulting pointer.
 	// (Use msprintf() for that.)
-	asprintf  word, "Array indexes start at [%s].", words[0]
+	sprintf  word, "Array indexes start at [%s].", words[0]
 	print  word  ;// temporary local stack space.
 
-	// Macros permit declaring pointer at time of use.
-	// This follows the design pattern of least duplication.
-	char * asprintf  blah, "This array has %i indexes, numbered 0 - %i.", len(words), len(words)-1
+	char *blah = alloca  99
+	sprintf  blah, "This array has %i indexes, numbered 0 - %i.", len(words), len(words)-1
 	print  blah  ;// the newly-declared pointer
 
 	// The for..in pattern loops over arrays with a pointer.
