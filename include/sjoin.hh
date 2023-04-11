@@ -158,6 +158,7 @@ char *replace  char *s, char *find, char *repl
 char *addcslashes  char *s
     replace  s, "\\", "\\\\"
     replace  s, "\"", "\\x22"
+    replace  s, "\n", "\\\n"
     return s
 #endif
 #endif

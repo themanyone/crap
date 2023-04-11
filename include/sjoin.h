@@ -30,7 +30,7 @@
 fprintf(stderr, "sjoin %i: %s\n", __LINE__, msg);
 #endif
 #define malloc_maybe(buf){                               \
-    if(!(buf || (buf = malloc(BUF_MAX + 1)))){          \
+    if (!(buf || (buf = malloc(BUF_MAX + 1)))){          \
         WARN("Out of memory\n");                         \
         exit(1);}}         
 #define bufcpy(buf, str){                                \
@@ -158,6 +158,7 @@ char *replace(char *s, char *find, char *repl){
 char *addcslashes(char *s){
     replace(s, "\\", "\\\\");
     replace(s, "\"", "\\x22");
+    replace(s, "\n", "\\\n");
     return s;}
 #endif
 #endif

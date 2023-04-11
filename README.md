@@ -47,6 +47,22 @@ fertilizer content or implied fitness for gardening. Have fun and
 experiment under the terms of the included LICENSE. For 
 more lucrative licensing please contact the author.
 
+## Interactive `crap`.
+
+The future of Rapid Application Development is `icrap`. Instant gratification at the speed of C. Let `icrap` do compiling and testing in the background, and focus on the code. Prove your routine does what it should BEFORE putting  `crap` into a project. It's a run-eval-print loop (REPL) for C, C++, and `crap`.
+Get it here for free: https://github.com/themanyone/itcc
+
+```
+$ ./icrap
+crap> puts  "hi"
+hi
+crap> for  int x=3;x--;
+crap>     printf  "x is %i\n", x
+x is 2
+x is 1
+x is 0
+```
+
 ## Crap has `crap`ped itself!
 
 Crap bootstrapped itself some time ago, so its source code is `crap`. 
