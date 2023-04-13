@@ -1,5 +1,5 @@
 # Concise, Regex-Aware Preprocessor (CRAP)
-C (computer language) code mangler and language maker. [Website](https://themanyone.github.io/crap/).
+C (computer language) code mangler and language maker. [Website](https://themanyone.github.io/crap/). https://github.com/themanyone/crap
 
 <img style="float:right" src="https://proxy.duckduckgo.com/iu/?u=http%3A%2F%2Ficons.iconarchive.com%2Ficons%2Fgoogle%2Fnoto-emoji-smileys%2F128%2F10104-pile-of-poo-icon.png&f=1">
 
@@ -71,6 +71,17 @@ As future development progresses in `crap` code, rest assured that
 
 Generated C source files are included, so thankfully there is no 
 prerequisite for `crap` to compile `crap`.
+
+Build steps:
+
+```
+git checkout https://github.com/themanyone/crap
+# edit the Makefile to set LIBDIR location, other prefs.
+make
+# if there are corrupted or 0-byte .c files:
+git pull
+# libtre-dev might be necessary in Debian Android UserLand
+```
 
 ## Even `crap` has limits.
 
