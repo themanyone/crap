@@ -64,20 +64,26 @@ void macros  char **s
         SUB  "for" INARRAY, LOOP "," INCREMENT
         // while myLabel in array[[start][:end]]
         SUB  "while" INARRAY, LOOP "&&" INCREMENT
-        #define ARGSP "(( ?[^ \"]| ?\"(\\\\.|[^\\\"])*\")*) ?([ ]+|$)"
+        #define ARGSP "(( ?[^ \"]| ?\"(\\\\.|[^\\\"])*\")*) ?(\\s+|$)"
         // until
         SUB("(\\s|^)until\\s*" ARGSP, "\1while (!(\2))\5")
         // unless
         SUB("(\\s|^)unless\\s*" ARGSP, "\1if (!(\2))\5")
-        // double-space = parenthesis
+         // double-space = parenthesis
         SUB("(\\w)  " ARGSP, "\1(\2)\5")
-        // puti is like puts but for integers
-        SUB("(\\s|^)puti\\s*" ARGSP, "\1printf(\"%i\\n\",\2)\5")
-
         // Put function-like macros here
         // repeat
         SUB("repeat\\s*\\(([^, ]+)[, ]*(\\w*)\\)",
          "for(size_t \2_index=\1;\2_index--;)")
+        // puti(int) prints up to 4 ints
+        SUB("puti\\s*\\(([^, ]+)[, ]+([^, ]+)[, ]+([^, ]+)[, ]+([^, ]+)\\)", 
+         "printf(\"%i, %i, %i, %i\\n\",\1,\2,\3,\4)")
+        SUB("puti\\s*\\(([^, ]+)[, ]+([^, ]+)[, ]+([^, ]+)\\)", 
+         "printf(\"%i, %i, %i\\n\",\1,\2,\3)")
+        SUB("puti\\s*\\(([^, ]+)[, ]+([^, ]+)\\)", 
+         "printf(\"%i, %i\\n\",\1,\2)")
+        SUB("puti\\s*\\(([^, ]+)\\)",
+         "printf(\"%i\\n\",\1)")
         // skip over multi-line comments
         if  (tmp = resub(*s,"(/\\*)(.*[^/)]$)", "\1\2"))
             strcpy  skip.to, "(\\*/)"  ;strcpy  skip.end, "\1"

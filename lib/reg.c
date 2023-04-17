@@ -17,7 +17,7 @@ char *unescape_backref(char * const s){
     char *s1 = s, *e = strrchr(s1, '\0');
     while((s1+=strcspn(s1, "\\")) < e){
         int backref = atoi(++s1);
-        if(!(backref && backref < 32)) continue;
+        if (!(backref && backref < 32)) continue;
         *(s1-1)=backref;
         int s2 = strspn(s1, "0123456789");
         memmove(s1, s1+s2, strlen(s1+s2)+1);}
@@ -25,10 +25,10 @@ char *unescape_backref(char * const s){
 void macro_append(struct macro **sm, char *match, char *replace){
     struct macro *head = *sm;
     while(head && head->next) head = head->next;
-    if(!(head)){
+    if (!(head)){
         head = *sm = malloc(sizeof (struct macro));}
     else head = head->next = malloc(sizeof (struct macro));
-    if(!(head)){
+    if (!(head)){
         fprintf(stderr, "Out of memory.");
         exit(1);}
     else{
@@ -65,7 +65,7 @@ char *resub(const char *text, const char *pattern, const char *replacement){
             len = strcspn(replacement, dec);
             // append output up-to backref
             STRNCAT(output, replacement, len);
-            if(!(i = replacement[len])) break;
+            if (!(i = replacement[len])) break;
             replacement += len + 1;
             // append pattern match pm[i]
             len = pm[i].rm_eo - pm[i].rm_so;
