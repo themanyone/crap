@@ -71,6 +71,8 @@ void macros  char **s
         SUB("(\\s|^)unless\\s*" ARGSP, "\1if (!(\2))\5")
         // double-space = parenthesis
         SUB("(\\w)  " ARGSP, "\1(\2)\5")
+        // puti is like puts but for integers
+        SUB("(\\s|^)puti\\s*" ARGSP, "\1printf(\"%i\n\",\2)\5")
 
         // Put function-like macros here
         // repeat
