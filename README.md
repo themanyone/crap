@@ -49,18 +49,20 @@ more lucrative licensing please contact the author.
 
 ## Interactive `crap`.
 
-The future of Rapid Application Development is `icrap`. Instant gratification at the speed of C. Let `icrap` do compiling and testing in the background, and focus on the code. Prove your routine does what it should BEFORE putting  `crap` into a project. It's a run-eval-print loop (REPL) for C, C++, and `crap`.
+The future of Rapid Application Development is `icrap`. Instant gratification at the speed of C. Try out individual lines of code and get instant results from the `icrap` interactive shell. Test ideas BEFORE putting  `crap` into production. It's a read-eval-print loop (REPL) for C, C++, and `crap`.
 Get it here for free: https://github.com/themanyone/itcc
 
-```
-$ ./icrap
-crap> puts  "hi"
-hi
-crap> for  int x=3;x--;
-crap>     printf  "x is %i\n", x
-x is 2
-x is 1
-x is 0
+```c
+ $ ./icrap -lm
+ crap> #include "math.h"
+ crap> for  int x=0;x<5;x++
+ crap>      printf  "%i squared is %0.0f\n", x, pow(x, 2.0)
+ 0 squared is 0
+ 1 squared is 1
+ 2 squared is 4
+ 3 squared is 9
+ 4 squared is 16
+ crap> |
 ```
 
 ## Crap has `crap`ped itself!
@@ -398,7 +400,7 @@ Didn't Mom warn you about playing with dirty old `crap`? Don't take
 
 `git clone https://github.com/themanyone/crap.git`
 
-Copyright (C) 2018-2020 Henry Kroll III, https://thenerdshow.com
+Copyright (C) 2018-2023 Henry Kroll III, https://thenerdshow.com
 
 Permission to use, copy, modify, distribute, and sell this software and 
 its documentation for any purpose is hereby granted without fee, 
