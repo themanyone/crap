@@ -14,8 +14,7 @@ C (computer language) code mangler and language maker. [Website](https://themany
 ## Crap. It's not a compiler. It's a movement.
 
 Crap is a new language maker. It has sort of become its own language to 
-demonstrate what it might be capable of. It may be used as-is, or 
-transformed to process any kind of computer language. The easiest way to 
+demonstrate what it might be capable of. The easiest way to 
 explain it is in code. The following crap-worthy example prints "hello 
 world" five times.
 
@@ -41,9 +40,7 @@ int main(int argc, char **argv, char** env){
 
 Yes, yes it is.
 
-*Crap is in alpha stages of development. Use at your own risk! In case 
-the name isn't good enough, there are no guarantees about its 
-fertilizer content or implied fitness for gardening. Have fun and 
+*Crap is in alpha stages of development. Use at your own risk! Have fun and 
 experiment under the terms of the included LICENSE. For 
 more lucrative licensing please contact the author.
 
@@ -77,11 +74,13 @@ prerequisite for `crap` to compile `crap`.
 Build steps:
 
 ```
-git checkout https://github.com/themanyone/crap
+git clone https://github.com/themanyone/crap
 # edit the Makefile to set LIBDIR location, other prefs.
+# There is currently a `master` and a `testing` branch
+git switch testing
 make
 # if there are corrupted or 0-byte .c files:
-git pull
+git checkout [nam of c file]
 # libtre-dev might be necessary in Debian Android UserLand
 ```
 

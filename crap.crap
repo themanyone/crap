@@ -4,19 +4,20 @@ crap "$0" |tcc -Iinclude -Llib -lreg -lsjoin -run - "$@";exit 0
 /* Concise, Regex-Aware Preprocessor (CRAP)
 C (computer language) code decorator and language maker
 
-Copyright (C) 2018-2020 Henry Kroll III, https://thenerdshow.com
+Copyright (C) 2018-2024 Henry Kroll III, https://thenerdshow.com
 
-Permission to use, copy, modify, distribute, and sell this software and 
-its documentation for any purpose is hereby granted without fee, 
-provided that the above copyright notice appears in all copies and that 
-both that copyright notice and this permission notice appear in 
-supporting documentation, including About boxes in derived user 
-interfaces or web front-ends. No redpresentations are made about the 
-suitability of this software for any purpose. It is provided "as is" 
+Permission to use, copy, modify, distribute, and sell this software and
+its documentation for any purpose is hereby granted without fee,
+provided that the above copyright notice appears in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation, including About boxes in derived user
+interfaces or web front-ends. No redpresentations are made about the
+suitability of this software for any purpose. It is provided "as is"
 without express or implied warranty.
 */
 #include "crap.h"
 #include "sjoin.h"
+
 #define INDENT while  indent > prev_indent  \
     *s = prepend  *s, "{"  , prev_indent += TAB
 struct
@@ -46,7 +47,7 @@ void macros  char **s
         // array[:] notation now works most places (do not free)
         // this one employs a non-standard GNU extension
         SUB("([(*,=]\\s*|  )([^[\" ]+)\\s*\\[(\\w*):(\\w*)\\]([[);, ]+|$)",
-          "\1({void *t;typeof(\2) tmp = {0};"
+          "\1({typeof(\2) tmp = {0};"
           "size_t len = sizeof \2 / sizeof \2[0];"
           "size_t start= \3+0>=0?\3+0:\3 +len;"
           "size_t end = \4+0?\4:len\4;"
@@ -58,8 +59,7 @@ void macros  char **s
         #define LOOP \
           "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4:\5+0,"          \
           "\1_end=\7+0?\7+0:sizeof \2/sizeof \2[0]\6;(\1=\2[\1_index])"
-        #define INCREMENT \
-        "\1_index<\1_end;\1_index++)"
+        #define INCREMENT "\1_index<\1_end;\1_index++)"
         // for myLabel in array[[start][:end]]
         SUB  "for" INARRAY, LOOP "," INCREMENT
         // while myLabel in array[[start][:end]]
@@ -128,7 +128,7 @@ char *prepend  char *dest, char *src
     size_t srclen = strlen(src); dest -= srclen
     memcpy  dest, src, srclen  ; return dest
 void decorate  char **s
-    //char *t
+    static char plc = ' '
     // convert tabs to spaces
     replace  *s, "\t", SPACES
     // locate first non-whitespace char
@@ -139,17 +139,19 @@ void decorate  char **s
     while  indent < prev_indent
         *s = prepend  *s, "}"  ;prev_indent -= TAB
     cut_eol  &fc, &lc
-    unless  *(skip.end) || indent != prev_indent
+    unless  plc == '\\' || *fc == 34 || *(skip.end) || indent != prev_indent
         *s = prepend  *s, ";"
     macros  &fc
     if  *(skip.to) || (*(skip.end) && --(*(skip.end)))  return
     lc = *s + strlen(*s) - 1; if  lc < *s  return
     // skip semicolon on lines ending with punc.
-    if  strchr(" <>;,.\"=*/&|^!", *lc)  *(skip.end) = 1
+    if  strchr(" <>;,.=\"*/&|^!", *lc)
+        *(skip.end) = 1;
     // skip semicolon on blank lines
     if  strlen(fc) < 1  *(skip.end) = 1
     // skip semicolon on defines
     if  *fc=='#'  *(skip.end) = 1
+    plc = *lc
     INDENT
 int crap  char *name
     char buf[MAX_LINE_LEN + BACK_BUFFER_LEN], *b

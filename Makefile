@@ -1,79 +1,79 @@
-NAME=crap
+# Target binary
+TARGET=crap
+# Compiler
+CC=gcc
+.SUFFIXES:
+.SUFFIXES: .c .o
+SHELL = /bin/sh
+INSTALL=install
+INSTALL_PROGRAM=$(INSTALL)
+# Directories
+INCLUDEDIR=include
+LIBSDIR=lib
+SUBDIRS=$(INCLUDEDIR) $(LIBSDIR)
+# Compiler flags
+export BFLAGS=-Iinclude -Wall -pipe -O2 -std=c99
+# Linker flags
+LDFLAGS=-Llib
 DESTDIR=/usr/local
 PREFIX=$(DESTDIR)
-INCLUDEDIR=$(PREFIX)/include
-INSTALLDIR=$(PREFIX)/bin
-DOCDIR=    $(PREFIX)/share/$(NAME)
-LIBDIR=    $(PREFIX)/lib64
-export
-BUILD_TARGETS=$(NAME).o
-BUILD_LIBS=lib/reg.o lib/sjoin.o
-SUBDIRS=include lib
-LDFLAGS=-Llib
-CFLAGS=-Iinclude -g -Wall -pipe -O2 -std=c99
-MING=/usr/bin/i686-pc-mingw32-gcc
-CC=gcc
+export INCDIR=$(PREFIX)/include
+BINDIR=$(PREFIX)/bin
+DOCDIR=$(PREFIX)/share/$(TARGET)
+export LIBDIR=$(PREFIX)/lib64
 
+# Source files
+SRCS=crap.c $(LIBSDIR)/reg.c $(LIBSDIR)/sjoin.c
+# Object files
+OBJS=$(SRCS:.c=.o)
+
+# Static make target
+all: $(SUBDIRS) $(TARGET)
+
+# Shared make target
+shared: LDFLAGS+=-lreg -lsjoin -Wl,-rpath=$(LIBSDIR)
+shared: BFLAGS+=-fPIC -shared
+shared: lib $(TARGET)
+
+# Craptastic rules
 %.c : %.crap
 	crap "$<" > "$@"
-%.o : %.c
-	$(CC) $(CFLAGS) -c "$<" -o "$@"
-% : %.o
-	$(CC) "$<"  $(BUILD_LIBS) -o "$@$(EXT)" $(LDFLAGS)
 
-.PHONY: shared tests $(SUBDIRS)
+# Compile rules
+%.o: %.c
+	$(CC) $(BFLAGS) $(CFLAGS) -c $< -o $@
 
-#~ defauilt rule builds target[s] lib[s]
-all: $(SUBDIRS) $(BUILD_TARGETS:.o=) $(BUILD_TARGETS) $(BUILD_LIBS)
+# Link rule
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
 
-$(SUBDIRS):
-	$(MAKE) -C $@ $(MAKECMDGOALS)
+# Phony targets
+.PHONY: all shared tests $(SUBDIRS)
 
-shared: BUILD_LIBS=
-shared: LDFLAGS+=-lreg -lsjoin -Wl,-rpath=$(LIBDIR)
-shared: lib all
-#$(CC) $(BUILD_TARGETS) -o "$(NAME)$(EXT)" $(LDFLAGS) -lreg
+# Clean rule
+clean: $(SUBDIRS)
+	$(RM) $(OBJS) $(TARGET)
 
-#~ do not delete after build
-.PRECIOUS: %.c %.h
+debug: BFLAGS+=-Wall -pedantic -O0
+debug: CFLAGS=-g
+debug: all
 
-#~ other targets
-win: CC=$(MINGW)
-win: EXT=.exe
-win: all
+debugshared: BFLAGS+=-Wall -pedantic -O0
+debugshared: CFLAGS=-g
+debugshared: shared
 
 tcc: CC=$(TCC)
 tcc: all
 
-debug: CFLAGS+=-g -Wall -pedantic
-debug: all
-
-%.asm : %.o
-	objdump -Sx $< > $@
-
-%.html : %.md
-	rdiscount $< > $@
-
-html: README.html
-
-s:
-	SciTE Makefile *.crap&
-
-clean: $(SUBDIRS)
-	$(RM) $(BUILD_TARGETS) $(BUILD_TARGETS:.o=) $(BUILD_TARGETS:.o=.exe) $(BUILD_LIBS) *.asm
-
-tests:
-	$(MAKE) -C $@
-pub:
-	-strip $(BUILD_TARGETS:.o=)
-	-i686-pc-mingw32-strip $(BUILD_TARGETS:.o=.exe)
+$(SUBDIRS):
+	$(MAKE) -C $@ $(MAKECMDGOALS)
 
 install: $(SUBDIRS)
-	-install -D README.md "$(DOCDIR)/README.md"
-	-install -D LICENSE   "$(DOCDIR)/LICENSE"
-	install -D "$(NAME)" "$(INSTALLDIR)/$(NAME)"
-
+	$(INSTALL_PROGRAM) -D README.md "$(DOCDIR)/README.md"
+	$(INSTALL_PROGRAM) -D LICENSE   "$(DOCDIR)/LICENSE"
+	$(INSTALL_PROGRAM) -D "$(TARGET)" "$(BINDIR)/$(TARGET)"
 uninstall: $(SUBDIRS)
-	-$(RM) "$(DOCDIR)/README.md"
-	-$(RM) "$(DOCDIR)/LICENSE"
-	$(RM) "$(INSTALLDIR)/$(NAME)"
+
+	$(RM) "$(DOCDIR)/README.md"
+	$(RM) "$(DOCDIR)/LICENSE"
+	$(RM) "$(BINDIR)/$(TARGET)"

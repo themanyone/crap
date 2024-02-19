@@ -1,1 +1,8 @@
-LD_LIBRARY_PATH=lib ./crap crap.crap|tcc -Iinclude -Llib -lreg -lsjoin -run - "$@"
+#!/bin/bash
+# Multiple, chained, self-compilation runs.
+# Run this after modifying the crap.crap source
+# This ougut to test it.
+./crap crap.crap \
+| tcc -Iinclude -Llib lib/*.o -run - crap.crap \
+| tcc -Iinclude -Llib lib/*.o -run - crap.crap \
+| tcc -Iinclude -Llib lib/*.o -run - "$@"

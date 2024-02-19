@@ -1,12 +1,20 @@
 HEADERS=$(wildcard *.hh)
+#defaults
+.SUFFIXES:
+.SUFFIXES: .c .o
+SHELL = /bin/sh
+INSTALL=install
+INSTALL_PROGRAM=$(INSTALL)
+
 %.h : %.hh
 	crap "$<" > "$@"
 all: $(HEADERS:.hh=.h)
-.PHONY: clean shared
+.PHONY: clean
 clean:
-	#$(RM) $(HEADERS:.hh=.h)
+	$(RM) $(HEADERS:.hh=.h)
+shared: all
 install: all
-	-install -D $(HEADERS:.hh=.h) -t $(INCLUDEDIR)
+	-$(INSTALL_PROGRAM) -D $(HEADERS:.hh=.h) -t $(INCDIR)
 uninstall: all
 	$(foreach header,$(HEADERS:.hh=.h), \
-	$(RM) $(INCLUDEDIR)/$(header);)
+	$(RM) $(INCDIR)/$(header);)

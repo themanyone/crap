@@ -1,0 +1,9 @@
+
+crap.c
+├── include
+│   ├── crap.h
+│   ├── reg.h
+│   └── sjoin.h
+└── lib
+    ├── reg.c
+    └── sjoin.c

@@ -3,20 +3,20 @@
 #endif
 // test2.crap example and tests
 #include <stdio.h>
+#include <alloca.h>
+#include <stdlib.h>
+#define LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
-/** Crap's #replace 
+/** Crap's #replace
 /pattern/replacement/ directive extends
 the familiar cpp directives, and may also modify them!
 Up to 100 replacements per line, defined in `crap.h`.*/
 #replace /print\((.*)\)/puts(\1)/
 
-int len  char *arr
-    return sizeof  arr  / sizeof  arr[0]
-
 main
 	// declare pointers and arrays just like C
-	char *word, *words[] = { "zero", "one", "two", "three", "four" }
-    word = alloca  12
+	char *word, *words[] = { "zero", "one", "two", "three", "four", "five" }
+    word = alloca  80
 	// The asprintf() macro is alloca() + sprintf().
 	// Do not attempt to free or return the resulting pointer.
 	// (Use msprintf() for that.)
@@ -24,7 +24,8 @@ main
 	print  word  ;// temporary local stack space.
 
 	char *blah = alloca  99
-	sprintf  blah, "This array has %i indexes, numbered 0 - %i.", len(words), len(words)-1
+	int len = LEN  words
+	sprintf  blah, "The words array has %i indexes, numbered 0 - %i.", len, len-1
 	print  blah  ;// the newly-declared pointer
 
 	// The for..in pattern loops over arrays with a pointer.
@@ -32,7 +33,7 @@ main
 	for word in words
 		// _index and _len are local loop variables.
 		// They do not exist outside the loop.
-		printf  "  %i < %i: %s\n", word_index, word_end, word
+		printf  "  %lu < %lu: %s\n", word_index, word_end, word
 
     // for..in also permits array[[start][:end]] pattern
     // words [1:3] ...             from words[1] to words[3] inclusive
@@ -43,19 +44,19 @@ main
         printf  " \"%s\"%s", word, word_index == 3?" }\n":","
     printf  "words[2:] = {"
     for word in words[2:]
-        printf  " \"%s\"%s", word, word_index == 4?" }\n":","
+        printf  " \"%s\"%s", word, word_index == 5?" }\n":","
     printf  "words[2:][1] = \"%s\"\n", words[2:][1]
     printf  "words[:3] = {"
     for word in words[:3]
         printf  " \"%s\"%s", word, word_index == 2?" }\n":","
     printf  "words[:-3] = {"
     for word in words[:-3]
-        printf  " \"%s\"%s", word, word_index == 1?" }\n":","
+        printf  " \"%s\"%s", word, word_index == 2?" }\n":","
     printf  "words[-3:-1] = {"
     for word in words[ -3 : -1 ]
         printf  " \"%s\"%s", word, word_index == word_end - 1?" }\n":","
     char c
-    char *test = "testing it";
+    char test[] = "testing it";
     while c in test[:99]
         printf  "[%c]", c
     putchar  '\n'

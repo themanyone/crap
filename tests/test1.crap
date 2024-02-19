@@ -17,9 +17,9 @@ int y
 
 main
     repeat  5
-        printf  "%i", _index
+        printf  "%lu", _index
     repeat  5, t
-        printf  "%i", t_index
+        printf  "%lu", t_index
     for  int t_index=5;t_index--;
         printf  "%i", t_index
     puts  ""

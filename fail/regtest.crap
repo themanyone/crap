@@ -1,9 +1,0 @@
-//bin/bash -c "../crap "$0" |tcc -I../include -L../lib -lreg -run - "$@"";exit 0;
-#include "reg.h"
-main
-    char s[100], *t
-    strcpy  s, "this becomes a modifiabless test strings."
-    puts  s
-    t = resub  s, ".*(c[^ ]+s).*(b[^ ]+s).*(t[^ ]+t)", "He \1 to \2 and \3 my"
-    puts  t
-    free  t

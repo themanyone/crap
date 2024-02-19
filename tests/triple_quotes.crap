@@ -1,4 +1,5 @@
 //bin/bash -c "../crap "$0" |tcc -run - "$@"";exit 0;
+// -*- coding: utf-8 -*-
 #include <stdio.h>
 main
     puts ("""

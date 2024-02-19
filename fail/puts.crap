@@ -1,4 +1,0 @@
-//bin/bash -c "../crap "$0" |tcc -run - "$@"";exit 0;
-#include <stdio.h>
-main
-    char *s="\0*********" + 10; while  *(--s)  puts  s

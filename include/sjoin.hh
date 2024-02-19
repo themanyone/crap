@@ -23,6 +23,21 @@
 #include <string.h>
 #include <alloca.h>
 
+#if defined(_MSC_VER)
+   /* Microsoft */
+   #define EXPORT __declspec(dllexport)
+   #define IMPORT __declspec(dllimport)
+#elif defined(__GNUC__)
+   /* GCC */
+   #define EXPORT __attribute__((visibility("default")))
+   #define IMPORT
+#else
+   /* do nothing and hope for the best? */
+   #define EXPORT
+   #define IMPORT
+   #pragma warning Unknown dynamic link import/export semantics.
+#endif
+
 #define BUF_MAX BUFSIZ
 #define ARRAY_MAX 100
 #ifndef WARN
@@ -32,7 +47,7 @@ fprintf  stderr, "sjoin %i: %s\n", __LINE__, msg
 #define malloc_maybe  buf                               \
     unless  buf || (buf = malloc(BUF_MAX + 1))          \
         WARN  "Out of memory\n"                         \
-        exit  1         
+        exit  1
 #define bufcpy  buf, str                                \
     strncpy  buf, str, BUF_MAX                          \
     buf[BUF_MAX] = '\0'                                 \
@@ -108,7 +123,7 @@ char *replace  char *s, char *find, char *repl
 char *addcslashes  char *s
 
 #ifdef UDE // User-defined Executable (UDE) header
-char *_argjoin  char* s1, ...
+EXPORT char *_argjoin  char* s1, ...
     va_list ap; va_start  ap, s1
     int nul; char *s2, sep[BUF_MAX + 1]
     if  (nul = !s1)
@@ -125,7 +140,7 @@ char *_argjoin  char* s1, ...
         strcat  s1, sep
         strcat  s1, s2
     va_end  ap  ; return s1
-char *join  char *buf, char *sep, char **arr
+EXPORT char *join  char *buf, char *sep, char **arr
     malloc_maybe  buf
     char *ele="", *pbuf = buf
     for (size_t ele_index=0, sep_len = strlen(sep);
@@ -135,19 +150,19 @@ char *join  char *buf, char *sep, char **arr
             argcat  pbuf , sep  ;pbuf += sep_len
         argcat  pbuf, ele  ;pbuf += strlen(ele)
     return buf
-char **split  char **arr, char *s, char *sep
+EXPORT char **split  char **arr, char *s, char *sep
     malloc_maybe  arr
     int i=0; for (arr[i++] = strtok_r  s, sep, &s
       (arr[i++] = strtok_r  NULL, sep, &s  )
     ){} arr[i]=NULL; return arr
-char **strsplit  char **arr, char *s, char *sep
+EXPORT char **strsplit  char **arr, char *s, char *sep
     malloc_maybe  arr
     char *ss = s; size_t ls = strlen  sep  , i = 0
     while  (ss = strstr(ss, sep))
         arr[i++] = s, *ss = '\0', ss+=ls, s=ss
     arr[i++] = s, arr[i] = NULL
     return arr
-char *replace  char *s, char *find, char *repl
+EXPORT char *replace  char *s, char *find, char *repl
     char *ss = s;
     size_t lr = strlen  repl  , lf = strlen  find
     while  (ss = strstr(ss, find))
@@ -155,10 +170,10 @@ char *replace  char *s, char *find, char *repl
         memcpy  ss, repl, lr
         ss+=lr
     return s
-char *addcslashes  char *s
+EXPORT char *addcslashes  char *s
     replace  s, "\\", "\\\\"
     replace  s, "\"", "\\x22"
-    replace  s, "\n", "\\\n"
+    replace  s, "\n", "\\x0A"
     return s
 #endif
 #endif
