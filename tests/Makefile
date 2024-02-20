@@ -1,6 +1,9 @@
 LIBS=$(wildcard *.craplib)
 CRAP=$(wildcard *.crap)
 CFLAGS=-I../include
+ifeq (,$(findstring "../", $(PATH)))
+	export PATH := ../:$(PATH)
+endif
 %.c : %.crap
 	crap "$<" > "$@"
 %.o : %.c

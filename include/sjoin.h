@@ -172,8 +172,8 @@ EXPORT char *replace(char *s, char *find, char *repl){
     return s;}
 EXPORT char *addcslashes(char *s){
     replace(s, "\\", "\\\\");
-    replace(s, "\"", "fubar");
-    replace(s, "\n", "\\n");
+    replace(s, "\"", "\\x22");
+    replace(s, "\n", "\\x0A");
     return s;}
 #endif
 #endif

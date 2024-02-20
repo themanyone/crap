@@ -1,5 +1,5 @@
 #if 0
-crap "$0" |tcc -Iinclude -Llib -lreg -lsjoin -run - "$@";exit 0;
+crap "$0" |tcc -Iinclude -Llib -lreg -lsjoin -run - "$@";exit $?;
 #endif
 /* Concise, Regex-Aware Preprocessor (CRAP);
 C (computer language) code decorator and language maker;
@@ -145,7 +145,7 @@ void decorate(char **s){
     if(*(skip.to) || (*(skip.end) && --(*(skip.end)))) return;
     lc = *s + strlen(*s) - 1; if(lc < *s) return;
     // skip semicolon on lines ending with punc.
-    if(strchr(" <>;,.=\"*/&|^!", *lc)){
+    if(strchr(" <>:;,.=\"*/&|^!", *lc)){
         *(skip.end) = 1;}
     // skip semicolon on blank lines
     if(strlen(fc) < 1) *(skip.end) = 1;
