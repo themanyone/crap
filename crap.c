@@ -4,7 +4,7 @@ crap "$0" |tcc -Iinclude -Llib -lreg -lsjoin -run - "$@";exit $?;
 /* Concise, Regex-Aware Preprocessor (CRAP);
 C (computer language) code decorator and language maker;
 
-Copyright (C) 2018-2024 Henry Kroll III, https:;//thenerdshow.com
+Copyright (C) 2018-2024 Henry Kroll III, https://thenerdshow.com
 
 Permission to use, copy, modify, distribute, and sell this software and;
 its documentation for any purpose is hereby granted without fee,
@@ -55,10 +55,10 @@ void macros(char **s){
         // Implements `myCmd myLabel in array[[start][:end]]`
         #define INARRAY \
           "\\s*(\\w+)\\s+in\\s+([^:\" ]+)\\s*(\\[\\s*(-[^]:]+)?([^]:]+)?"   \
-          "\\s*:\\s*(-[^]:]+)?([^]:]+)?\\s*\\])?"
+          "\\s*:\\s*(-[^]:]+)?([^]:]+)?\\s*\\])?"                           //
         #define LOOP \
           "for(size_t \1_index=0\4?sizeof \2/sizeof \2[0]\4:\5+0,"          \
-          "\1_end=\7+0?\7+0:sizeof \2/sizeof \2[0]\6;(\1=\2[\1_index])"
+          "\1_end=\7+0?\7+0:sizeof \2/sizeof \2[0]\6;(\1=\2[\1_index])"     //
         #define INCREMENT "\1_index<\1_end;\1_index++)"
         // for myLabel in array[[start][:end]]
         SUB("for" INARRAY, LOOP "," INCREMENT);
@@ -145,10 +145,10 @@ void decorate(char **s){
     if(*(skip.to) || (*(skip.end) && --(*(skip.end)))) return;
     lc = *s + strlen(*s) - 1; if(lc < *s) return;
     // skip semicolon on lines ending with punc.
-    if(strchr(" <>:;,.=\"*/&|^!", *lc)){
+    if(strchr(" <>:;,.=*/&|^!", *lc)){
         *(skip.end) = 1;}
     // skip semicolon on blank lines
-    if(strlen(fc) < 1) *(skip.end) = 1;
+    if(strlen(fc) == 0) *(skip.end) = 1;
     // skip semicolon on defines
     if(*fc=='#') *(skip.end) = 1;
     plc = *lc;

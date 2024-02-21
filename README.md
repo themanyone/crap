@@ -136,10 +136,8 @@ for some reason, just add it manually. Lines that may need manual
 editing of semicolons are preprocessor statements like `#define`, 
 `//comment`s, and lines that end with any of the characters ` 
 <>;,."=*/&|^!`. Purposely ending lines with one of those characters or 
-a c99 `//comment` permits long statements to be broken up across 
-multiple lines, without receiving unwanted semicolons. Expect to 
-manually add a semicolon after string literal assignments because they 
-end with a `quote`.
+a `//comment` prevents unwanted semicolons. When all else fails, look
+at the examples and tests.
 
 **Return.** Again, `crap` adds a final `return 0` only when `main` is 
 used. In other words, please supply functions with `return` values.
