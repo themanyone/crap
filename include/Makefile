@@ -9,7 +9,7 @@ INSTALL_PROGRAM=$(INSTALL)
 %.h : %.hh
 	crap "$<" > "$@"
 all: $(HEADERS:.hh=.h)
-.PHONY: clean
+.PHONY: clean install
 clean:
 	$(RM) $(HEADERS:.hh=.h)
 shared: all

@@ -175,15 +175,6 @@ int crap(char *name){
     return 0;}
 int main(int argc, char **argv, char **env){
     if(argc < 2) puts("usage: crap infile [> outfile]");
-    #ifdef __TINYC__
-    else if(argc == 3 && argv[2] == "-run"){
-        if (!((TCCState *s = tcc_new()))){
-            fprintf(stderr, "Could not create tcc state\n");
-            exit(1);}
-        /* MUST BE CALLED before any compilation */
-        tcc_set_output_type(s, TCC_OUTPUT_MEMORY);
-        tcc_run(s, argc - 1, argv+1);}
-    #endif
     else return crap(argv[1]);
     return 0;
 }
