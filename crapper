@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# crapper [compiler args] -- [program args]
+#
+# Runs a program from bash #!shebang line
+#
+# Copyright (C) 2018-2024 Henry Kroll III, https://thenerdshow.com
+# Some permissions granted with included GPL-2 LICENSE
+# NO WARRANTEE
+
+# get position of needle in haystack
+pos() {
+    c=0; local hay needle=$1
+    shift
+    for hay; do
+        if [[ $hay == $needle ]]; then echo $c; return 0;fi
+    ((c++))
+    done; return 1
+}
+
+ax=($(echo "$1"|xargs)) #unquote shebang arguments ~_^
+
+# split args on --, into left and right tokens
+left=(); right=()
+p=$(pos "--" "${ax[@]}")
+if [[ $p > 0 ]]; then
+    left="${ax[@]:0:$p}"
+    right="${ax[@]:$p+1}"
+fi
+
+# run it
+crap "${@:(-1)}" | tcc ${left[@]} -run - ${right[@]}

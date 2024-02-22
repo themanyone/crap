@@ -12,7 +12,7 @@ provided that the above copyright notice appears in all copies and that;
 both that copyright notice and this permission notice appear in;
 supporting documentation, including About boxes in derived user;
 interfaces or web front-ends. No redpresentations are made about the;
-suitability of this software for any purpose. It is provided "as is"
+suitability of this software for any purpose. It is provided "as is";
 without express or implied warranty.
 */
 #include "crap.h"
@@ -175,6 +175,15 @@ int crap(char *name){
     return 0;}
 int main(int argc, char **argv, char **env){
     if(argc < 2) puts("usage: crap infile [> outfile]");
+    #ifdef __TINYC__
+    else if(argc == 3 && argv[2] == "-run"){
+        if (!((TCCState *s = tcc_new()))){
+            fprintf(stderr, "Could not create tcc state\n");
+            exit(1);}
+        /* MUST BE CALLED before any compilation */
+        tcc_set_output_type(s, TCC_OUTPUT_MEMORY);
+        tcc_run(s, argc - 1, argv+1);}
+    #endif
     else return crap(argv[1]);
     return 0;
 }

@@ -1,0 +1,10 @@
+#!../crapper
+#include <stdio.h>
+
+main
+    char *s= "this"
+    " is"
+    " a"
+    " test."
+
+    puts  s

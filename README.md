@@ -105,10 +105,12 @@ becoming C code should go into another file or header and `#include`
 them. It is good programming practice to maintain separation by not 
 "hard coding" important data and resources into the source.
 
-**Includes.** Like C, Crap programs `#include <stdio.h>` if they want 
-to print to, or read from, consoles or files in a standard way. See 
-`test2.crap` for a demo that uses `"asprintf.h"` for string and array 
-manipulation.
+**Includes.** Like C, Crap programs `#include <stdio.h>` if they 
+want to print to, or read from, consoles or files in a standard way. 
+See `test2.crap` for a demo that uses `asprintf.h` for string and 
+array manipulation. Tinycc supports c11 _Generic() types, so include 
+`print.h` for a type-aware print function. If the include is 
+useful, copy it to `/usr/local/include`
 
 **Expand `main` and return.** The optional `main` macro, when it occurs 
 all by itself, expands to `int main(int argc, char **argv, char** 
@@ -338,12 +340,18 @@ and prevents the interpreter from attempting to execute the remaining
 `crap` as shell code.
 
 ```bash
-//bin/crap "$0" |tcc -run - "$@";exit $?
+//usr/local/bin/crap "$0" |tcc -run - "$@";exit $?
 ```
 Or to create debuggable `.c` files along the way.
 
 ```bash
-//bin/crap "$0">"$0.c"&&tcc -run "$0.c";exit $?
+//usr/local/bin/crap "$0">"$0.c"&&tcc -run "$0.c";exit $?
+```
+
+For convenience, we can also launch with the `crapper` crap wrapper.
+Place in the top line of sources to make executable crap scripts.
+```bash
+#!crapper [compiler args] -- [optional program args]`
 ```
 
 You may use other compilers or shells. Get creative!
