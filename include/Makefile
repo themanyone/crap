@@ -9,11 +9,12 @@ INSTALL_PROGRAM=$(INSTALL)
 %.h : %.hh
 	crap "$<" > "$@"
 all: $(HEADERS:.hh=.h)
-.PHONY: clean install debug
+.PHONY: clean install debug debugshared
 clean:
 	$(RM) $(HEADERS:.hh=.h) *~
 shared: all
 debug: all
+debugshared: all
 install: all
 	-$(INSTALL_PROGRAM) -D $(HEADERS:.hh=.h) -t $(INCDIR)
 uninstall: all
