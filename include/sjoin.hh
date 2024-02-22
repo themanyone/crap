@@ -173,7 +173,7 @@ EXPORT char *replace  char *s, char *find, char *repl
 EXPORT char *addcslashes  char *s
     replace  s, "\\", "\\\\"
     replace  s, "\"", "\\x22"
-    replace  s, "\n", "\\x0A"
+    replace  s, "\n", "FIXME"
     return s
 #endif
 #endif

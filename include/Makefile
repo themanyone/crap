@@ -11,7 +11,7 @@ INSTALL_PROGRAM=$(INSTALL)
 all: $(HEADERS:.hh=.h)
 .PHONY: clean install
 clean:
-	$(RM) $(HEADERS:.hh=.h)
+	$(RM) $(HEADERS:.hh=.h) *~
 shared: all
 install: all
 	-$(INSTALL_PROGRAM) -D $(HEADERS:.hh=.h) -t $(INCDIR)

@@ -33,7 +33,7 @@ all: $(SUBDIRS) $(TARGET)
 # Shared make target
 shared: LDFLAGS+=-lreg -lsjoin -Wl,-rpath=$(LIBSDIR)
 shared: BFLAGS+=-fPIC -shared
-shared: lib $(TARGET)
+shared: include lib $(TARGET)
 
 # Craptastic rules
 %.c : %.crap
@@ -52,7 +52,7 @@ $(TARGET): $(OBJS)
 
 # Clean rule
 clean: $(SUBDIRS)
-	$(RM) $(OBJS) $(TARGET)
+	$(RM) $(OBJS) $(TARGET) *~
 
 debug: BFLAGS+=-Wall -pedantic -O0
 debug: CFLAGS=-g

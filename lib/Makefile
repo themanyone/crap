@@ -11,15 +11,15 @@ INSTALL_PROGRAM=$(INSTALL)
 	crap "$<" > "$@"
 %.o : %.c
 	$(CC) $(BFLAGS) $(CFLAGS) -c "$<" -o "$@"
-%.so : BFLAGS+=-fPIC
+%.so : CFLAGS+=-fPIC
 %.so : LDFLAGS+=-shared
 %.so : %.o
-	$(CC) $(CFLAGS) $(LDFLAGS) $< -Wl,-soname,"lib$@.1" -o "lib$@.1.0.1"
+	$(CC) $(BFLAGS) $(CFLAGS) $(LDFLAGS) $< -Wl,-soname,"lib$@.1" -o "lib$@.1.0.1"
 	ln -sf "lib$@.1.0.1" "lib$@.1"
 	ln -sf "lib$@.1.0.1" "lib$@"
 all: $(LIBS:.crap=.c) $(LIBS:.crap=.o)
 clean:
-	$(RM) $(LIBS:.crap=.[oc]) $(wildcard lib*.so*)
+	$(RM) $(LIBS:.crap=.[oc]) $(wildcard lib*.so*) *~
 shared: $(LIBS:.crap=.so)
 install: all
 	$(foreach lib, $(wildcard lib*.so*), \

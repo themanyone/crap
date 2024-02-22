@@ -11,8 +11,8 @@ without express or implied warranty. */
 #ifndef __REG_H__
 #define __REG_H__
 
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <regex.h>
 
