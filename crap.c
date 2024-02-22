@@ -29,12 +29,11 @@ int prev_indent = 0, indent = 0;
 void macros(char **s){
     char *tmp, *match, *changed;
     // if done skipping over comments, triple-quotes
-    if(*(skip.to) && (tmp = resub(*s, skip.to, skip.end))){
-        strcpy(*s, tmp) ; free(tmp);
-        skip.to[0] = '\0', skip.end[0] = 2;}
-    else{
-        if(!strcmp(skip.to, "(.*)\"{3}")){
-            addcslashes(*s);}
+    {
+        //        if  !strcmp(skip.to, "(.*)\"{3}")
+        //            addcslashes  *s
+        //            tmp = resub  *s, "(.*)", "\"\1\n\""
+        //            strcpy  *s, tmp  ; free  tmp
         // put keyword macros here
         // main becomes int main()
         if (!(has_main || strcmp(*s, "main"))){
@@ -92,10 +91,11 @@ void macros(char **s){
         if((tmp = resub(*s,"\"{3}(.*)\"{3}", "\"\1"))){
             addcslashes(tmp+1);
             strcpy(*s, tmp) ;strcat(*s, "\"") ;free(tmp);}
-        if((tmp = resub(*s,"(.*)\"{3}(([^\"]+\"?)*)", "\"\2"))){
+        // multi-line triple quotes
+        else if((tmp = resub(*s,"(.*)\"{3}(([^\"]+\"?)*)", "\"\2"))){
             addcslashes(tmp+1);
             match = resub(*s,"\"{3}(([^\"]+\"?)*)", tmp);
-            strcpy(skip.to, "(.*)\"{3}") ;strcpy(skip.end, "\1\""); 
+            strcpy(skip.to, "(.*)\"{3}") ;strcpy(skip.end, "\1");
             strcpy(*s, match) ;free(tmp) ;free(match) ;INDENT;}
         // apply embedded macros
         for(struct macro *m = maclist;m ;m = m->next){
@@ -129,9 +129,10 @@ char *prepend(char *dest, char *src){
     memcpy(dest, src, srclen) ; return dest;}
 void decorate(char **s){
     static char plc = ' ';
+    char *tmp;
     // convert tabs to spaces
     replace(*s, "\t", SPACES);
-    // locate first non-whitespace char
+    // locate first non-whitespace chr
     int spaces = strspn(*s, " ");
     char *fc = *s + spaces, *lc = strrchr(*s, '\n');
     if(!(*skip.to) && fc < lc) indent = ((fc - *s) | 0x03) ^ 0x03;
@@ -141,6 +142,14 @@ void decorate(char **s){
     cut_eol(&fc, &lc);
     if (!(plc == '\\' || *fc == 34 || *(skip.end) || indent != prev_indent)){
         *s = prepend(*s, ";");}
+    if(*(skip.to) && (tmp = resub(*s, skip.to, skip.end))){
+        strcpy(*s, tmp) ; free(tmp);
+        skip.to[0] = '\0', skip.end[0] = 2;
+        *s = prepend(*s, "\\n\"");}
+    if(!strcmp(skip.to, "(.*)\"{3}")){
+        addcslashes(*s);}
+    //        tmp = resub  *s, "(.*)", "b\"\1\\n\""
+    //        strcpy  *s, tmp  ; free  tmp
     macros(&fc);
     if(*(skip.to) || (*(skip.end) && --(*(skip.end)))) return;
     lc = *s + strlen(*s) - 1; if(lc < *s) return;

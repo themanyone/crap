@@ -171,10 +171,9 @@ EXPORT char *replace(char *s, char *find, char *repl){
         ss+=lr;}
     return s;}
 EXPORT char *addcslashes(char *s){
-    replace(s, "\n", "FIXME");
     replace(s, "\\", "\\\\");
     replace(s, "\"", "\\x22");
-    replace(s, "This", "FIXME");
+    replace(s, "\n", "\\n\"\n\"");
     return s;}
 #endif
 #endif
