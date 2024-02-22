@@ -140,11 +140,13 @@ void decorate  char **s
     while  indent < prev_indent
         *s = prepend  *s, "}"  ;prev_indent -= TAB
     cut_eol  &fc, &lc
+    // if we have skipped to the end of a long comment or quote
     if  *(skip.to) && (tmp = resub(*s, skip.to, "\1"))
         strcpy  *s, tmp  ; free  tmp
+        // and if not a comment, end the last line with a quote
         if  strcmp(skip.to, "([*]/)")  *s = prepend  *s, "\\n\""
-        *(skip.to) = '\0', skip.end[0] = 2
-        
+        // stop the skip.to algorithm
+        *(skip.to) = '\0', *skip.end = 2
     unless  plc == '\\' || *fc == 34 || *(skip.end) || indent != prev_indent
         *s = prepend  *s, ";"
     if  !strcmp(skip.to, "(.*)\"{3}")
