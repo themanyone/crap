@@ -72,8 +72,11 @@ install: $(SUBDIRS)
 	$(INSTALL_PROGRAM) -D README.md "$(DOCDIR)/README.md"
 	$(INSTALL_PROGRAM) -D LICENSE   "$(DOCDIR)/LICENSE"
 	$(INSTALL_PROGRAM) -D "$(TARGET)" "$(BINDIR)/$(TARGET)"
+	$(INSTALL_PROGRAM) -D "$(TARGET)" "$(BINDIR)/crapper"
+
 uninstall: $(SUBDIRS)
 
 	$(RM) "$(DOCDIR)/README.md"
 	$(RM) "$(DOCDIR)/LICENSE"
 	$(RM) "$(BINDIR)/$(TARGET)"
+	$(RM) "$(BINDIR)/crapper"
