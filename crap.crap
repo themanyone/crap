@@ -84,9 +84,9 @@ void macros  char **s
         SUB("puti\\s*\\(([^, ]+)\\)",
          "printf(\"%i\\n\",\1)")
         // skip over multi-line comments
-        if  (tmp = resub(*s,"(/\\*)(.*[^/)]$)", "\1\2"))
-            strcpy  skip.to, "(\\*/)"  ;strcpy  skip.end, "\1"
-            free  tmp  ;INDENT;return
+        if  (tmp = resub(*s,"(/[*])(.*[^/]$)", "\1\2"))
+            strcpy  skip.to, "([*]/)"  ;strcpy  skip.end, "\1"
+            free  tmp  ; INDENT; return
         // triple quotes
         if  (tmp = resub(*s,"\"{3}(.*)\"{3}", "\"\1"))
             addcslashes  tmp+1
@@ -140,17 +140,16 @@ void decorate  char **s
     while  indent < prev_indent
         *s = prepend  *s, "}"  ;prev_indent -= TAB
     cut_eol  &fc, &lc
+    if  *(skip.to) && (tmp = resub(*s, skip.to, "\1"))
+        strcpy  *s, tmp  ; free  tmp
+        if  !strcmp(skip.to, "(.*)\"{3}")  *s = prepend  *s, "\\n\""
+        *(skip.to) = '\0', skip.end[0] = 2
+        
     unless  plc == '\\' || *fc == 34 || *(skip.end) || indent != prev_indent
         *s = prepend  *s, ";"
-    if  *(skip.to) && (tmp = resub(*s, skip.to, skip.end))
-        strcpy  *s, tmp  ; free  tmp
-        skip.to[0] = '\0', skip.end[0] = 2
-        *s = prepend  *s, "\\n\""
     if  !strcmp(skip.to, "(.*)\"{3}")
         addcslashes  *s
-    //        tmp = resub  *s, "(.*)", "b\"\1\\n\""
-    //        strcpy  *s, tmp  ; free  tmp
-    macros  &fc
+    if  !*skip.to  macros  &fc
     if  *(skip.to) || (*(skip.end) && --(*(skip.end)))  return
     lc = *s + strlen(*s) - 1; if  lc < *s  return
     // skip semicolon on lines ending with punc.

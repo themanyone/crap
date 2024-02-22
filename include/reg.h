@@ -6,7 +6,7 @@ provided that the above copyright notice appears in all copies and that
 both that copyright notice and this permission notice appear in 
 supporting documentation, including About boxes in derived user 
 interfaces or web front-ends. No redpresentations are made about the 
-suitability of this software for any purpose. It is provided "as is" 
+suitability of this software for any purpose. It is provided "as is"\n" 
 without express or implied warranty. */
 #ifndef __REG_H__
 #define __REG_H__

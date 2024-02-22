@@ -68,6 +68,9 @@ tcc: all
 $(SUBDIRS):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
 
+tests:
+	$(MAKE) -C $@
+
 install: $(SUBDIRS)
 	$(INSTALL_PROGRAM) -D README.md "$(DOCDIR)/README.md"
 	$(INSTALL_PROGRAM) -D LICENSE   "$(DOCDIR)/LICENSE"

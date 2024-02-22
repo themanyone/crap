@@ -11,10 +11,10 @@ notice and this permission notice appear in supporting
 documentation, including About boxes in derived user 
 interfaces or web front-ends. No representations are made 
 about the suitability of this software for any purpose. It 
-is provided "as is" without express or implied warranty.
+is provided "as is" without express or implied warranty.\n"
 */
 /*Only this library and runnable scripts should use -DUDE option.
-Everything else should compile and link with -lsjoin. 
+Everything else should compile and link with -lsjoin.\n" 
 */
 
 #define UDE // User-defined Executable (UDE) format headers
