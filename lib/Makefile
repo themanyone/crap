@@ -21,6 +21,10 @@ all: $(LIBS:.crap=.c) $(LIBS:.crap=.o)
 clean:
 	$(RM) $(LIBS:.crap=.[oc]) $(wildcard lib*.so*) *~
 shared: $(LIBS:.crap=.so)
+debug: BFLAGS+=-Wall -pedantic -O0
+debug: CFLAGS=-g
+debug: all
+.PHONY: debug all shared
 install: all
 	$(foreach lib, $(wildcard lib*.so*), \
 	$(INSTALL_PROGRAM) -D $(lib) $(LIBDIR)/$(lib);)

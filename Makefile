@@ -48,7 +48,7 @@ $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
 
 # Phony targets
-.PHONY: all shared tests $(SUBDIRS)
+.PHONY: debug all shared tests $(SUBDIRS)
 
 # Clean rule
 clean: $(SUBDIRS)
@@ -56,11 +56,11 @@ clean: $(SUBDIRS)
 
 debug: BFLAGS+=-Wall -pedantic -O0
 debug: CFLAGS=-g
-debug: all
+debug: include lib all
 
 debugshared: BFLAGS+=-Wall -pedantic -O0
 debugshared: CFLAGS=-g
-debugshared: shared
+debugshared: include lib shared
 
 tcc: CC=$(TCC)
 tcc: all

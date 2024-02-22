@@ -171,9 +171,10 @@ EXPORT char *replace  char *s, char *find, char *repl
         ss+=lr
     return s
 EXPORT char *addcslashes  char *s
+    replace  s, "\n", "FIXME"
     replace  s, "\\", "\\\\"
     replace  s, "\"", "\\x22"
-    replace  s, "\n", "FIXME"
+    replace  s, "This", "FIXME"
     return s
 #endif
 #endif
