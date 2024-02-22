@@ -1,5 +1,5 @@
 /** resub
- * a terse regex library for code decorating\n"
+ * a terse regex library for code decorating
  */
 /* Copyright (C) 2018-2019 Henry Kroll III, https://thenerdshow.com
 
@@ -10,7 +10,7 @@ both that copyright notice and this permission notice appear in
 supporting documentation, including About boxes in derived user 
 interfaces or web front-ends. No representations are made about the 
 suitability of this software for any purpose. It is provided "as is" 
-without express or implied warranty.\n"
+without express or implied warranty.
 */
 #include "reg.h"
 char *unescape_backref(char * const s){

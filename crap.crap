@@ -142,7 +142,7 @@ void decorate  char **s
     cut_eol  &fc, &lc
     if  *(skip.to) && (tmp = resub(*s, skip.to, "\1"))
         strcpy  *s, tmp  ; free  tmp
-        if  !strcmp(skip.to, "(.*)\"{3}")  *s = prepend  *s, "\\n\""
+        if  strcmp(skip.to, "([*]/)")  *s = prepend  *s, "\\n\""
         *(skip.to) = '\0', skip.end[0] = 2
         
     unless  plc == '\\' || *fc == 34 || *(skip.end) || indent != prev_indent

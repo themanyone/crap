@@ -12,7 +12,7 @@
     documentation, including About boxes in derived user 
     interfaces or web front-ends. No representations are made 
     about the suitability of this software for any purpose. It 
-    is provided "as is" without express or implied warranty.\n"
+    is provided "as is" without express or implied warranty.
 */
 #ifndef __SPLITJOIN_H__
 #define __SPLITJOIN_H__
@@ -55,12 +55,12 @@ fprintf(stderr, "sjoin %i: %s\n", __LINE__, msg);
         WARN("Buffer full! Increase BUF_MAX.");}}
 /* argjoin
 Join args, inserting separator, sep between each
-subsequent argument. Assumes buf is a valid array[]\n"
+subsequent argument. Assumes buf is a valid array[]
 or pointer to allocated memory.                         */
 #define argjoin(buf, sep, ...)                          \
    _argjoin(strcpy(buf,sep), __VA_ARGS__, NULL)        //
 /* margjoin: malloc'd argjoin, declarable
-   with var hanging out there for convenience.\n"
+   with var hanging out there for convenience.
    Usage: char * margjoin(myVar,"/", "foo,"bar",...)    */
 #define margjoin(buf, ...)                              \
    buf = _argjoin(NULL, __VA_ARGS__, NULL)             //
@@ -68,18 +68,18 @@ or pointer to allocated memory.                         */
 #define argcat(s1, ...)                                 \
    argjoin(s1, "", __VA_ARGS__)                        //
 /* margcat: malloc'd argcat 
-   with var hanging out there for convenience.\n"
+   with var hanging out there for convenience.
    Usage: char * margcat(myVar, "foo,"bar",...)         */
 #define margcat(buf, ...)                               \
    margjoin(buf, "", __VA_ARGS__)                      //
 /* aargjoin: alloca'd argjoin, optionally declarable
-   with var hanging out there for convenience.\n"
+   with var hanging out there for convenience.
    Usage: char * aargjoin(myVar, "/", "foo,"bar",...)  */
 #define aargjoin(var, s1, ...)                          \
    var = (var = alloca(BUF_MAX + 1) ,                  \
    _argjoin(strcpy(var, s1), __VA_ARGS__, NULL) )      //
 /* aargcat: alloca'd argcat, optionally declarable
-   with var hanging out there for convenience.\n"
+   with var hanging out there for convenience.
    Usage: char * aargcat(myVar, "foo,"bar",...)         */
 #define aargcat(var, ...)                               \
    var = ( var = alloca(BUF_MAX + 1) ,                 \
@@ -99,7 +99,7 @@ or pointer to allocated memory.                         */
     and join everything together with next separator.
     Free the pointer when done, in that case...
 
- *  The last argument must be NULL! Use macros...\n"
+ *  The last argument must be NULL! Use macros...
  */
 #define ajoin(buf, ...) buf =                          \
 (buf = alloca(BUF_MAX + 1) ,join(buf, __VA_ARGS__) )  //

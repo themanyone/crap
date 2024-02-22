@@ -1,18 +1,18 @@
 #if 0
 crap "$0" |tcc -Iinclude -Llib -lreg -lsjoin -run - "$@";exit $?;
 #endif
-/* Concise, Regex-Aware Preprocessor (CRAP);
-C (computer language) code decorator and language maker;
+/* Concise, Regex-Aware Preprocessor (CRAP)
+C (computer language) code decorator and language maker
 
 Copyright (C) 2018-2024 Henry Kroll III, https://thenerdshow.com
 
-Permission to use, copy, modify, distribute, and sell this software and;
+Permission to use, copy, modify, distribute, and sell this software and
 its documentation for any purpose is hereby granted without fee,
-provided that the above copyright notice appears in all copies and that;
-both that copyright notice and this permission notice appear in;
-supporting documentation, including About boxes in derived user;
-interfaces or web front-ends. No redpresentations are made about the;
-suitability of this software for any purpose. It is provided "as is";
+provided that the above copyright notice appears in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation, including About boxes in derived user
+interfaces or web front-ends. No redpresentations are made about the
+suitability of this software for any purpose. It is provided "as is"
 without express or implied warranty.
 */
 #include "crap.h"
@@ -142,7 +142,7 @@ void decorate(char **s){
     cut_eol(&fc, &lc);
     if(*(skip.to) && (tmp = resub(*s, skip.to, "\1"))){
         strcpy(*s, tmp) ; free(tmp);
-        if(!strcmp(skip.to, "(.*)\"{3}")) *s = prepend(*s, "\\n\"");
+        if(strcmp(skip.to, "([*]/)")) *s = prepend(*s, "\\n\"");
         *(skip.to) = '\0', skip.end[0] = 2;
         }
     if (!(plc == '\\' || *fc == 34 || *(skip.end) || indent != prev_indent)){
