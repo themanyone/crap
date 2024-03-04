@@ -1,8 +1,12 @@
 #!/bin/bash
-
-# crapper [compiler args] -- [program args]
 #
-# Runs a program from bash #!shebang line
+# Begin crap scripts with the following line
+# #!crapper [compiler args] -- [program args]
+#
+# Don't forget to make them executable with chmod +x!
+#
+# Scripts that supply their own [program args] are redundant, yes.
+# We do it because we can.
 #
 # Copyright (C) 2018-2024 Henry Kroll III, https://thenerdshow.com
 # Some permissions granted with included GPL-2 LICENSE
