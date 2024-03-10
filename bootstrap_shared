@@ -3,6 +3,6 @@
 # Run this every time you change the crap.crap source
 # This ougut to test it.
 ./crap crap.crap \
-| tcc -I./include -L./lib -lreg -lsjoin -run - crap.crap \
-| tcc -I./include -L./lib -lreg -lsjoin -run - crap.crap \
-| tcc -I./include -L./lib -lreg -lsjoin -run - "$@"
+| tcc -I./include -L./lib -lreg -run - crap.crap \
+| tcc -I./include -L./lib -lreg -run - crap.crap \
+| tcc -I./include -L./lib -lreg -run - "$@"
