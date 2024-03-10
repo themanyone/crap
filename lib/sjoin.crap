@@ -17,6 +17,4 @@ is provided "as is" without express or implied warranty.
 Everything else should compile and link with -lsjoin. 
 */
 
-#define UDE // User-defined Executable (UDE) format headers
-  #include "sjoin.h"
-#undef UDE
+#include "sjoin.h"

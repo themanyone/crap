@@ -12,7 +12,7 @@ INCLUDEDIR=include
 LIBSDIR=lib
 SUBDIRS=$(INCLUDEDIR) $(LIBSDIR)
 # Compiler flags
-export BFLAGS=-Iinclude -Wall -pipe -O2 -std=c99
+export BFLAGS=-Iinclude -Wall -pipe -O2 -std=c11
 # Linker flags
 LDFLAGS=-Llib
 DESTDIR=/usr/local
@@ -33,7 +33,8 @@ all: $(SUBDIRS) $(TARGET)
 # Shared make target
 shared: LDFLAGS+=-lreg -lsjoin -Wl,-rpath=$(LIBSDIR)
 shared: BFLAGS+=-fPIC -shared
-shared: include lib $(TARGET)
+shared: $(SUBDIRS) crap.o
+	$(CC) $(CFLAGS) $(LDFLAGS) crap.o -o crap
 
 # Craptastic rules
 %.c : %.crap

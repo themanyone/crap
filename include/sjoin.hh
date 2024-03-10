@@ -14,8 +14,8 @@
     about the suitability of this software for any purpose. It 
     is provided "as is" without express or implied warranty.
 */
-#ifndef __SPLITJOIN_H__
-#define __SPLITJOIN_H__
+#ifndef __SJOIN_H__
+#define __SJOIN_H__
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -38,6 +38,7 @@
    #pragma warning Unknown dynamic link import/export semantics.
 #endif
 
+#define _BSD_SOURCE
 #define BUF_MAX BUFSIZ
 #define ARRAY_MAX 100
 #ifndef WARN
@@ -115,14 +116,7 @@ or pointer to allocated memory.                         */
 #define mstrsplit  arr, ...                             \
  arr = strsplit  NULL, __VA_ARGS__                      //
 
-char *_argjoin  char* s1, ...
-char *join  char *buf, char *sep, char **arr
-char **split  char **arr, char *s, char *sep
-char **strsplit  char **arr, char *s, char *sep
-char *replace  char *s, char *find, char *repl
-char *addcslashes  char *s
-
-#ifdef UDE // User-defined Executable (UDE) header
+//#ifdef UDE // User-defined Executable (UDE) header
 EXPORT char *_argjoin  char* s1, ...
     va_list ap; va_start  ap, s1
     int nul; char *s2, sep[BUF_MAX + 1]
@@ -175,5 +169,5 @@ EXPORT char *addcslashes  char *s
     replace  s, "\"", "\\x22"
     replace  s, "\n", "\\n\"\n\""
     return s
-#endif
-#endif
+//#endif
+#endif //__SJOIN_H

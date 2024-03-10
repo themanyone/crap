@@ -28,12 +28,7 @@ struct macro *maclist = NULL;
 int prev_indent = 0, indent = 0;
 void macros(char **s){
     char *tmp, *match, *changed;
-    // if done skipping over comments, triple-quotes
-    {
-        //        if  !strcmp(skip.to, "(.*)\"{3}")
-        //            addcslashes  *s
-        //            tmp = resub  *s, "(.*)", "\"\1\n\""
-        //            strcpy  *s, tmp  ; free  tmp
+    {// if done skipping over comments, triple-quotes
         // put keyword macros here
         // main becomes int main()
         if (!(has_main || strcmp(*s, "main"))){
