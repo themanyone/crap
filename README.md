@@ -25,7 +25,7 @@ main
         puts  "hello world"
 ```
 
-After preprocessing, it becomes more or less standard C (`C99`).
+After preprocessing, it becomes standard C (std=`c99` or `c11`).
 
 ```c
 #include <stdio.h>
@@ -46,14 +46,14 @@ more lucrative licensing please contact the author.
 
 ## Interactive `crap`.
 
-The future of Rapid Application Development is `icrap`. Instant gratification at the speed of C. Try out individual lines of code and get instant results from the `icrap` interactive shell. Test ideas BEFORE putting  `crap` into production. It's a read-eval-print loop (REPL) for C, C++, and `crap`.
-Get it here for free: https://github.com/themanyone/itcc
+The future of Rapid Application Development is `icrap`. Instant gratification at the speed of C. Try out individual lines of code and get instant results from the `icrap` interactive shell. Test ideas BEFORE putting  `crap` into production. It's a read-eval-print loop (REPL) for C, C++, `crap`, and a bunch of other languages. Get it here for free: https://github.com/themanyone/itcc
 
 ```c
  $ ./icrap -lm
  crap> #include "math.h"
+ crap> #include "print.h"
  crap> for  int x=0;x<5;x++
- crap>      printf  "%i squared is %0.0f\n", x, pow(x, 2.0)
+ crap>      println  x, "squared is", pow(x, 2.0)
  0 squared is 0
  1 squared is 1
  2 squared is 4
@@ -159,6 +159,19 @@ output will have backslashes and quotes properly escaped.
             strcpy  skip.end, "\1\""
             strcpy  *s, tmp  ;free  tmp  ;return
     """);
+```
+
+**Generic types for print().** Crap can now print mixed types using c11 generic type selections. Include <stdio.h> and "print.h" to make it happen.
+
+```c
+    #includ <stdio.h>
+    #include "print.h"
+    main
+        println  "Test, four thirds", '(4/3) is', (4.0 / 3), '!', 
+        println  "The character code for", 'a', "is", ('a')  // parenthesis evaluate numbers
+        int F = 53
+        print  F, "Farenheit is", ((F - 32) * 5.0 / 9)
+        println  "Celcius."
 ```
 
 ### Decisions.

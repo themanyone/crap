@@ -1,17 +1,17 @@
 #if 0
-../crap "$0" | tcc -run - "$@"; exit 0
+../crap "$0" | tcc -I../include -run - "$@"; exit 0
 #endif
 // test2.crap example and tests
 #include <stdio.h>
 #include <alloca.h>
 #include <stdlib.h>
+#include "print.h"
 #define LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
 /** Crap's #replace
 /pattern/replacement/ directive extends
 the familiar cpp directives, and may also modify them!
 Up to 100 replacements per line, defined in `crap.h`.*/
-#replace /print\((.*)\)/puts(\1)/
 
 main
 	// declare pointers and arrays just like C

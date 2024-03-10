@@ -1,5 +1,5 @@
 #if 0
-crap "$0" |tcc -Iinclude -Llib -lreg -lsjoin -run - "$@";exit $?;
+crap "$0" |tcc -Iinclude -Llib -lreg -run - "$@";exit $?;
 #endif
 /* Concise, Regex-Aware Preprocessor (CRAP)
 C (computer language) code decorator and language maker
@@ -17,6 +17,7 @@ without express or implied warranty.
 */
 #include "crap.h"
 #include "sjoin.h"
+#include "print.h"
 
 #define INDENT while(indent > prev_indent){  \
     *s = prepend(*s, "{") , prev_indent += TAB;}
@@ -56,6 +57,8 @@ void macros(char **s){
         #define INCREMENT "\1_index<\1_end;\1_index++)"
         // for myLabel in array[[start][:end]]
         SUB("for" INARRAY, LOOP "," INCREMENT);
+        // foreach
+        SUB("foreach" INARRAY, "void *\1; for(size_t \1_index=0;(\1=\2[\1_index]);\1_index++)");
         // while myLabel in array[[start][:end]]
         SUB("while" INARRAY, LOOP "&&" INCREMENT);
         #define ARGSP "(( ?[^ \"]| ?\"(\\\\.|[^\\\"])*\")*) ?(\\s+|$)"
@@ -66,6 +69,22 @@ void macros(char **s){
          // double-space = parenthesis
         SUB("(\\w)  " ARGSP, "\1(\2)\5");
         // Put function-like macros here
+        // println()
+        // tmp will contain argument list
+        if((tmp = resub(*s, ".*pri(nt|ntln)\\s*\\((.*)\\).*", "\2,_\1_"))){
+            strcpy(*s, "do{char *_ntln_=\"\\n\", *_nt_=\"\";");
+            // token split argument string by commas and spaces
+            char *args[MAX_TOKENS] = {NULL};
+            int token_count = split_print_args(tmp, args);
+            for(int i=0; args[i]; i++) {// send each arg to print1()
+                if(i) strcat(*s, "putchar(' ');");
+                char *cmd = aargcat(cmd, "print1(", args[i], ");");
+                strcat(*s, cmd);}
+            strcat(*s, "}while(0);");
+            // Free dynamically allocated memory
+            for(int i = 0; i < token_count; i++){
+                free(args[i]);}
+            free(tmp);}
         // repeat
         SUB("repeat\\s*\\(([^, ]+)[, ]*(\\w*)\\)",
          "for(size_t \2_index=\1;\2_index--;)");
