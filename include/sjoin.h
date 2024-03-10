@@ -23,6 +23,9 @@
 #include <string.h>
 #include <alloca.h>
 
+#ifndef _POSIX_C_SOURCE
+#define _POSIX_C_SOURCE 200809L
+#endif
 #if defined(_MSC_VER)
    /* Microsoft */
    #define EXPORT __declspec(dllexport)
@@ -38,7 +41,6 @@
    #pragma warning Unknown dynamic link import/export semantics.
 #endif
 
-#define _BSD_SOURCE
 #define BUF_MAX BUFSIZ
 #define ARRAY_MAX 100
 #ifndef WARN
@@ -146,8 +148,8 @@ EXPORT char *join(char *buf, char *sep, char **arr){
     return buf;}
 EXPORT char **split(char **arr, char *s, char *sep){
     malloc_maybe(arr);
-    int i=0; for (arr[i++] = strtok_r(s, sep, &s);
-      (arr[i++] = strtok_r(NULL, sep, &s) );
+    int i=0; for (arr[i++] = strtok(s, sep);
+      (arr[i++] = strtok(NULL, sep) );
     ){} arr[i]=NULL; return arr;}
 EXPORT char **strsplit(char **arr, char *s, char *sep){
     malloc_maybe(arr);

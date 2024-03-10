@@ -12,7 +12,7 @@ INCLUDEDIR=include
 LIBSDIR=lib
 SUBDIRS=$(INCLUDEDIR) $(LIBSDIR)
 # Compiler flags
-export BFLAGS=-Iinclude -Wall -pipe -O2 -std=c11
+export BFLAGS=-Iinclude -Wall -pipe -O2 -std=c99
 # Linker flags
 LDFLAGS=-Llib
 DESTDIR=/usr/local
@@ -23,7 +23,8 @@ DOCDIR=$(PREFIX)/share/$(TARGET)
 export LIBDIR=$(PREFIX)/lib64
 
 # Source files
-SRCS=crap.c $(LIBSDIR)/reg.c $(LIBSDIR)/sjoin.c
+SRCS=crap.c $(LIBSDIR)/reg.c
+# $(LIBSDIR)/sjoin.c
 # Object files
 OBJS=$(SRCS:.c=.o)
 
@@ -31,7 +32,7 @@ OBJS=$(SRCS:.c=.o)
 all: $(SUBDIRS) $(TARGET)
 
 # Shared make target
-shared: LDFLAGS+=-lreg -lsjoin -Wl,-rpath=$(LIBSDIR)
+shared: LDFLAGS+=-lreg -Wl,-rpath=$(LIBSDIR)
 shared: BFLAGS+=-fPIC -shared
 shared: $(SUBDIRS) crap.o
 	$(CC) $(CFLAGS) $(LDFLAGS) crap.o -o crap
