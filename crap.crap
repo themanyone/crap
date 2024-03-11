@@ -76,7 +76,7 @@ void macros  char **s
             // token split argument string by commas and spaces
             char *args[MAX_TOKENS] = {NULL}
             int token_count = split_print_args  tmp, args
-            for  int i=0; args[i]; i++  // send each arg to print1()
+            for  int i=0; i<MAX_TOKENS && args[i]; i++
                 if  i  strcat  *s, "putchar(' ');"
                 char *cmd = aargcat  cmd, "print1(", args[i], ");"
                 strcat  *s, cmd
