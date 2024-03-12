@@ -183,7 +183,7 @@ int crap  char *name
     fclose  f
     unless  strchr("#}()<", b[0])  // final #endif, brace, tag?
         if  has_main  strcpy  b, SPACES "return 0;\n}\n"
-        else strcpy  b, SPACES "\n}\n"
+        else strcpy  b, "}"
         decorate  &b  ;puts  b
     else puts  ""
     macro_free  &maclist

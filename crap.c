@@ -76,7 +76,7 @@ void macros(char **s){
             // token split argument string by commas and spaces
             char *args[MAX_TOKENS] = {NULL};
             int token_count = split_print_args(tmp, args);
-            for(int i=0; args[i]; i++) {// send each arg to print1()
+            for(int i=0; i<MAX_TOKENS && args[i]; i++){
                 if(i) strcat(*s, "putchar(' ');");
                 char *cmd = aargcat(cmd, "print1(", args[i], ");");
                 strcat(*s, cmd);}
@@ -183,7 +183,7 @@ int crap(char *name){
     fclose(f);
     if (!(strchr("#}()<", b[0]))) {// final #endif, brace, tag?
         if(has_main) strcpy(b, SPACES "return 0;\n}\n");
-        else strcpy(b, SPACES "\n}\n");
+        else strcpy(b, "}");
         decorate(&b) ;puts(b);}
     else puts("");
     macro_free(&maclist);

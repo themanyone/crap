@@ -76,5 +76,4 @@ char *resub(const char *text, const char *pattern, const char *replacement){
         free(output) ;output = NULL;}
     regfree(&re);
     return output;
-    
 }
