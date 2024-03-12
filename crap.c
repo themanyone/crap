@@ -73,8 +73,8 @@ void macros(char **s){
         // tmp will contain argument list; match holds var assignment, if any
         // need to do it twice because we only have greedy regex
         if((tmp = resub(*s, ".*(sp|fp|ep)rin(t|tln)\\s*\\((.*)\\).*", "\1, \3, \2_")) || (tmp = resub(*s, ".*prin(t|tln)\\s*\\((.*)\\).*", "p, \2, \1_"))){
-            !(match = resub(*s, "(.*)(sp|fp|ep)rint.*", "\1") )?
-              match = resub(*s, "(.*)print.*", "\1") : match;
+            !(match = resub(*s, "(.*)(sp|fp|ep)rint.*\\(.*", "\1") )?
+              match = resub(*s, "(.*)print.*\\(.*", "\1") : match;
             strcpy(*s, match);
             // token split argument string by commas and spaces
             char *ep, *pre = "", *pc = "", *cmd, *args[MAX_TOKENS] = {NULL};
