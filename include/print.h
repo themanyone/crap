@@ -23,33 +23,38 @@ supports without having to specify the type explicitly in the call: */
 #include <stdlib.h>
 #include <string.h>
 
-#define printf_dec_format(x) _Generic((x), \
-char: "%d", \
-signed char: "%hhd", \
-unsigned char: "%hhu", \
-signed short: "%hd", \
-unsigned short: "%hu", \
-signed int: "%d", \
-unsigned int: "%u", \
-long int: "%ld", \
-unsigned long int: "%lu", \
-long long int: "%lld", \
-unsigned long long int: "%llu", \
-float: "%f", \
-double: "%f", \
-long double: "%Lf", \
-char *: "%s", \
-void *: "%s") //
+#define printf_dec_format(x, y) _Generic((x), \
+char: "%d" y, \
+signed char: "%hhd" y, \
+unsigned char: "%hhu" y, \
+signed short: "%hd" y, \
+unsigned short: "%hu" y, \
+signed int: "%d" y, \
+unsigned int: "%u" y, \
+long int: "%ld" y, \
+unsigned long int: "%lu" y, \
+long long int: "%lld" y, \
+unsigned long long int: "%llu" y, \
+float: "%f" y, \
+double: "%f" y, \
+long double: "%Lf" y, \
+char *: "%s" y, \
+void *: "%s" y) //
 
-#define print1(x) printf(printf_dec_format(x), x)
-#define print1n(x) printf(printf_dec_format(x), x), putchar('\n')
+#define px_(x)  printf(printf_dec_format(x,), x)
+#define p_(x)   printf(printf_dec_format(x, " "), x)
+#define pn_(x)  printf(printf_dec_format(x, "\n"), x)
+
+#define epx_(x) fprintf(stderr, printf_dec_format(x,), x)
+#define ep_(x)  fprintf(stderr, printf_dec_format(x, " "), x)
+#define epn_(x) fprintf(stderr, printf_dec_format(x, "\n"), x)
 
 #if 0
 {// We can then print values like so:
-    print1(('a'));    // prints "97" (on an ASCII system)
-    print1('a');  // prints "a"
-    print1(123);    // prints "123"
-    print1(1.234);      }// prints "1.234000"
+    p_('a');    // prints "97" (on an ASCII system)
+    p_((char)'a');  // prints "a"
+    p_(123);    // prints "123"
+    p_(1.234);      }// prints "1.234000"
 #endif
 
 #define MAX_TOKENS 100
@@ -90,6 +95,8 @@ int split_print_args(char *str, char **tokens){
                 if(token_index > 0){
                     tokens[token_count] = strdup(token);
                     token_count++;
+                    if(token_count > MAX_TOKENS){
+                        fprintf(stderr, "Token length exceeded\n");}
                     token_index = 0;
                     memset(token, 0, MAX_TOKEN_LEN);}
                 break;

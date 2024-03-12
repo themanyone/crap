@@ -71,16 +71,18 @@ void macros  char **s
         // Put function-like macros here
         // println()
         // tmp will contain argument list
-        if  (tmp = resub(*s, ".*pri(nt|ntln)\\s*\\((.*)\\).*", "\2,_\1_"))
-            strcpy  *s, "do{char *_ntln_=\"\\n\", *_nt_=\"\";"
+        if  (tmp = resub(*s, "(ep|p)rin(t|tln)\\s*\\((.*)\\).*", "\1, \3, \2_"))
+            strcpy  *s, ""
             // token split argument string by commas and spaces
-            char *args[MAX_TOKENS] = {NULL}
+            char *ep, *cmd, *args[MAX_TOKENS] = {NULL}
             int token_count = split_print_args  tmp, args
-            for  int i=0; i<MAX_TOKENS && args[i]; i++
-                if  i  strcat  *s, "putchar(' ');"
-                char *cmd = aargcat  cmd, "print1(", args[i], ");"
-                strcat  *s, cmd
-            strcat  *s, "}while(0);"
+            ep = args[0]
+            for  int i=1; i < token_count - 1; i++
+                // if not println end print with a space "_()"
+                if  strcmp(args[i + 1], "tln_")
+                    strcat  *s, aargcat(cmd, ep, "_(", args[i], ");")
+                else // otherwise print a new line "n_()"
+                    strcat  *s, aargcat(cmd, ep, "n_(", args[i], ");")
             // Free dynamically allocated memory
             for  int i = 0; i < token_count; i++
                 free  args[i]
