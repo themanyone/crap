@@ -41,13 +41,23 @@ long double: "%Lf" y, \
 char *: "%s" y, \
 void *: "%s" y) //
 
-#define px_(x)  printf(printf_dec_format(x,), x)
-#define p_(x)   printf(printf_dec_format(x, " "), x)
-#define pn_(x)  printf(printf_dec_format(x, "\n"), x)
+#define end_(s) strchrnul((s), '\0')
 
-#define epx_(x) fprintf(stderr, printf_dec_format(x,), x)
-#define ep_(x)  fprintf(stderr, printf_dec_format(x, " "), x)
-#define epn_(x) fprintf(stderr, printf_dec_format(x, "\n"), x)
+#define px_(x)  +printf(printf_dec_format(x,), x)
+#define p_(x)   +printf(printf_dec_format(x, " "), x)
+#define pn_(x)  +printf(printf_dec_format(x, "\n"), x)
+
+#define epx_(x) +fprintf(stderr, printf_dec_format(x,), x)
+#define ep_(x)  +fprintf(stderr, printf_dec_format(x, " "), x)
+#define epn_(x) +fprintf(stderr, printf_dec_format(x, "\n"), x)
+
+#define spx_(s, x) +sprintf(end_(s), printf_dec_format(x,), x)
+#define sp_(s, x)  +sprintf(end_(s), printf_dec_format(x, " "), x)
+#define spn_(s, x) +sprintf(end_(s), printf_dec_format(x, "\n"), x)
+
+#define fpx_(f, x) +fprintf(f, printf_dec_format(x,), x)
+#define fp_(f, x)  +fprintf(f, printf_dec_format(x, " "), x)
+#define fpn_(f, x) +fprintf(f, printf_dec_format(x, "\n"), x)
 
 #if 0
 {// We can then print values like so:

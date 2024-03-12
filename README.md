@@ -80,7 +80,7 @@ git clone https://github.com/themanyone/crap
 git switch testing
 make
 # if there are corrupted or 0-byte .c files:
-git checkout [nam of c file]
+git checkout [name of c file]
 # libtre-dev might be necessary in Debian Android UserLand
 ```
 
@@ -108,7 +108,7 @@ them. It is good programming practice to maintain separation by not
 **Includes.** Like C, Crap programs `#include <stdio.h>` if they 
 want to print to, or read from, consoles or files in a standard way. 
 See `test2.crap` for a demo that uses `asprintf.h` for string and 
-array manipulation. Tinycc supports c11 _Generic() types, so include 
+array manipulation. TinyCC supports c11 _Generic() types, so include 
 `print.h` for a type-aware print function. If the include is 
 useful, copy it to `/usr/local/include`
 
@@ -164,15 +164,26 @@ output will have backslashes and quotes properly escaped.
 **Generic types for print().** Crap can now print mixed types using c11 generic type selections. Include <stdio.h> and "print.h" to make it happen.
 
 ```c
-    #includ <stdio.h>
+    #include <stdio.h>
     #include "print.h"
     main
         println  "Test, four thirds", '(4/3) is', (4.0 / 3), '!', 
         println  "The character code for", 'a', "is", ('a')  // parenthesis evaluate numbers
         int F = 53
-        print  F, "Farenheit is", ((F - 32) * 5.0 / 9)
-        println  "Celcius."
+        print  F, "Fahrenheit is", ((F - 32) * 5.0 / 9)
+        println  "Celsius."
 ```
+
+There are also `sprint`, `sprintln`, `fprint`, `fprintln`, `eprint`, and `eprintln`. The error macros, `eprint` and `eprintln`, are a convenient equivalent to `fprint(stderr)` and `fprintln(stderr)` respectively. These function macros also work as arguments to other functions and macros, where they return the number of bytes written. The `sprint` and `sprintln` macros tack data onto the end of a string much like would be expected when writing to files or terminals or preparing output to be written. The old `sprintf` family of functions overwrite the beginning of a string, which is not usually what anyone wants.
+
+Thus, `sprint(s, "hello", "world", 4); sprintln(s, "hello", "again", 5);`
+Translates to the equivalent `sprintf` standard library functions:
+`sprintf(strchrnul(s, '\0'), "%s %d ", "hello world", 4);`
+`sprintf(strchrnul(s, '\0'), "%s %d \n", "hello again", 5);`
+
+More examples can be found in tests and by glancing at the `print.hh` header.
+
+These `print.hh` macros are in development. And they are not without limits. They can handle up to 100 arguments per statement invocation. Why would anyone want to print that many arguments? Anyway, the limits can be raised by editing that header file.
 
 ### Decisions.
 
@@ -209,7 +220,7 @@ objects where the length is unknown at compile time.
 Compilers can be configured to generate warnings when these loops are 
 unable to compute array sizes. From `make debug`:
 
-```makefile
+```Makefile
 gcc -g -Wall -pedantic ...
 ```
 
@@ -375,7 +386,7 @@ Crap works like any lexer, Vala, or C preprocessor. This `Makefile`
 target tells GNU `make` to turn `.crap` files into `.c` files as 
 needed.
 
-```makefile
+```Makefile
 %.c : %.crap
     crap "$<" > "$@"
 ```

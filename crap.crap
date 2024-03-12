@@ -70,23 +70,29 @@ void macros  char **s
         SUB("(\\w)  " ARGSP, "\1(\2)\5")
         // Put function-like macros here
         // println()
-        // tmp will contain argument list
-        if  (tmp = resub(*s, "(ep|p)rin(t|tln)\\s*\\((.*)\\).*", "\1, \3, \2_"))
-            strcpy  *s, ""
+        // tmp will contain argument list; match holds var assignment, if any
+        // need to do it twice because we only have greedy regex
+        if  (tmp = resub(*s, ".*(sp|fp|ep)rin(t|tln)\\s*\\((.*)\\).*", "\1, \3, \2_")) || (tmp = resub(*s, ".*prin(t|tln)\\s*\\((.*)\\).*", "p, \2, \1_"))
+            !(match = resub  *s, "(.*)(sp|fp|ep)rint.*", "\1"  )?
+              match = resub  *s, "(.*)print.*", "\1"  : match
+            strcpy  *s, match
             // token split argument string by commas and spaces
-            char *ep, *cmd, *args[MAX_TOKENS] = {NULL}
-            int token_count = split_print_args  tmp, args
-            ep = args[0]
-            for  int i=1; i < token_count - 1; i++
+            char *ep, *pre = "", *pc = "", *cmd, *args[MAX_TOKENS] = {NULL}
+            int b = 0, token_count = split_print_args  tmp, args
+            ep = args[b++]
+            if  ep[0] == 's' || ep[0] == 'f' // sprint/fprint
+                pre = args[b++]; pc = ", "
+            for  int i=b; i < token_count - 1; i++
                 // if not println end print with a space "_()"
                 if  strcmp(args[i + 1], "tln_")
-                    strcat  *s, aargcat(cmd, ep, "_(", args[i], ");")
+                    strcat  *s, aargcat(cmd, ep, "_(", pre, pc, args[i], ")")
                 else // otherwise print a new line "n_()"
-                    strcat  *s, aargcat(cmd, ep, "n_(", args[i], ");")
+                    strcat  *s, aargcat(cmd, ep, "n_(", pre, pc, args[i], ")")
             // Free dynamically allocated memory
             for  int i = 0; i < token_count; i++
                 free  args[i]
             free  tmp
+            free  match
         // repeat
         SUB("repeat\\s*\\(([^, ]+)[, ]*(\\w*)\\)",
          "for(size_t \2_index=\1;\2_index--;)")
@@ -162,7 +168,7 @@ void decorate  char **s
     if  *(skip.to) || (*(skip.end) && --(*(skip.end)))  return
     lc = *s + strlen(*s) - 1; if  lc < *s  return
     // skip semicolon on lines ending with punc.
-    if  strchr(" <>:;,.=*/&|^!", *lc)
+    if  strchr(" <>:;,.=*/&|^!?", *lc)
         *(skip.end) = 1;
     // skip semicolon on blank lines
     if  strlen(fc) == 0  *(skip.end) = 1
