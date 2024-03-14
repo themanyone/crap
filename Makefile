@@ -35,7 +35,7 @@ all: $(SUBDIRS) $(TARGET)
 shared: LDFLAGS+=-lreg -Wl,-rpath=$(LIBSDIR)
 shared: BFLAGS+=-fPIC -shared
 shared: $(SUBDIRS) crap.o
-	$(CC) $(CFLAGS) $(LDFLAGS) crap.o -o crap
+	$(CC) $(CFLAGS) crap.o $(LDFLAGS) -o crap
 
 # Craptastic rules
 %.c : %.crap
