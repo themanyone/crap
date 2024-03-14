@@ -61,6 +61,8 @@ void *: "%s" y) //
 #define fp_(f, x)  +fprintf(f, printf_dec_format(x, " "), x)
 #define fpn_(f, x) +fprintf(f, printf_dec_format(x, "\n"), x)
 
+#define debugf(x, ...) DEBUG && fprintf(stderr, FL x "s\n", __VA_ARGS__)
+
 #if 0
 {// We can then print values like so:
     p_('a');    // prints "97" (on an ASCII system)
@@ -74,7 +76,7 @@ void *: "%s" y) //
 
 #define STR_(x) #x
 #define STRINGS_(x) STR_(x)
-#define FL __FILE__""STRINGS_(:__LINE__)
+#define FL __FILE__""STRINGS_(:__LINE__)" "
 
 typedef enum{
     NORMAL,

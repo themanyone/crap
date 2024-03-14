@@ -39,6 +39,17 @@ void macros  char **s
         max = MAX_REPLACE                           \
         while  max-- && (tmp=resub(*s, match, rep)) \
             strcpy  *s, tmp  ;free  tmp
+        // apply embedded macros
+        for  struct macro *m = maclist;m ;m = m->next
+            SUB  m->match, m->replace
+        // read embedded macros
+        match = resub  *s, "#replace\\s+/(.*)/(.*)/", "\1"
+        changed= resub  *s,"#replace\\s+/(.*)/(.*)/", "\2"
+        if  match && changed
+            macro_append  &maclist, match, changed
+        else
+            free  match  ;free  changed
+        SUB("#replace\\s+/(.*)/(.*)/", "\x2f/ crap: replaced \1 with \2")
         // array[:] notation now works most places (do not free)
         // this one employs a non-standard GNU extension
         SUB("([(*,=]\\s*|  )([^[\" ]+)\\s*\\[(\\w*):(\\w*)\\]([[);, ]+|$)",
@@ -111,17 +122,6 @@ void macros  char **s
             match = resub(*s,"\"{3}(([^\"]+\"?)*)", tmp)
             strcpy  skip.to, "(.*)\"{3}"  ;strcpy  skip.end, "\1"
             strcpy  *s, match  ;free  tmp  ;free  match  ;INDENT
-        // apply embedded macros
-        for  struct macro *m = maclist;m ;m = m->next
-            SUB  m->match, m->replace
-        // read embedded macros
-        match = resub  *s, "#replace\\s+/(.*)/(.*)/", "\1"
-        changed= resub  *s, "#replace\\s+/(.*)/(.*)/","\2"
-        if  match && changed
-            macro_append  &maclist, match, changed
-        else
-            free  match  ;free  changed
-        SUB("#replace\\s+/(.*)/(.*)/", "\x2f/ crap: replaced \1 with \2")
     return
 
 #undef ARGSP
