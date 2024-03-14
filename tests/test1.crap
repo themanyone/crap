@@ -1,5 +1,5 @@
 #if 0
-../crap "$0" | tcc -run - "$@"; exit 0
+LD_LIBRARY_PATH=../lib ../crap "$0" | tcc -run - "$@"; exit $?
 #endif
 // test1.crap example and tests
 #include <stdio.h>

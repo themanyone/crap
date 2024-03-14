@@ -1,9 +1,8 @@
 #if 0
-../crap "$0" | tcc -I../include -run - "$@"; exit 0
+LD_LIBRARY_PATH=../lib ../crap "$0" | tcc -I../include -run - "$@"; exit $?
 #endif
 // test2.crap example and tests
 #include <stdio.h>
-#include <alloca.h>
 #include <stdlib.h>
 #include "print.h"
 #define LEN(arr) (sizeof(arr) / sizeof(arr[0]))
@@ -15,18 +14,17 @@ Up to 100 replacements per line, defined in `crap.h`.*/
 
 main
 	// declare pointers and arrays just like C
-	char *word, *words[] = { "zero", "one", "two", "three", "four", "five" }
-    word = alloca  80
-	// The asprintf() macro is alloca() + sprintf().
+	char ord[80], *words[] = { "zero", "one", "two", "three", "four", "five" }
+	char *word = ord
 	// Do not attempt to free or return the resulting pointer.
 	// (Use msprintf() for that.)
 	sprintf  word, "Array indexes start at [%s].", words[0]
 	print  word  ;// temporary local stack space.
 
-	char *blah = alloca  99
+	char blah[99]
 	int len = LEN  words
 	sprintf  blah, "The words array has %i indexes, numbered 0 - %i.", len, len-1
-	print  blah  ;// the newly-declared pointer
+	print  blah  // the newly-declared pointer
 
 	// The for..in pattern loops over arrays with a pointer.
 	// Use any previously-declared pointer for "word".

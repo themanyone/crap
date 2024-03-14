@@ -61,8 +61,6 @@ void *: "%s" y) //
 #define fp_(f, x)  +fprintf(f, printf_dec_format(x, " "), x)
 #define fpn_(f, x) +fprintf(f, printf_dec_format(x, "\n"), x)
 
-#define fmt_(x) (char *s, sprintf(
-
 #if 0
 {// We can then print values like so:
     p_('a');    // prints "97" (on an ASCII system)

@@ -16,7 +16,7 @@ endif
 	ln -sf "lib$@.1.0.1" "lib$@"
 all:
 	$(foreach exe, $(wildcard *.crap), \
-	./$(exe) || exit;)
+	LD_LIBRARY_PATH=../lib ./$(exe) || exit;)
 clean:
 	$(RM) $(CRAP:.crap=.c)
 shared: $(LIBS:.crap=.so)

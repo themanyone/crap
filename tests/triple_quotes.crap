@@ -1,6 +1,6 @@
-#!../crap
-//bin/bash -c "../crap "$0" |tcc -run - "$@"";exit 0;
-// -*- coding: utf-8 -*-
+#if 0
+LD_LIBRARY_PATH=../lib ../crap "$0" | tcc -run - "$@"; exit $?
+#endif
 #include <stdio.h>
 
 main

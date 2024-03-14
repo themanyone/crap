@@ -1,12 +1,12 @@
 #if 0
-../crap "$0" | tcc -run - "$@"; exit 0
+LD_LIBRARY_PATH=../lib ../crap "$0" | tcc -run - "$@"; exit $?
 #endif
 // test1.crap example and tests
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-char* pass  char **v, char*fmt, char *s
-    *v = malloc  strlen(s) + 1
+char* pass   char **v, char*fmt, char *s
+    *v = malloc  strlen(s) + 1 
     sprintf  *v, fmt, s
     return *v
 main
