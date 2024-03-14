@@ -429,6 +429,28 @@ Didn't Mom warn you about playing with dirty old `crap`? Don't take
 
 `git clone https://github.com/themanyone/crap.git`
 
+## Depositing `crap`.
+
+There are some extra considerations for contributing `crap` to the pile.
+Edit the `*.crap` and `*.hh` files. The `*.c` and `*.h` files will be
+overwritten the next time you run `make` for big disappointment.
+
+Run `bootstrap_test` or `bootstrap_shared` for shared build to make sure
+the build works before installing the new version. Also use `make -B`
+to always build everything, even the generated `*.c` and `*.h` files that
+have been outdated by changes in `*.crap` and `*.hh`. That should help.
+
+Scripts, `remake.sh` and `shared_remake.sh` do all of that for convenience. 
+
+## Who to blame.
+
+Browse Themanyone
+- GitHub https://github.com/themanyone
+- YouTube https://www.youtube.com/themanyone
+- Mastodon https://mastodon.social/@themanyone
+- Linkedin https://www.linkedin.com/in/henry-kroll-iii-93860426/
+- [TheNerdShow.com](http://thenerdshow.com/)
+
 Copyright (C) 2018-2023 Henry Kroll III, https://thenerdshow.com
 
 Permission to use, copy, modify, distribute, and sell this software and 
