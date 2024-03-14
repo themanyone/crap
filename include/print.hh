@@ -80,8 +80,9 @@ void *: "%s" y) //
 
 typedef enum
     NORMAL,
-    QUOTED,
-    PARENS,
+    QUOTED = '"',
+    SQUOTED= '\'',
+    PARENS = ')',
 State;
 
 char *strdup  const char *s
@@ -101,7 +102,11 @@ int split_print_args  char *str, char **tokens
         switch  state
             case NORMAL:
             switch  c
-                case '\'': case '"':
+                case '\'':
+                state = SQUOTED
+                token[token_index++] = '"'
+                break
+                case '"':
                 state = QUOTED
                 token[token_index++] = '"'
                 break
@@ -121,17 +126,10 @@ int split_print_args  char *str, char **tokens
                 default:
                     token[token_index++] = c
             break
-            case QUOTED:
-            if  (c == '\'' || c == '\x22')
-                state = NORMAL
-                c = '"'
+            default:
+            if  c == state  state = NORMAL
+            if  c == '\''  c = '"'
             token[token_index++] = c
-            break
-            case PARENS:
-            if  c == ')'
-                state = NORMAL
-            token[token_index++] = c
-            break
 
     if  token_index > 0
         tokens[token_count] = strdup  token

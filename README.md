@@ -398,7 +398,10 @@ relevant to your system before running `make`. If the build complains
 about a missing library or header file, use the system package manager 
 to find it or search the web. Developers, testers, and those who want 
 to improve upon `crap`'s regex engine, or include it into other 
-projects, may desire to `make shared` to build shared libraries.
+projects, may desire to `make shared` to build shared libraries. Be sure
+`/usr/local/lib64` is in your `LD_LIBRARY_PATH` if installing there.
+Or single user install to `~/.local/bin/`, `~/.local/lib64`, etc.
+Edit Makefile install locations.
 
 ```bash
 make
