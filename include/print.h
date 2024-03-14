@@ -38,6 +38,8 @@ unsigned long long int: "%llu" y, \
 float: "%f" y, \
 double: "%f" y, \
 long double: "%Lf" y, \
+size_t: "%z" y, \
+size_t *:"%zn" y,\
 char *: "%s" y, \
 void *: "%s" y) //
 
@@ -59,6 +61,8 @@ void *: "%s" y) //
 #define fp_(f, x)  +fprintf(f, printf_dec_format(x, " "), x)
 #define fpn_(f, x) +fprintf(f, printf_dec_format(x, "\n"), x)
 
+#define fmt_(x) (char *s, sprintf(
+
 #if 0
 {// We can then print values like so:
     p_('a');    // prints "97" (on an ASCII system)
@@ -69,6 +73,10 @@ void *: "%s" y) //
 
 #define MAX_TOKENS 100
 #define MAX_TOKEN_LEN 256
+
+#define STR_(x) #x
+#define STRINGS_(x) STR_(x)
+#define FL __FILE__""STRINGS_(:__LINE__)
 
 typedef enum{
     NORMAL,
@@ -106,7 +114,7 @@ int split_print_args(char *str, char **tokens){
                     tokens[token_count] = strdup(token);
                     token_count++;
                     if(token_count > MAX_TOKENS){
-                        fprintf(stderr, "Token length exceeded\n");}
+                        fprintf(stderr, FL "Token length exceeded\n");}
                     token_index = 0;
                     memset(token, 0, MAX_TOKEN_LEN);}
                 break;

@@ -77,7 +77,7 @@ void macros(char **s){
               match = resub(*s, "(.*)print.*\\(.*", "\1") : match;
             strcpy(*s, match);
             // token split argument string by commas and spaces
-            char *ep, *pre = "", *pc = "", *cmd, *args[MAX_TOKENS] = {NULL};
+            char *ep, *pre = "", *pc = "", *cmd = NULL, *args[MAX_TOKENS] = {NULL};
             int b = 0, token_count = split_print_args(tmp, args);
             ep = args[b++];
             if(ep[0] == 's' || ep[0] == 'f') {// sprint/fprint
@@ -85,14 +85,15 @@ void macros(char **s){
             for(int i=b; i < token_count - 1; i++){
                 // if not println end print with a space "_()"
                 if(strcmp(args[i + 1], "tln_")){
-                    strcat(*s, aargcat(cmd, ep, "_(", pre, pc, args[i], ")"));}
+                    strcat(*s, margcat(cmd, ep, "_(", pre, pc, args[i], ")"));}
                 else {// otherwise print a new line "n_()"
-                    strcat(*s, aargcat(cmd, ep, "n_(", pre, pc, args[i], ")"));}}
+                    strcat(*s, margcat(cmd, ep, "n_(", pre, pc, args[i], ")"));}}
             // Free dynamically allocated memory
             for(int i = 0; i < token_count; i++){
                 free(args[i]);}
             free(tmp);
-            free(match);}
+            free(match);
+            free(cmd);}
         // repeat
         SUB("repeat\\s*\\(([^, ]+)[, ]*(\\w*)\\)",
          "for(size_t \2_index=\1;\2_index--;)");
