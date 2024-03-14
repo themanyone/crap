@@ -1,4 +1,4 @@
 make clean
-make
+make -B
 ./bootstrap_test
 make tests

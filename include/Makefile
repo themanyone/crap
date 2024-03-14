@@ -10,8 +10,6 @@ INSTALL_PROGRAM=$(INSTALL)
 	crap "$<" > "$@"
 all: $(HEADERS:.hh=.h)
 .PHONY: clean install debug debugshared
-clean:
-	$(RM) $(HEADERS:.hh=.h) *~
 shared: all
 debug: all
 debugshared: all

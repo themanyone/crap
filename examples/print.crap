@@ -1,0 +1,10 @@
+#!../crapper -I../include -L. -std=c11 -- moo flap
+#include <stdio.h>
+#include <print.h>
+
+main
+    int a = 5
+    float f = 3.14
+    char *p= "Hello world!"
+    print  a,f, p
+    puts  argv[1]

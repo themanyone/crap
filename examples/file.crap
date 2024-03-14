@@ -1,0 +1,19 @@
+#!/usr/local/bin/crapper -I../include -L. -std=c11 -- moo flap
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
+main
+    /* read source code and output it to the termial */
+    char *in="./file.crap";
+    char *out = "/dev/stdout";
+    ssize_t len
+    int ret = 0, fin, fout
+    char *buf[4096]
+    struct stat st
+    if  (fin = open(in, O_RDONLY)) == -1  puts  "open fail"
+    fout = open  out, O_WRONLY|O_CREAT|O_TRUNC, st.st_mode & 0777
+    if  fout == -1  puts  "failed to open output for writing"
+    while  (len = read(fin, buf, 4096)) > 0  write  fout, buf, len

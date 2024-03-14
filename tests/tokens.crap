@@ -1,0 +1,19 @@
+#if 0
+../crap "$0" | tcc -I../include -run - "$@"; exit 0
+#endif
+#include <stdio.h>
+#include "print.h"
+
+main
+    char *input = "'quack, quack', ('a' + 4), w, sqrt(2.5)"
+    char *tokens[MAX_TOKENS] = {NULL}
+
+    int token_count = split_print_args  input, tokens
+
+    printf  "Number of tokens: %d\n", token_count
+    for  int i = 0; i < token_count; i++
+        println  "Token", i, "=", tokens[i]
+
+    // Free dynamically allocated memory
+    for  int i = 0; i < token_count; i++
+        free  tokens[i]

@@ -1,0 +1,18 @@
+//usr/local/bin/crap "$0">"$0.c"&&tcc -run -I./include "$0.c" ;exit $?
+#include <stdio.h>
+#include <string.h>
+#include "print.h"
+
+float C  float F
+    return (F - 32) * 5.0 / 9
+
+void toCelsius  float F
+    println  F, "degrees, Fahrenheit is", C(F), "Celsius."
+
+main
+    char input[100]
+    float F
+    println  "Celsius Conversion. Enter the temperature in Fahrenheit."
+    fgets  input, sizeof input, stdin
+    F = atof  input
+    toCelcius  F

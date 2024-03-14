@@ -19,7 +19,7 @@ INSTALL_PROGRAM=$(INSTALL)
 	ln -sf "lib$@.1.0.1" "lib$@"
 all: $(LIBS:.crap=.c) $(LIBS:.crap=.o)
 clean:
-	$(RM) $(LIBS:.crap=.[oc]) $(wildcard lib*.so*) *~
+	$(RM) $(LIBS:.crap=.o) $(wildcard lib*.so*) *~
 shared: $(LIBS:.crap=.so)
 debug: BFLAGS+=-Wall -pedantic -O0
 debug: CFLAGS+=-g
