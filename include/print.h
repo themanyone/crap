@@ -126,8 +126,9 @@ int split_print_args(char *str, char **tokens){
             break;
             default:
             if(*end != '\\'){
-                if(c == state) state = NORMAL;
-                if(c == '\'') c = '"';}
+                if(c == state){
+                    state = NORMAL;
+                    if(c == '\'') c = '"';}}
             token[token_index++] = c;}
         if(token_count > MAX_TOKENS){
             fprintf(stderr, FL "Token length exceeded\n");
