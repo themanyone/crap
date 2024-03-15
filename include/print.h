@@ -38,8 +38,6 @@ unsigned long long int: "%llu" y, \
 float: "%f" y, \
 double: "%f" y, \
 long double: "%Lf" y, \
-size_t: "%z" y, \
-size_t *:"%zn" y,\
 char *: "%s" y, \
 void *: "%s" y) //
 
@@ -99,6 +97,9 @@ int split_print_args(char *str, char **tokens){
     int token_index = 0;
 
     for(int c, i = 0; (c=str[i]); i++){
+        int tl = strlen(token);
+        char *end = "";
+        if(tl) end = token + strlen(token) - 1;
         switch(state){
             case NORMAL:
             switch(c){
@@ -116,10 +117,7 @@ int split_print_args(char *str, char **tokens){
                 break;
                 case ',': case ' ':
                 if(token_index > 0){
-                    tokens[token_count] = strdup(token);
-                    token_count++;
-                    if(token_count > MAX_TOKENS){
-                        fprintf(stderr, FL "Token length exceeded\n");}
+                    tokens[token_count++] = strdup(token);
                     token_index = 0;
                     memset(token, 0, MAX_TOKEN_LEN);}
                 break;
@@ -127,14 +125,15 @@ int split_print_args(char *str, char **tokens){
                     token[token_index++] = c;}}
             break;
             default:
-            if(c == state) state = NORMAL;
-            if(c == '\'') c = '"';
-            token[token_index++] = c;
-}}
+            if(*end != '\\'){
+                if(c == state) state = NORMAL;
+                if(c == '\'') c = '"';}
+            token[token_index++] = c;}
+        if(token_count > MAX_TOKENS){
+            fprintf(stderr, FL "Token length exceeded\n");
+            break;}}
     if(token_index > 0){
-        tokens[token_count] = strdup(token);
-        token_count++;
-}
+        tokens[token_count++] = strdup(token);}
     tokens[token_count] = NULL;
     return token_count;
 }
