@@ -37,7 +37,7 @@ shared: BFLAGS+=-fPIC -shared
 shared: $(SUBDIRS) crap.o
 	$(CC) $(CFLAGS) crap.o $(LDFLAGS) -o crap
 
-ifeq ($(wildcard crap),)
+ifeq ($(wildcard crap),$(TARGET))
 # Craptastic rules
 %.c : %.crap
 	$(CRAP_EXECUTABLE) "$<" > "$@"
