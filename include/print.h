@@ -97,9 +97,9 @@ int split_print_args(char *str, char **tokens){
     int token_index = 0;
 
     for(int c, i = 0; (c=str[i]); i++){
-        int tl = strlen(token);
         char *end = "";
-        if(tl) end = token + strlen(token) - 1;
+        int tl = strlen(token);
+        if(tl) end = token + tl - 1;
         switch(state){
             case NORMAL:
             switch(c){

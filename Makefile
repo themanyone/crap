@@ -37,9 +37,15 @@ shared: BFLAGS+=-fPIC -shared
 shared: $(SUBDIRS) crap.o
 	$(CC) $(CFLAGS) crap.o $(LDFLAGS) -o crap
 
+ifeq ($(wildcard crap),)
 # Craptastic rules
 %.c : %.crap
-	crap "$<" > "$@"
+	$(CRAP_EXECUTABLE) "$<" > "$@"
+else
+%.c : %.crap
+	@echo "Note: 'crap' program not available yet. Using existing '.c' files."
+	@touch "$@"
+endif
 
 # Compile rules
 %.o: %.c
