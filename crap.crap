@@ -190,7 +190,7 @@ int crap  char *name
             if  b[strlen(b)-1]!='\n'  strcat  b, "\n"
             decorate  &b  ;printf  "%s", b
     fclose  f
-    unless  strchr("#}()<", b[0])  // final #endif, brace, tag?
+    unless  strchr("#}()<", *b)  // final #endif, brace, tag?
         if  has_main  strcpy  b, SPACES "return 0;\n}\n"
         else strcpy  b, "}"
         decorate  &b  ;puts  b

@@ -40,7 +40,7 @@ shared: $(SUBDIRS) crap.o
 ifeq ($(wildcard crap),$(TARGET))
 # Craptastic rules
 %.c : %.crap
-	$(CRAP_EXECUTABLE) "$<" > "$@"
+	crap "$<" > "$@"
 else
 %.c : %.crap
 	@echo "Note: 'crap' program not available yet. Using existing '.c' files."
