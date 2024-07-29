@@ -72,7 +72,7 @@ void macros  char **s
         SUB  "foreach" INARRAY, "void *\1; for(size_t \1_index=0;(\1=\2[\1_index]);\1_index++)"
         // while myLabel in array[[start][:end]]
         SUB  "while" INARRAY, LOOP "&&" INCREMENT
-        #define ARGSP "(( ?[^ \"]| ?\"(\\\\.|[^\\\"])*\")*) ?(\\s+|$)"
+        #define ARGSP "(( ?[^ \"]| ?\"(\\\\.|[^\\\"])*\")*)(\\s+|$)"
         // until
         SUB("(\\s|^)until\\s*" ARGSP, "\1while (!(\2))\5")
         // unless

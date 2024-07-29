@@ -6,10 +6,15 @@ LD_LIBRARY_PATH=../lib ../crap "$0" | tcc -run - "$@"; exit $?
 main
     puts ("""
         This is a test!
-    
+
         // triple quotes
         if  (tmp = resub(*s,"\"{3}(([^\"]+\"?)*)", "\"\2"))
             strcpy  skip.to, "(.*)\"{3}"
             strcpy  skip.end, "\1\""
             strcpy  *s, tmp  ;free  tmp  ;return
-    """);
+    """)
+
+    char *a = """Testinng
+one
+two three """
+    char *b = "test"

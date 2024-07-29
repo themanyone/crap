@@ -59,7 +59,7 @@ void *: "%s" y) //
 #define fp_(f, x)  +fprintf(f, printf_dec_format(x, " "), x)
 #define fpn_(f, x) +fprintf(f, printf_dec_format(x, "\n"), x)
 
-#define debugf(x, ...) DEBUG && fprintf(stderr, FL x "s\n", __VA_ARGS__)
+#define debugf(...) DEBUG && fprintf(stderr, FL __VA_ARGS__)
 
 #if 0
 // We can then print values like so:
