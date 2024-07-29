@@ -5,7 +5,7 @@ C (computer language) code mangler and language maker. [Website](https://themany
 
 ## Giving everyone `crap` for writing crappy code.
 
-* **Terse**. Under 200 lines of pure, unadulterated `crap`.
+* **Terse**. Around 200 lines of pure, unadulterated `crap`.
 * **Simple**. Uses a simplified syntax `crap` coders can understand.
 * **Compatible**. Won't break existing code unless it looks like `crap`.*
 * **Extendable**. Build complex macros that would confuse any compiler.
@@ -31,7 +31,7 @@ After preprocessing, it becomes standard C (std=`c99` or `c11`).
 #include <stdio.h>
 int main(int argc, char **argv, char** env){
     for(size_t _index=5;_index--;){
-        puts ("hello world");}
+        puts("hello world");}
     return 0;
 }
 ```
@@ -46,7 +46,7 @@ more lucrative licensing please contact the author.
 
 ## Interactive `crap`.
 
-The future of Rapid Application Development is `icrap`. Instant gratification at the speed of C. Try out individual lines of code and get instant results from the `icrap` interactive shell. Test ideas BEFORE putting  `crap` into production. It's a read-eval-print loop (REPL) for C, C++, `crap`, and a bunch of other languages. Get it here for free: https://github.com/themanyone/itcc
+The future of Rapid Application Development is `icrap`. Instant gratification at the speed of C. Try out individual lines of code and get instant results from the `icrap` interactive shell. Test ideas BEFORE putting  `crap` into production. It's a read-eval-print loop (REPL) for C, C++, `crap`, zig, hare, go, and other languages. Get it here for free: https://github.com/themanyone/itcc
 
 ```c
  $ ./icrap -lm
@@ -64,7 +64,7 @@ The future of Rapid Application Development is `icrap`. Instant gratification at
 
 ## Crap has `crap`ped itself!
 
-Crap bootstrapped itself some time ago, so its source code is `crap`. 
+Crap bootstrapped itself some time ago, so its source is pure `crap`. 
 As future development progresses in `crap` code, rest assured that 
 `crap` will always remain 100% `crap`.
 
@@ -135,7 +135,7 @@ it persists for the author's convenience.
 
 **Semicolons.** Not usually necessary! If some line needs a semicolon 
 for some reason, just add it manually. Lines that may need manual 
-editing of semicolons are preprocessor statements like `#define`, 
+addition of semicolons are preprocessor statements like `#define`, 
 `//comment`s, and lines that end with any of the characters ` 
 <>;,."=*/&|^!`. Purposely ending lines with one of those characters or 
 a `//comment` prevents unwanted semicolons. When all else fails, look
@@ -168,13 +168,13 @@ output will have backslashes and quotes properly escaped.
     #include "print.h"
     main
         println  "Test, four thirds", '(4/3) is', (4.0 / 3), '!', 
-        println  "The character code for", 'a', "is", ('a')  // parenthesis evaluate numbers
+        println  "The character code for", 'a', "is", ('a')  // Use parenthesis to evaluate 'a' as a number
         int F = 53
         print  F, "Fahrenheit is", ((F - 32) * 5.0 / 9)
         println  "Celsius."
 ```
 
-There are also `sprint`, `sprintln`, `fprint`, `fprintln`, `eprint`, and `eprintln`. The error macros, `eprint` and `eprintln`, are a convenient equivalent to `fprint(stderr)` and `fprintln(stderr)` respectively. These function macros also work as arguments to other functions and macros, where they return the number of bytes written. The `sprint` and `sprintln` macros tack data onto the end of a string much like would be expected when writing to files or terminals or preparing output to be written. The old `sprintf` family of functions overwrite the beginning of a string, which is not usually what anyone wants.
+There are also `sprint`, `sprintln`, `fprint`, `fprintln`, `eprint`, and `eprintln`. The error macros, `eprint` and `eprintln`, are a convenient equivalent to `fprint(stderr)` and `fprintln(stderr)` respectively. These function macros also work as arguments to other functions and macros, where they return the number of bytes written. The `sprint` and `sprintln` macros tack data onto the end of a string, as would be expected when writing to files or terminals, or preparing output to be written. The standard library `sprintf` family of functions overwrite the beginning of a string, which is not usually what anyone wants. But they are always there if you need them.
 
 Thus, `sprint(s, "hello", "world", 4); sprintln(s, "hello", "again", 5);`
 Translates to the equivalent `sprintf` standard library functions:
@@ -183,7 +183,7 @@ Translates to the equivalent `sprintf` standard library functions:
 
 More examples can be found in tests and by glancing at the `print.hh` header.
 
-These `print.hh` macros are in development. And they are not without limits. They can handle up to 100 arguments per statement invocation. Why would anyone want to print that many arguments? Anyway, the limits can be raised by editing that header file.
+These `print.hh` macros are in development. And they are not without limits. They can handle up to 1000 arguments per statement invocation. Why would anyone want to print that many arguments? And the length of each argument is limited to 5000 characters. Limits can be raised by editing that header file.
 
 ### Decisions.
 
@@ -454,7 +454,7 @@ Browse Themanyone
 - Linkedin https://www.linkedin.com/in/henry-kroll-iii-93860426/
 - [TheNerdShow.com](http://thenerdshow.com/)
 
-Copyright (C) 2018-2023 Henry Kroll III, https://thenerdshow.com
+Copyright (C) 2018-2024 Henry Kroll III, https://thenerdshow.com
 
 Permission to use, copy, modify, distribute, and sell this software and 
 its documentation for any purpose is hereby granted without fee, 

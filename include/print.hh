@@ -69,8 +69,8 @@ void *: "%s" y) //
     p_(1.234);      // prints "1.234000"
 #endif
 
-#define MAX_TOKENS 100
-#define MAX_TOKEN_LEN 256
+#define MAX_TOKENS 1000
+#define MAX_TOKEN_LEN 5000
 
 #define STR_(x) #x
 #define STRINGS_(x) STR_(x)
