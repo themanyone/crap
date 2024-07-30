@@ -94,6 +94,7 @@ void macros  char **s
             if  ep[0] == 's' || ep[0] == 'f' // sprint/fprint
                 pre = args[b++]; pc = ", "
             for  int i=b; i < token_count - 1; i++
+                if (i > b) strcat  *s, ","
                 // if not println end print with a space "_()"
                 if  strcmp(args[i + 1], "tln_")
                     strcat  *s, margcat(cmd, ep, "_(", pre, pc, args[i], ")")
@@ -117,11 +118,11 @@ void macros  char **s
             addcslashes  tmp+1
             strcpy  *s, tmp  ;strcat  *s, "\""  ;free  tmp
         // multi-line triple quotes
-        else if  (tmp = resub(*s,"(.*)\"{3}(([^\"]+\"?)*)", "\"\2"))
+        else if((tmp = resub(*s,"(.*)\"{3}(([^\"]+\"?)*)", "\"\2")))
             addcslashes  tmp+1
-            match = resub(*s,"\"{3}(([^\"]+\"?)*)", tmp)
+            match = resub  *s,"\"{3}(([^\"]+\"?)*)", tmp
             strcpy  skip.to, "(.*)\"{3}"  ;strcpy  skip.end, "\1"
-            strcpy  *s, match  ;free  tmp  ;free  match  ;INDENT
+            strcpy  *s, match  ;free(tmp) ;free(match) ;INDENT
     return
 
 #undef ARGSP
@@ -155,12 +156,17 @@ void decorate  char **s
         *s = prepend  *s, "}"  ;prev_indent -= TAB
     cut_eol  &fc, &lc
     // if we have skipped to the end of a long comment or quote
-    if  *(skip.to) && (tmp = resub(*s, skip.to, "\1"))
+    //Using DEL (x7f) to hide quote from addslashes
+    if  *(skip.to) && (tmp = resub(*s, skip.to, "\1\x7f"))
         strcpy  *s, tmp  ; free  tmp
         // and if not a comment, end the last line with a quote
-        if  strcmp(skip.to, "([*]/)")  *s = prepend  *s, "\\n\""
-        // stop the skip.to algorithm
-        *(skip.to) = '\0', *skip.end = 2
+        if  strcmp(skip.to, "([*]/)")
+            //*s = prepend  *s, "\\n\""
+            addcslashes  *s
+            *strchr(*s, '\x7f') = '"'// put quote back in
+        else *strchr(*s, '\x7f') = ' '
+        // stop skip.to algorithm and *skip.end=1 to add semicolon
+        fc = lc, *skip.to = '\0', *skip.end = 1
     unless  plc == '\\' || *fc == 34 || *(skip.end) || indent != prev_indent
         *s = prepend  *s, ";"
     if  !strcmp(skip.to, "(.*)\"{3}")

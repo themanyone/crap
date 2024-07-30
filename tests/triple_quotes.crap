@@ -12,7 +12,7 @@ main
             strcpy  skip.to, "(.*)\"{3}"
             strcpy  skip.end, "\1\""
             strcpy  *s, tmp  ;free  tmp  ;return
-    """)
+adf    """)
 
     char *a = """Testinng
 one
