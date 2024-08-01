@@ -11,11 +11,11 @@ supporting documentation, including About boxes in derived user
 interfaces or web front-ends. No redpresentations are made about the
 suitability of this software for any purpose. It is provided "as is"
 without express or implied warranty.
-*/
+*/ 
 /* From http://www.robertgamble.net/2012/01/c11-generic-selections.html
 
 This allows the creation of a macro that can print any type of value that printf
-supports without having to specify the type explicitly in the call: */
+supports without having to specify the type explicitly in the call: */ 
 
 #ifndef __print_h
 #define __print_h
@@ -41,23 +41,28 @@ long double: "%Lf" y, \
 char *: "%s" y, \
 void *: "%s" y) //
 
-#define end_(s) strchr((s), '\0')
+size_t cp_ = 0;
 
-#define px_(x)  printf(printf_dec_format(x,), x)
-#define p_(x)   printf(printf_dec_format(x, " "), x)
-#define pn_(x)  printf(printf_dec_format(x, "\n"), x)
+size_t total_printed(){
+    size_t c = cp_;
+    cp_ = 0;
+    return c;
+}
+#define px_(x)  (cp_+=printf(printf_dec_format(x,), x))
+#define p_(x)   (cp_+=printf(printf_dec_format(x, " "), x))
+#define pn_(x)  (cp_+=printf(printf_dec_format(x, "\n"), x))
 
-#define epx_(x) fprintf(stderr, printf_dec_format(x,), x)
-#define ep_(x)  fprintf(stderr, printf_dec_format(x, " "), x)
-#define epn_(x) fprintf(stderr, printf_dec_format(x, "\n"), x)
+#define epx_(x) (cp_+=fprintf(stderr, printf_dec_format(x,), x))
+#define ep_(x)  (cp_+=fprintf(stderr, printf_dec_format(x, " "), x))
+#define epn_(x) (cp_+=fprintf(stderr, printf_dec_format(x, "\n"), x))
 
-#define spx_(s, x) sprintf(end_(s), printf_dec_format(x,), x)
-#define sp_(s, x)  sprintf(end_(s), printf_dec_format(x, " "), x)
-#define spn_(s, x) sprintf(end_(s), printf_dec_format(x, "\n"), x)
+#define spx_(s, x) (cp_+=sprintf(strrchr((s), 0), printf_dec_format(x,), x))
+#define sp_(s, x)  (cp_+=sprintf(strrchr((s), 0), printf_dec_format(x, " "), x))
+#define spn_(s, x) (cp_+=sprintf(strrchr((s), 0), printf_dec_format(x, "\n"), x))
 
-#define fpx_(f, x) fprintf(f, printf_dec_format(x,), x)
-#define fp_(f, x)  fprintf(f, printf_dec_format(x, " "), x)
-#define fpn_(f, x) fprintf(f, printf_dec_format(x, "\n"), x)
+#define fpx_(f, x) (cp_+=fprintf(f, printf_dec_format(x,), x))
+#define fp_(f, x)  (cp_+=fprintf(f, printf_dec_format(x, " "), x))
+#define fpn_(f, x) (cp_+=fprintf(f, printf_dec_format(x, "\n"), x))
 
 #define debugf(...) DEBUG && fprintf(stderr, FL __VA_ARGS__)
 
@@ -99,7 +104,7 @@ int split_print_args(char *str, char **tokens){
     for(int c, i = 0; (c=str[i]); i++){
         char *end = "";
         int tl = strlen(token);
-        if(tl) end = token + tl - 1;
+        if(tl)  end = token + tl - 1;
         switch(state){
             case NORMAL:
             switch(c){
@@ -128,7 +133,7 @@ int split_print_args(char *str, char **tokens){
             if(*end != '\\'){
                 if(c == state){
                     state = NORMAL;
-                    if(c == '\'') c = '"';}}
+                    if(c == '\'')  c = '"';}}
             token[token_index++] = c;}
         if(token_count > MAX_TOKENS){
             fprintf(stderr, FL "Token length exceeded\n");
