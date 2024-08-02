@@ -48,21 +48,21 @@ size_t total_printed(){
     cp_ = 0;
     return c;
 }
-#define px_(x)  (cp_+=printf(printf_dec_format(x,), x))
-#define p_(x)   (cp_+=printf(printf_dec_format(x, " "), x))
-#define pn_(x)  (cp_+=printf(printf_dec_format(x, "\n"), x))
+#define px_(x)  cp_+=printf(printf_dec_format(x,), x)
+#define p_(x)   cp_+=printf(printf_dec_format(x, " "), x)
+#define pn_(x)  cp_+=printf(printf_dec_format(x, "\n"), x)
 
-#define epx_(x) (cp_+=fprintf(stderr, printf_dec_format(x,), x))
-#define ep_(x)  (cp_+=fprintf(stderr, printf_dec_format(x, " "), x))
-#define epn_(x) (cp_+=fprintf(stderr, printf_dec_format(x, "\n"), x))
+#define epx_(x) cp_+=fprintf(stderr, printf_dec_format(x,), x)
+#define ep_(x)  cp_+=fprintf(stderr, printf_dec_format(x, " "), x)
+#define epn_(x) cp_+=fprintf(stderr, printf_dec_format(x, "\n"), x)
 
-#define spx_(s, x) (cp_+=sprintf(strrchr((s), 0), printf_dec_format(x,), x))
-#define sp_(s, x)  (cp_+=sprintf(strrchr((s), 0), printf_dec_format(x, " "), x))
-#define spn_(s, x) (cp_+=sprintf(strrchr((s), 0), printf_dec_format(x, "\n"), x))
+#define spx_(s, x) cp_+=sprintf(strrchr((s), 0), printf_dec_format(x,), x)
+#define sp_(s, x)  cp_+=sprintf(strrchr((s), 0), printf_dec_format(x, " "), x)
+#define spn_(s, x) cp_+=sprintf(strrchr((s), 0), printf_dec_format(x, "\n"), x)
 
-#define fpx_(f, x) (cp_+=fprintf(f, printf_dec_format(x,), x))
-#define fp_(f, x)  (cp_+=fprintf(f, printf_dec_format(x, " "), x))
-#define fpn_(f, x) (cp_+=fprintf(f, printf_dec_format(x, "\n"), x))
+#define fpx_(f, x) cp_+=fprintf(f, printf_dec_format(x,), x)
+#define fp_(f, x)  cp_+=fprintf(f, printf_dec_format(x, " "), x)
+#define fpn_(f, x) cp_+=fprintf(f, printf_dec_format(x, "\n"), x)
 
 #define debugf(...) DEBUG && fprintf(stderr, FL __VA_ARGS__)
 

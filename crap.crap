@@ -90,7 +90,7 @@ void macros  char **s
             // token split argument string by commas and spaces
             char *ep, *pre = "", *pc = "", *cmd = NULL, *args[MAX_TOKENS] = {NULL}
             int b = 0, token_count = split_print_args  tmp, args
-            ep = args[b++]
+            ep = args[b++]; strcat  *s, "("// begin series of print macros
             if  ep[0] == 's' || ep[0] == 'f' // sprint/fprint
                 pre = args[b++]; pc = ", "
             for  int i=b; i < token_count - 1; i++
@@ -100,6 +100,7 @@ void macros  char **s
                     strcat  *s, margcat(cmd, ep, "_(", pre, pc, args[i], ")")
                 else // otherwise print a new line "n_()"
                     strcat  *s, margcat(cmd, ep, "n_(", pre, pc, args[i], ")")
+            strcat  *s, ")"// end print macros, count total chars printed
             // Free dynamically allocated memory
             for  int i = 0; i < token_count; i++
                 free  args[i]
@@ -118,11 +119,11 @@ void macros  char **s
             addcslashes  tmp+1
             strcpy  *s, tmp  ;strcat  *s, "\""  ;free  tmp
         // multi-line triple quotes
-        else if((tmp = resub(*s,"(.*)\"{3}(([^\"]+\"?)*)", "\"\2")))
+        else if  (tmp = resub(*s,"(.*)\"{3}(([^\"]+\"?)*)", "\"\2"))
             addcslashes  tmp+1
             match = resub  *s,"\"{3}(([^\"]+\"?)*)", tmp
             strcpy  skip.to, "(.*)\"{3}"  ;strcpy  skip.end, "\1"
-            strcpy  *s, match  ;free(tmp) ;free(match) ;INDENT
+            strcpy  *s, match  ;free  tmp  ;free  match  ;INDENT
     return
 
 #undef ARGSP

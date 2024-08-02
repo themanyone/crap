@@ -14,13 +14,13 @@ supporting documentation, including About boxes in derived user
 interfaces or web front-ends. No redpresentations are made about the
 suitability of this software for any purpose. It is provided "as is"
 without express or implied warranty.
-*/
+*/ 
 #include "crap.h"
 #include "sjoin.h"
 #include "print.h"
 
 #define INDENT while(indent > prev_indent){  \
-    *s = prepend(*s, "{") , prev_indent += TAB;}
+    *s = prepend(*s, "{")  , prev_indent += TAB;}
 struct{
     char to[10], end[5];}
 skip = {{'\0'}, {'\2'}};
@@ -38,7 +38,7 @@ void macros(char **s){
         #define SUB(match, rep)                     \
         max = MAX_REPLACE;                           \
         while(max-- && (tmp=resub(*s, match, rep))){ \
-            strcpy(*s, tmp) ;free(tmp);}
+            strcpy(*s, tmp)  ;free(tmp);}
         // apply embedded macros
         for(struct macro *m = maclist;m ;m = m->next){
             SUB(m->match, m->replace);}
@@ -48,7 +48,7 @@ void macros(char **s){
         if(match && changed){
             macro_append(&maclist, match, changed);}
         else{
-            free(match) ;free(changed);}
+            free(match)  ;free(changed);}
         SUB("#replace\\s+/(.*)/(.*)/", "\x2f/ crap: replaced \1 with \2");
         // array[:] notation now works most places (do not free)
         // this one employs a non-standard GNU extension
@@ -84,13 +84,13 @@ void macros(char **s){
         // tmp will contain argument list; match holds var assignment, if any
         // need to do it twice because we only have greedy regex
         if((tmp = resub(*s, ".*(sp|fp|ep)rin(t|tln)\\s*\\((.*)\\).*", "\1, \3, \2_")) || (tmp = resub(*s, ".*prin(t|tln)\\s*\\((.*)\\).*", "p, \2, \1_"))){
-            !(match = resub(*s, "(.*)(sp|fp|ep)rint.*\\(.*", "\1") )?
-              match = resub(*s, "(.*)print.*\\(.*", "\1") : match;
+            !(match = resub(*s, "(.*)(sp|fp|ep)rint.*\\(.*", "\1")  )?
+              match = resub(*s, "(.*)print.*\\(.*", "\1")  : match;
             strcpy(*s, match);
             // token split argument string by commas and spaces
             char *ep, *pre = "", *pc = "", *cmd = NULL, *args[MAX_TOKENS] = {NULL};
             int b = 0, token_count = split_print_args(tmp, args);
-            ep = args[b++];
+            ep = args[b++]; strcat(*s, "(");// begin series of print macros
             if(ep[0] == 's' || ep[0] == 'f') {// sprint/fprint
                 pre = args[b++]; pc = ", ";}
             for(int i=b; i < token_count - 1; i++){
@@ -100,6 +100,7 @@ void macros(char **s){
                     strcat(*s, margcat(cmd, ep, "_(", pre, pc, args[i], ")"));}
                 else {// otherwise print a new line "n_()"
                     strcat(*s, margcat(cmd, ep, "n_(", pre, pc, args[i], ")"));}}
+            strcat(*s, ")");// end print macros, count total chars printed
             // Free dynamically allocated memory
             for(int i = 0; i < token_count; i++){
                 free(args[i]);}
@@ -111,18 +112,18 @@ void macros(char **s){
          "for(size_t \2_index=\1;\2_index--;)");
         // skip over multi-line comments
         if((tmp = resub(*s,"(/[*])(.*[^/]$)", "\1\2"))){
-            strcpy(skip.to, "([*]/)") ;strcpy(skip.end, "\1");
-            free(tmp) ; INDENT; return;}
+            strcpy(skip.to, "([*]/)")  ;strcpy(skip.end, "\1");
+            free(tmp)  ; INDENT; return;}
         // triple quotes
         if((tmp = resub(*s,"\"{3}(.*)\"{3}", "\"\1"))){
             addcslashes(tmp+1);
-            strcpy(*s, tmp) ;strcat(*s, "\"") ;free(tmp);}
+            strcpy(*s, tmp)  ;strcat(*s, "\"")  ;free(tmp);}
         // multi-line triple quotes
         else if((tmp = resub(*s,"(.*)\"{3}(([^\"]+\"?)*)", "\"\2"))){
             addcslashes(tmp+1);
             match = resub(*s,"\"{3}(([^\"]+\"?)*)", tmp);
-            strcpy(skip.to, "(.*)\"{3}") ;strcpy(skip.end, "\1");
-            strcpy(*s, match) ;free(tmp) ;free(match) ;INDENT;}}
+            strcpy(skip.to, "(.*)\"{3}")  ;strcpy(skip.end, "\1");
+            strcpy(*s, match)  ;free(tmp)  ;free(match)  ;INDENT;}}
     return;
 }
 #undef ARGSP
@@ -134,14 +135,14 @@ void cut_eol(char **fc, char **lc){
     // slice off end of line comments, store in $eol
     // needed to insert semicolon before comments
     char *broil = resub(*fc,"([ \t]*/\\*[^/]*\\*/)?[\\ \n]*$|[/]{2}.*$", "");
-    *lc = *fc + strlen(broil) ;free(broil);
-    strcpy(eol, *lc) ;**lc = '\0'; (*lc)--;}
+    *lc = *fc + strlen(broil)  ;free(broil);
+    strcpy(eol, *lc)  ;**lc = '\0'; (*lc)--;}
 char *prepend(char *dest, char *src){
     // Requires writable memory *before* dest.
     // Caller may choose to keep original pointer or
     // reassign it with s = prepend(s, "some text")
     size_t srclen = strlen(src); dest -= srclen;
-    memcpy(dest, src, srclen) ; return dest;}
+    memcpy(dest, src, srclen)  ; return dest;}
 void decorate(char **s){
     static char plc = ' ';
     char *tmp;
@@ -150,15 +151,15 @@ void decorate(char **s){
     // locate first non-whitespace chr
     int spaces = strspn(*s, " ");
     char *fc = *s + spaces, *lc = strrchr(*s, '\n');
-    if(!(*skip.to) && fc < lc) indent = ((fc - *s) | 0x03) ^ 0x03;
+    if(!(*skip.to) && fc < lc)  indent = ((fc - *s) | 0x03) ^ 0x03;
     *s = prepend(*s, eol);
     while(indent < prev_indent){
-        *s = prepend(*s, "}") ;prev_indent -= TAB;}
+        *s = prepend(*s, "}")  ;prev_indent -= TAB;}
     cut_eol(&fc, &lc);
     // if we have skipped to the end of a long comment or quote
     //Using DEL (x7f) to hide quote from addslashes
     if(*(skip.to) && (tmp = resub(*s, skip.to, "\1\x7f"))){
-        strcpy(*s, tmp) ; free(tmp);
+        strcpy(*s, tmp)  ; free(tmp);
         // and if not a comment, end the last line with a quote
         if(strcmp(skip.to, "([*]/)")){
             //*s = prepend  *s, "\\n\""
@@ -171,16 +172,16 @@ void decorate(char **s){
         *s = prepend(*s, ";");}
     if(!strcmp(skip.to, "(.*)\"{3}")){
         addcslashes(*s);}
-    if(!*skip.to) macros(&fc);
-    if(*(skip.to) || (*(skip.end) && --(*(skip.end)))) return;
-    lc = *s + strlen(*s) - 1; if(lc < *s) return;
+    if(!*skip.to)  macros(&fc);
+    if(*(skip.to) || (*(skip.end) && --(*(skip.end))))  return;
+    lc = *s + strlen(*s) - 1; if(lc < *s)  return;
     // skip semicolon on lines ending with punc.
     if(strchr(" <>:;,.=*/&|^!?", *lc)){
         *(skip.end) = 1;}
     // skip semicolon on blank lines
-    if(strlen(fc) == 0) *(skip.end) = 1;
+    if(strlen(fc) == 0)  *(skip.end) = 1;
     // skip semicolon on defines
-    if(*fc=='#') *(skip.end) = 1;
+    if(*fc=='#')  *(skip.end) = 1;
     plc = *lc;
     INDENT;}
 int crap(char *name){
@@ -193,18 +194,18 @@ int crap(char *name){
     while (!(feof(f) || ferror(f))){
         b = buf + BACK_BUFFER_LEN;
         if(fgets(b, MAX_LINE_LEN, f)){
-            if(b[strlen(b)-1]!='\n') strcat(b, "\n");
-            decorate(&b) ;printf("%s", b);}}
+            if(b[strlen(b)-1]!='\n')  strcat(b, "\n");
+            decorate(&b)  ;printf("%s", b);}}
     fclose(f);
-    if (!(strchr("#}()<", *b))) {// final #endif, brace, tag?
-        if(has_main) strcpy(b, SPACES "return 0;\n}\n");
+    if (!(strchr("#}()<", *b)))  {// final #endif, brace, tag?
+        if(has_main)  strcpy(b, SPACES "return 0;\n}\n");
         else strcpy(b, "}");
-        decorate(&b) ;puts(b);}
+        decorate(&b)  ;puts(b);}
     else puts("");
     macro_free(&maclist);
     return 0;}
 int main(int argc, char **argv, char **env){
-    if(argc < 2) puts("usage: crap infile [> outfile]");
+    if(argc < 2)  puts("usage: crap infile [> outfile]");
     else return crap(argv[1]);
     return 0;
 }
