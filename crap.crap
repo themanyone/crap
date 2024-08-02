@@ -93,6 +93,8 @@ void macros  char **s
             ep = args[b++]; strcat  *s, "("// begin series of print macros
             if  ep[0] == 's' || ep[0] == 'f' // sprint/fprint
                 pre = args[b++]; pc = ", "
+            if  token_count == 2  // empty() args prints blank line
+                strcat  *s, margcat(cmd, ep, "n_(\"\")")
             for  int i=b; i < token_count - 1; i++
                 if (i > b) strcat  *s, ","
                 // if not println end print with a space "_()"
