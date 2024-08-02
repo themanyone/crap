@@ -155,27 +155,36 @@ have backslashes and quotes properly escaped.
     """);
 ```
 
-**New print statements.** Crap can print stuff without worrying about types, using c11 generic type selections. Include "print.h" to make it happen.
+**New print statements.** Print all kinds of crap, without worrying about types, using c11 generic type selections. Include "print.h" to make it happen.
 
 ```c
     #include <stdio.h>
     #include "print.h"
     main
+        // Trailing commas are ignored
         println  "Test, four thirds", '(4/3) is', (4.0 / 3), '!', 
-        println  "The character code for", 'a', "is", ('a')  // Use parenthesis to evaluate 'a' as a number
+        // Use parenthesis to evaluate 'a' as a number
+        println  "The character code for", 'a', "is", ('a')
         int F = 53
         print  F, "Fahrenheit is", ((F - 32) * 5.0 / 9)
         println  "Celsius."
 ```
 
-There are also `sprint`, `sprintln`, `fprint`, `fprintln`, `eprint`, and 
-`eprintln`. The error macros, `eprint` and `eprintln`, are a convenient 
-equivalent to `fprint(stderr)` and `fprintln(stderr)` respectively. These 
-`print.h` function macros return a **running total** of all bytes written by them 
-(excluding standard library and debug statements). Call `total_printed()` to 
-retrieve and clear that total.
+Features. This non-standard `print.h` library makes `sprint`, `sprintln`, 
+`fprint`, `fprintln`, `eprint`, and `eprintln` available for entertaiment 
+purposes. Error macros, `eprint` and `eprintln`, are a rough appproximation of 
+`fprint(stderr)` and `fprintln(stderr)` respectively. Output is unformatted, so 
+no ugly " %s\n" to disrupt eye movements. Instead, they add their own trailing 
+space or return character to make it easy to print stuff without worrying how it 
+will look. If precise formatted output is desired, use the standard library 
+`printf`.
 
-The `sprint` and `sprintln` macros tack data onto the end of a string, as would 
+Return values. These `print.h` macros return a **running total** of all bytes 
+written so far, not merely the current line. The total includes hidden trailing 
+spaces and return characters (and does not count standard library and debug 
+statements). Call `total_printed()` to retrieve and clear that total.
+
+Errata. The `sprint` and `sprintln` macros tack data onto the end of a string, as would 
 be expected when writing to files or terminals, or preparing output to be 
 written. The standard library `sprintf` family of functions overwrite the 
 beginning of a string, which is not usually what anyone wants. But they are 
@@ -183,10 +192,10 @@ always there if you need them. Caller is responsible for making sure strings are
 null-terminated and have sufficient space to hold the result. Failing to do so 
 will result in errors or buffer overflows.
 
-Thus, `sprint(s, "hello", "world", 4); sprintln(s, "hello", "again", 5);`
-Translates to the equivalent `sprintf` standard library functions:
-`sprintf(strchrnul(s, '\0'), "%s %d ", "hello world", 4);`
-`sprintf(strchrnul(s, '\0'), "%s %d \n", "hello again", 5);`
+Hence, `sprint(s, "hello", "world", 4); sprintln(s, "hello", "again", 5);`
+might produce output similar to these `sprintf` standard library functions:
+`sprintf(strchr(s, '\0'), "%s %d ", "hello world", 4);`
+`sprintf(strchr(s, '\0'), "%s %d \n", "hello again", 5);`
 
 More examples can be found in tests and by glancing at the `print.hh` header.
 
