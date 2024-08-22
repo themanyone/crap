@@ -11,11 +11,11 @@ supporting documentation, including About boxes in derived user
 interfaces or web front-ends. No redpresentations are made about the
 suitability of this software for any purpose. It is provided "as is"
 without express or implied warranty.
-*/ 
+*/
 /* From http://www.robertgamble.net/2012/01/c11-generic-selections.html
 
 This allows the creation of a macro that can print any type of value that printf
-supports without having to specify the type explicitly in the call: */ 
+supports without having to specify the type explicitly in the call: */
 
 #ifndef __print_h
 #define __print_h
@@ -104,7 +104,7 @@ int split_print_args(char *str, char **tokens){
     for(int c, i = 0; (c=str[i]); i++){
         char *end = "";
         int tl = strlen(token);
-        if(tl)  end = token + tl - 1;
+        if(tl) end = token + tl - 1;
         switch(state){
             case NORMAL:
             switch(c){
@@ -133,7 +133,7 @@ int split_print_args(char *str, char **tokens){
             if(*end != '\\'){
                 if(c == state){
                     state = NORMAL;
-                    if(c == '\'')  c = '"';}}
+                    if(c == '\'') c = '"';}}
             token[token_index++] = c;}
         if(token_count > MAX_TOKENS){
             fprintf(stderr, FL "Token length exceeded\n");

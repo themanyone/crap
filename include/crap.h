@@ -22,7 +22,7 @@ without express or implied warranty.
 #define SPACES "    "
 #define MAX_REPLACE 100 // limit regex loops of clueless users
 #define MAX_LINE_LEN 8000   // truncate lines longer than this
-#define BACK_BUFFER_LEN 100 // length of back buffer, for indents
+#define BACK_BUFFER_LEN 8000 // length of back buffer, for indents
 
 void cut_eol(char**, char**);
 char *prepend(char*, char*);

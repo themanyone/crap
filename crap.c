@@ -24,7 +24,7 @@ without express or implied warranty.
 struct{
     char to[10], end[5];}
 skip = {{'\0'}, {'\2'}};
-char *has_main=NULL, eol[255]={'\0'};
+char *has_main=NULL, eol[BACK_BUFFER_LEN]={'\0'};
 struct macro *maclist = NULL;
 int prev_indent = 0, indent = 0;
 void macros(char **s){
@@ -72,7 +72,7 @@ void macros(char **s){
         SUB("foreach" INARRAY, "void *\1; for(size_t \1_index=0;(\1=\2[\1_index]);\1_index++)");
         // while myLabel in array[[start][:end]]
         SUB("while" INARRAY, LOOP "&&" INCREMENT);
-        #define ARGSP "(( ?[^ \"]| ?\"(\\\\.|[^\\\"])*\")*)(\\s+|$)"
+        #define ARGSP "(( ?[^ \"]| ?\"(\\\\.|[^\\\"])*\")*) ?(\\s|$)"
         // until
         SUB("(\\s|^)until\\s*" ARGSP, "\1while (!(\2))\5");
         // unless
@@ -161,13 +161,12 @@ void decorate(char **s){
     // if we have skipped to the end of a long comment or quote
     //Using DEL (x7f) to hide quote from addslashes
     if(*(skip.to) && (tmp = resub(*s, skip.to, "\1\x7f"))){
-        strcpy(*s, tmp)  ; free(tmp);
         // and if not a comment, end the last line with a quote
         if(strcmp(skip.to, "([*]/)")){
-            //*s = prepend  *s, "\\n\""
-            addcslashes(*s);
-            *strchr(*s, '\x7f') = '"';}// put quote back in
-        else *strchr(*s, '\x7f') = ' ';
+            addcslashes(tmp);
+            *strchr(tmp, '\x7f') = '"';// put quote back in
+            strcpy(*s, tmp);}
+        free(tmp);
         // stop skip.to algorithm and *skip.end=1 to add semicolon
         fc = lc, *skip.to = '\0', *skip.end = 1;}
     if (!(plc == '\\' || *fc == 34 || *(skip.end) || indent != prev_indent)){
