@@ -384,7 +384,7 @@ For convenience, we can also launch with the `crapper` crap wrapper. Place in th
 top line of sources to make executable crap scripts. 
 
 ```bash
-#!crapper [compiler args] -- [optional program args]`
+#!/path/to/crapper [compiler args] -- [optional program args]`
 ```
 
 You may use other compilers or shells. Get creative!
