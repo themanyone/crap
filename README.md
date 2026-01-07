@@ -384,7 +384,7 @@ For convenience, we can also launch with the `crapper` crap wrapper. Place in th
 top line of sources to make executable crap scripts. 
 
 ```bash
-#!/path/to/crapper [compiler args] -- [optional program args]`
+#!/usr/bin/env -S crapper [compiler args] -- [optional program args]`
 ```
 
 You may use other compilers or shells. Get creative!
@@ -460,7 +460,7 @@ Browse Themanyone
 - Linkedin https://www.linkedin.com/in/henry-kroll-iii-93860426/
 - [TheNerdShow.com](http://thenerdshow.com/)
 
-Copyright (C) 2018-2024 Henry Kroll III, https://thenerdshow.com
+Copyright (C) 2018-2026 Henry Kroll III, https://thenerdshow.com
 
 Permission to use, copy, modify, distribute, and sell this software and its 
 documentation for any purpose is hereby granted without fee, provided that the 
