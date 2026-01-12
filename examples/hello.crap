@@ -1,0 +1,7 @@
+#!../crapper -I../include -L. -std=c11 -- moo flap
+#include <stdio.h>
+#include <print.h>
+
+main
+    repeat  5
+        println   "Hello World!", _index

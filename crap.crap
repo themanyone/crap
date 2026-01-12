@@ -4,7 +4,7 @@ crap "$0" |tcc -Iinclude -Llib -lreg -run - "$@";exit $?
 /* Concise, Regex-Aware Preprocessor (CRAP)
 C (computer language) code decorator and language maker
 
-Copyright (C) 2018-2024 Henry Kroll III, https://thenerdshow.com
+Copyright (C) 2018-2026 Henry Kroll III, https://thenerdshow.com
 
 Permission to use, copy, modify, distribute, and sell this software and
 its documentation for any purpose is hereby granted without fee,
