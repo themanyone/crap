@@ -384,10 +384,14 @@ For convenience, we can also launch with the `crapper` crap wrapper. Place in th
 top line of sources to make executable crap scripts. 
 
 ```bash
-#!/usr/bin/env -S crapper [compiler args] -- [optional program args]`
+#!/usr/bin/env -S crapper [compiler args] --
 ```
 
-You may use other compilers or shells. Get creative!
+You may include optional program args, for testing. Example:
+
+```bash
+#!/usr/bin/env -S crapper -g -Wall -lm -- [optional program args]`
+```
 
 ## Now we're just making `crap` up.
 

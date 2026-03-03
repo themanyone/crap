@@ -22,15 +22,13 @@ pos() {
     done; return 1
 }
 
-ax=($(echo "$1"|xargs)) #unquote shebang arguments ~_^
-
 # split args on --, into left and right tokens
 left=(); right=()
-p=$(pos "--" "${ax[@]}")
+p=$(pos "--" "${@}")
 if [[ $p > 0 ]]; then
-    left="${ax[@]:0:$p}"
-    right="${ax[@]:$p+1}"
+    left=("${@:1:$p}")
+    right=("${@:$p+2}")
 fi
 
 # run it
-crap "${@:(-1)}" | tcc ${left[@]} -run - ${right[@]}
+crap "${right[0]}" | tcc "${left[@]}" -run - "${right[@]:1}"
