@@ -14,10 +14,10 @@
 
 # get position of needle in haystack
 pos() {
-    c=0; local hay needle=$1
+    c=0; local hay needle="$1"
     shift
     for hay; do
-        if [[ $hay == $needle ]]; then echo $c; return 0;fi
+        if [[ "$hay" == "$needle" ]]; then echo "$c"; return 0; fi
     ((c++))
     done; return 1
 }
@@ -28,6 +28,8 @@ p=$(pos "--" "${@}")
 if [[ $p > 0 ]]; then
     left=("${@:1:$p}")
     right=("${@:$p+2}")
+else
+    right=("$@")
 fi
 
 # run it

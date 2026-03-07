@@ -15,7 +15,7 @@ SUBDIRS=$(INCLUDEDIR) $(LIBSDIR)
 export BFLAGS=-Iinclude -Wall -pipe -O2 -std=c99
 # Linker flags
 LDFLAGS=-Llib
-DESTDIR=/usr/local
+DESTDIR?=/usr/local
 PREFIX=$(DESTDIR)
 export INCDIR=$(PREFIX)/include
 BINDIR=$(PREFIX)/bin
